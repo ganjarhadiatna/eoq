@@ -20,14 +20,20 @@
                     </form>
                 </div>
                 <div class="col-2 text-right">
-                    <button 
+                    <!-- <button 
                         type="button" 
                         class="btn btn-primary" 
                         data-toggle="modal" 
                         data-target="#createModal">
                         <i class="fa fa-lg fa-plus"></i>
                         Tambah
-                    </button>
+                    </button> -->
+                    <a href="{{ route('kategori-tambah') }}">
+                        <button type="button" class="btn btn-primary" >
+                            <i class="fa fa-lg fa-plus"></i>
+                            Tambah
+                        </button>
+                    </a>
                 </div>
             </div>
             
@@ -39,38 +45,64 @@
                     <tr>
                         <th scope="col" width="100">NO</th>
                         <th scope="col">Kategori</th>
+                        <th scope="col">Tanggal</th>
                         <th scope="col" width="200">#</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for ($i = 0; $i < 5; $i++)
-                    <tr>
-                        <th>
-                            {{ $i+1 }}
-                        </th>
-                        <td>
-                            4,569
-                        </td>
-                        <td>
-                            <button class="btn btn-danger">
-                                Hapus
-                            </button>
-                            <button 
-                                class="btn btn-success"
-                                data-toggle="modal" 
-                                data-target="#editModal">
-                                Ubah
-                            </button>
-                        </td>
-                    </tr>
-                    @endfor
+                    <?php $i = 1; ?>
+                    @foreach ($category as $ctr)
+                        <tr>
+                            <th>
+                                {{ $i++ }}
+                            </th>
+                            <td>
+                                {{ $ctr->category }}
+                            </td>
+                            <td>
+                                {{ $ctr->created_at }}
+                            </td>
+                            <td>
+                                <a 
+                                    href="{{ route('kategori-remove') }}" 
+                                    onclick="
+                                        event.preventDefault();
+                                        document.getElementById('hapus-kategori-{{ $ctr->idcategories }}').submit();">
+                                    <button class="btn btn-danger">
+                                        Hapus
+                                    </button>
+                                </a>
+
+                                <form 
+                                    id="hapus-kategori-{{ $ctr->idcategories }}" 
+                                    action="{{ route('kategori-remove') }}" 
+                                    method="POST" 
+                                    style="display: none;">
+                                    @csrf
+                                    <input 
+                                        type="hidden" 
+                                        name="idcategories" 
+                                        value="{{ $ctr->idcategories }}">
+                                </form>
+
+                                <a href="{{ route('kategori-edit', $ctr->idcategories) }}">
+                                    <button class="btn btn-success">
+                                        Ubah
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
+            <div class="col col-8">
+                {{ $category->links() }}
+            </div>
         </div>
     </div>
 
     <!-- Modal -->
-    <div 
+    <!-- <div 
         class="modal fade" 
         id="createModal" 
         tabindex="-1" 
@@ -79,26 +111,50 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createModalLabel">
-                        Buat Kategori Baru
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary">Simpan Kategori</button>
-                </div>
+                <form 
+                    method="post" 
+                    action="javascript:void(0)" 
+                    autocomplete="off" 
+                    id="form-create"
+                    onsubmit="publish()">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">
+                            Buat Kategori Baru
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group{{ $errors->has('category') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="input-category">{{ __('category') }}</label>
+                            <input 
+                                type="text" 
+                                name="category" 
+                                id="input-category" 
+                                class="form-control form-control-alternative{{ $errors->has('category') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('Masukan kategori') }}"  
+                                required 
+                                autofocus>
+
+                            @if ($errors->has('category'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('category') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan Kategori</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
+    </div> -->
 
-    <div 
+    <!-- <div 
         class="modal fade" 
         id="editModal" 
         tabindex="-1" 
@@ -124,5 +180,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 @endsection

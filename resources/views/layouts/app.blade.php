@@ -9,9 +9,6 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
@@ -20,6 +17,10 @@
     <link href="{{ asset('/css/argon.min.css') }}" rel="stylesheet">
     <link href="{{ asset('/css/nucleo/css/nucleo.css') }}" rel="stylesheet">
     <link href="{{ asset('/fonts/fontawesome/css/all.min.css') }}" rel="stylesheet">
+
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}" defer></script>
+
 </head>
 <body>
     <div class="main-content">
@@ -35,10 +36,23 @@
             </div>
         </div>
     </div>
-
-    <script src="{{ asset('/jquery/dist/jquery.min.js') }}"></script>
+    
+    <script src="{{ asset('/js/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 
     <script src="{{ asset('/js/argon.js?v=1.0.0') }}"></script>
+
+    <script type="text/javascript">
+        window.Laravel = {!! json_encode([
+            'csrfToken' => csrf_token(),
+        ]) !!};
+        
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
+    </script>
+
 </body>
 </html>
