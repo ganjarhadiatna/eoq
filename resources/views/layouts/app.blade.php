@@ -21,6 +21,11 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
+    <script src="{{ asset('/js/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+
+    <script src="{{ asset('/js/argon.js?v=1.0.0') }}"></script>
+
 </head>
 <body>
     <div class="main-content">
@@ -36,11 +41,6 @@
             </div>
         </div>
     </div>
-    
-    <script src="{{ asset('/js/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ asset('/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-
-    <script src="{{ asset('/js/argon.js?v=1.0.0') }}"></script>
 
     <script type="text/javascript">
         window.Laravel = {!! json_encode([

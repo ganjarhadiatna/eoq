@@ -20,14 +20,14 @@
                     </form>
                 </div>
                 <div class="col-2 text-right">
-                    <button 
-                        type="button" 
-                        class="btn btn-primary" 
-                        data-toggle="modal" 
-                        data-target="#createModal">
-                        <i class="fa fa-lg fa-plus"></i>
-                        Tambah
-                    </button>
+                    <a href="{{ route('supplier-tambah') }}">
+                        <button 
+                            type="button" 
+                            class="btn btn-primary" >
+                            <i class="fa fa-lg fa-plus"></i>
+                            Tambah
+                        </button>
+                    </a>
                 </div>
             </div>
             
@@ -38,39 +38,73 @@
                 <thead class="thead-light">
                     <tr>
                         <th scope="col" width="100">NO</th>
-                        <th scope="col">Suplier</th>
+                        <th scope="col">Nama</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Nomor Telpon</th>
+                        <th scope="col">Alamat</th>
                         <th scope="col" width="200">#</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for ($i = 0; $i < 5; $i++)
-                    <tr>
-                        <th>
-                            {{ $i+1 }}
-                        </th>
-                        <td>
-                            4,569
-                        </td>
-                        <td>
-                            <button class="btn btn-danger">
-                                Hapus
-                            </button>
-                            <button 
-                                class="btn btn-success"
-                                data-toggle="modal" 
-                                data-target="#editModal">
-                                Ubah
-                            </button>
-                        </td>
-                    </tr>
-                    @endfor
+                    <?php $i = 1; ?>
+                    @foreach ($supplier as $sp)
+                        <tr>
+                            <th>
+                                {{ $i++ }}
+                            </th>
+                            <td>
+                                {{ $sp->name }}
+                            </td>
+                            <td>
+                                {{ $sp->email }}
+                            </td>
+                            <td>
+                                {{ $sp->phone_number }}
+                            </td>
+                            <td>
+                                {{ $sp->address }}
+                            </td>
+                            <td>
+                                <a 
+                                    href="{{ route('supplier-remove') }}" 
+                                    onclick="
+                                        event.preventDefault();
+                                        document.getElementById('hapus-supplier-{{ $sp->idsuppliers }}').submit();">
+                                    <button type="" class="btn btn-danger">
+                                        Hapus
+                                    </button>
+                                </a>
+
+                                <form 
+                                    id="hapus-supplier-{{ $sp->idsuppliers }}" 
+                                    action="{{ route('supplier-remove') }}" 
+                                    method="POST" 
+                                    style="display: none;">
+                                    @csrf
+                                    <input 
+                                        type="hidden" 
+                                        name="idsuppliers" 
+                                        value="{{ $sp->idsuppliers }}">
+                                </form>
+
+                                <a href="{{ route('supplier-edit', $sp->idsuppliers) }}">
+                                    <button class="btn btn-success">
+                                        Ubah
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
+            <div class="col col-8">
+                {{ $supplier->links() }}
+            </div>
         </div>
     </div>
 
     <!-- Modal -->
-    <div 
+    <!-- <div 
         class="modal fade" 
         id="createModal" 
         tabindex="-1" 
@@ -124,5 +158,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 @endsection

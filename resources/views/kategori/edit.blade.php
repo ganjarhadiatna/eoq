@@ -32,10 +32,14 @@
 		                        	<strong>{{ $errors->first('category') }}</strong>
 		                        </span>
 	                        @endif
-	                    <div class="text-right">
-	                	<button type="submit" class="btn btn-success mt-4">{{ __('Simpan') }}</button>
 	                </div>
-	                </div>
+
+	                <div class="form-group">
+	                	<div class="text-right">
+		                	<button type="submit" class="btn btn-success mt-4">{{ __('Simpan') }}</button>
+		                </div>
+		            </div>
+	            
 				</form>
 
 			@endforeach

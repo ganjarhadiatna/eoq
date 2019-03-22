@@ -20,14 +20,14 @@
                     </form>
                 </div>
                 <div class="col-2 text-right">
-                    <button 
-                        type="button" 
-                        class="btn btn-primary" 
-                        data-toggle="modal" 
-                        data-target="#createModal">
-                        <i class="fa fa-lg fa-plus"></i>
-                        Tambah
-                    </button>
+                    <a href="{{ route('penjualan-tambah') }}">
+                        <button 
+                            type="button" 
+                            class="btn btn-primary" >
+                            <i class="fa fa-lg fa-plus"></i>
+                            Tambah
+                        </button>
+                    </a>
                 </div>
             </div>
             
@@ -38,39 +38,72 @@
                 <thead class="thead-light">
                     <tr>
                         <th scope="col" width="100">NO</th>
-                        <th scope="col">Penjualan</th>
+                        <th scope="col">Jumlah Barang</th>
+                        <th scope="col">Harga Barang</th>
+                        <th scope="col">Total Biaya</th>
                         <th scope="col" width="200">#</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for ($i = 0; $i < 5; $i++)
-                    <tr>
-                        <th>
-                            {{ $i+1 }}
-                        </th>
-                        <td>
-                            4,569
-                        </td>
-                        <td>
-                            <button class="btn btn-danger">
-                                Hapus
-                            </button>
-                            <button 
-                                class="btn btn-success"
-                                data-toggle="modal" 
-                                data-target="#editModal">
-                                Ubah
-                            </button>
-                        </td>
-                    </tr>
-                    @endfor
+                    <?php $i = 1; ?>
+                    @foreach ($transactions as $tr)
+                        <tr>
+                            <th>
+                                {{ $i++ }}
+                            </th>
+                            <td>
+                                {{ $tr->count }}
+                            </td>
+                            <td>
+                                {{ $tr->price_item }}
+                            </td>
+                            <td>
+                                {{ $tr->price_total }}
+                            </td>
+                            <td>
+                                <a 
+                                    href="{{ route('penjualan-remove') }}" 
+                                    onclick="
+                                        event.preventDefault();
+                                        document.getElementById('hapus-items-{{ $tr->idtransactions }}').submit();">
+                                    <button class="btn btn-danger">
+                                        Hapus
+                                    </button>
+                                </a>
+
+                                <form 
+                                    id="hapus-items-{{ $tr->idtransactions }}" 
+                                    action="{{ route('penjualan-remove') }}" 
+                                    method="POST" 
+                                    style="display: none;">
+                                    @csrf
+                                    <input 
+                                        type="hidden" 
+                                        name="idtransactions" 
+                                        value="{{ $tr->idtransactions }}">
+                                </form>
+
+                                <a href="{{ route('penjualan-edit', $tr->idtransactions) }}">
+                                    <button 
+                                        class="btn btn-success"
+                                        data-toggle="modal" 
+                                        data-target="#editModal">
+                                        Ubah
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
+            <div class="col col-8">
+                {{ $transactions->links() }}
+            </div>
         </div>
     </div>
 
     <!-- Modal -->
-    <div 
+    <!-- <div 
         class="modal fade" 
         id="createModal" 
         tabindex="-1" 
@@ -81,7 +114,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createModalLabel">
-                        Buat Penjualan Baru
+                        Buat penjualan Baru
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -92,7 +125,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary">Simpan Penjualan</button>
+                    <button type="button" class="btn btn-primary">Simpan penjualan</button>
                 </div>
             </div>
         </div>
@@ -109,7 +142,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editModalLabel">
-                        Ubah Penjualan
+                        Ubah penjualan
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -124,5 +157,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 @endsection

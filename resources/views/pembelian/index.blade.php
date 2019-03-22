@@ -20,14 +20,14 @@
                     </form>
                 </div>
                 <div class="col-2 text-right">
-                    <button 
-                        type="button" 
-                        class="btn btn-primary" 
-                        data-toggle="modal" 
-                        data-target="#createModal">
-                        <i class="fa fa-lg fa-plus"></i>
-                        Tambah
-                    </button>
+                    <a href="{{ route('pembelian-tambah') }}">
+                        <button 
+                            type="button" 
+                            class="btn btn-primary" >
+                            <i class="fa fa-lg fa-plus"></i>
+                            Tambah
+                        </button>
+                    </a>
                 </div>
             </div>
             
@@ -38,39 +38,76 @@
                 <thead class="thead-light">
                     <tr>
                         <th scope="col" width="100">NO</th>
-                        <th scope="col">Pembelian</th>
+                        <th scope="col">Jumlah Barang</th>
+                        <th scope="col">Harga Barang</th>
+                        <th scope="col">Biaya Gudang</th>
+                        <th scope="col">Status</th>
                         <th scope="col" width="200">#</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for ($i = 0; $i < 5; $i++)
-                    <tr>
-                        <th>
-                            {{ $i+1 }}
-                        </th>
-                        <td>
-                            4,569
-                        </td>
-                        <td>
-                            <button class="btn btn-danger">
-                                Hapus
-                            </button>
-                            <button 
-                                class="btn btn-success"
-                                data-toggle="modal" 
-                                data-target="#editModal">
-                                Ubah
-                            </button>
-                        </td>
-                    </tr>
-                    @endfor
+                    <?php $i = 1; ?>
+                    @foreach ($buying as $by)
+                        <tr>
+                            <th>
+                                {{ $i++ }}
+                            </th>
+                            <td>
+                                {{ $by->count }}
+                            </td>
+                            <td>
+                                {{ $by->price_item }}
+                            </td>
+                            <td>
+                                {{ $by->price_manage }}
+                            </td>
+                            <td>
+                                {{ $by->status }}
+                            </td>
+                            <td>
+                                <a 
+                                    href="{{ route('pembelian-remove') }}" 
+                                    onclick="
+                                        event.preventDefault();
+                                        document.getElementById('hapus-items-{{ $by->idbuying }}').submit();">
+                                    <button class="btn btn-danger">
+                                        Hapus
+                                    </button>
+                                </a>
+
+                                <form 
+                                    id="hapus-items-{{ $by->idbuying }}" 
+                                    action="{{ route('pembelian-remove') }}" 
+                                    method="POST" 
+                                    style="display: none;">
+                                    @csrf
+                                    <input 
+                                        type="hidden" 
+                                        name="idbuying" 
+                                        value="{{ $by->idbuying }}">
+                                </form>
+
+                                <a href="{{ route('pembelian-edit', $by->idbuying) }}">
+                                    <button 
+                                        class="btn btn-success"
+                                        data-toggle="modal" 
+                                        data-target="#editModal">
+                                        Ubah
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
+            <div class="col col-8">
+                {{ $buying->links() }}
+            </div>
         </div>
     </div>
 
     <!-- Modal -->
-    <div 
+    <!-- <div 
         class="modal fade" 
         id="createModal" 
         tabindex="-1" 
@@ -124,5 +161,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 @endsection

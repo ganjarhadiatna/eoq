@@ -47,16 +47,38 @@ Route::middleware('auth')->group(function() {
     Route::get('/barang/edit/{iditems}', 'BarangController@edit')->name('barang-edit');
     
     // crud
+    Route::get('/barang/price_item/{idiems}', 'BarangController@price_item')->name('barang-price-item');
     Route::post('/barang/push', 'BarangController@push')->name('barang-push');
     Route::post('/barang/put', 'BarangController@put')->name('barang-put');
     Route::post('/barang/remove', 'BarangController@remove')->name('barang-remove');
 
     // supplier
     Route::get('/supplier', 'SupplierController@index')->name('supplier');
+    Route::get('/supplier/tambah', 'SupplierController@tambah')->name('supplier-tambah');
+    Route::get('/supplier/edit/{idsuppliers}', 'SupplierController@edit')->name('supplier-edit');
+    
+    // crud
+    Route::post('/supplier/push', 'SupplierController@push')->name('supplier-push');
+    Route::post('/supplier/put', 'SupplierController@put')->name('supplier-put');
+    Route::post('/supplier/remove', 'SupplierController@remove')->name('supplier-remove');
 
     // pembelian
     Route::get('/pembelian', 'PembelianController@index')->name('pembelian');
+    Route::get('/pembelian/tambah', 'PembelianController@tambah')->name('pembelian-tambah');
+    Route::get('/pembelian/edit/{idbuying}', 'PembelianController@edit')->name('pembelian-edit');
+    
+    // crud
+    Route::post('/pembelian/push', 'PembelianController@push')->name('pembelian-push');
+    Route::post('/pembelian/put', 'PembelianController@put')->name('pembelian-put');
+    Route::post('/pembelian/remove', 'PembelianController@remove')->name('pembelian-remove');
 
     // penjualan
     Route::get('/penjualan', 'PenjualanController@index')->name('penjualan');
+    Route::get('/penjualan/tambah', 'PenjualanController@tambah')->name('penjualan-tambah');
+    Route::get('/penjualan/edit/{idtransactions}', 'PenjualanController@edit')->name('penjualan-edit');
+    
+    // crud
+    Route::post('/penjualan/push', 'PenjualanController@push')->name('penjualan-push');
+    Route::post('/penjualan/put', 'PenjualanController@put')->name('penjualan-put');
+    Route::post('/penjualan/remove', 'PenjualanController@remove')->name('penjualan-remove');
 });

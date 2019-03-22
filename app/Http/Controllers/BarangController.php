@@ -47,6 +47,14 @@ class BarangController extends Controller
     }
 
     // CRUD
+    public function price_item($iditems)
+    {
+        $price = Items::where('iditems', $iditems)->value('price');
+        return json_encode([
+            'iditems' => $iditems, 
+            'price' => $price
+        ]);
+    }
     public function push(Request $req)
     {
         $this->validate($req, [
