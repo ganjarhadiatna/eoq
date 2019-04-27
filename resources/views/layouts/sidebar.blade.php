@@ -34,7 +34,19 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('home') }}">
                         <i class="fa fa-lg fa-user-circle text-primary"></i>
-                        Profile
+                        Profil Pengguna
+                    </a>
+                </li>
+            </ul>
+
+            <hr class="my-3">
+            <h6 class="navbar-heading text-muted">Manajemen Persediaan</h6>
+            
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('home') }}">
+                        <i class="fa fa-lg fa-chart-pie text-info"></i>
+                        Pesan Barang
                     </a>
                 </li>
             </ul>
@@ -78,18 +90,6 @@
                     <a class="nav-link" href="{{ route('penjualan') }}">
                         <i class="fa fa-lg fa-edit text-default"></i>
                         Penjualan
-                    </a>
-                </li>
-            </ul>
-            
-            <hr class="my-3">
-            <h6 class="navbar-heading text-muted">Manajemen Persediaan</h6>
-            
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('home') }}">
-                        <i class="fa fa-lg fa-chart text-default"></i>
-                        EOQ
                     </a>
                 </li>
             </ul>
