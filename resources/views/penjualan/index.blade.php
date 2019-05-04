@@ -52,7 +52,7 @@
                                 {{ $i++ }}
                             </th>
                             <td>
-                                {{ $tr->count }}
+                                {{ $tr->total_item }}
                             </td>
                             <td>
                                 {{ $tr->price_item }}

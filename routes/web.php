@@ -81,4 +81,11 @@ Route::middleware('auth')->group(function() {
     Route::post('/penjualan/push', 'PenjualanController@push')->name('penjualan-push');
     Route::post('/penjualan/put', 'PenjualanController@put')->name('penjualan-put');
     Route::post('/penjualan/remove', 'PenjualanController@remove')->name('penjualan-remove');
+
+    // orders
+    Route::get('/pesanan', 'PesananController@index')->name('pesanan');
+    Route::get('/pesanan/tambah', 'PesananController@tambah')->name('pesanan-tambah');
+    Route::get('/pesanan/edit/{idtransactions}', 'PesananController@edit')->name('pesanan-edit');
+
+    // crud
 });

@@ -31,18 +31,18 @@
                     
                 </div>
 
-                <div class="form-group{{ $errors->has('count') ? ' has-danger' : '' }}">
-                    <label class="form-control-label" for="input-count">{{ __('Jumlah barang') }}</label>
+                <div class="form-group{{ $errors->has('total_item') ? ' has-danger' : '' }}">
+                    <label class="form-control-label" for="input-total-item">{{ __('Jumlah barang') }}</label>
                     <input 
                         type="number" 
-                        name="count" 
-                        id="input-count" 
-                        class="form-control form-control-alternative{{ $errors->has('count') ? ' is-invalid' : '' }}" 
+                        name="total_item" 
+                        id="input-total-item" 
+                        class="form-control form-control-alternative{{ $errors->has('total_item') ? ' is-invalid' : '' }}" 
                         placeholder="{{ __('10') }}"  
                         required>
-                        @if ($errors->has('count'))
+                        @if ($errors->has('total_item'))
                             <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('count') }}</strong>
+                                <strong>{{ $errors->first('total_item') }}</strong>
                             </span>
                         @endif
                 </div>
@@ -96,7 +96,7 @@
                 event.preventDefault();
                 /* Act on the event */
                 var iditems = $(this).val();
-                var count = $('#input-count').val();
+                var total_item = $('#input-total-item').val();
                 var url = '{{ url("/barang/price_item/") }}' + '/' + iditems;
 
                 if (iditems != 0) {
@@ -107,7 +107,7 @@
                         dataType: 'json',
                     })
                     .done(function(data) {
-                        var total = data.price * count;
+                        var total = data.price * total_item;
 
                         // console.log(data.price);
                         $('#input-price_item').val(data.price);
@@ -128,8 +128,8 @@
 
             });
 
-            $('#input-count').keyup(function(event) {
-                var total = $('#input-price_item').val() * $('#input-count').val();
+            $('#input-total-item').keyup(function(event) {
+                var total = $('#input-price_item').val() * $('#input-total-item').val();
                 $('#input-price_total').val(total);
             });
 

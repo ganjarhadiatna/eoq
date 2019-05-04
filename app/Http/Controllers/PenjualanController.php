@@ -53,7 +53,7 @@ class PenjualanController extends Controller
     {
         $this->validate($req, [
             'iditems' => ['required', 'int'],
-            'count' => ['required', 'int'],
+            'total_item' => ['required', 'int'],
             'price_item' => ['required', 'int']
         ]);
 
@@ -61,9 +61,9 @@ class PenjualanController extends Controller
         $data = [
             'id' => $id,
             'iditems' => $req['iditems'],
-            'count' => $req['count'],
+            'total_item' => $req['total_item'],
             'price_item' => $req['price_item'],
-            'price_total' => ($req['price_item'] * $req['count']),
+            'price_total' => ($req['price_item'] * $req['total_item']),
         ];
 
         // echo json_encode($data);
@@ -82,7 +82,7 @@ class PenjualanController extends Controller
     {
         $this->validate($req, [
             'iditems' => ['required', 'int'],
-            'count' => ['required', 'int'],
+            'total_item' => ['required', 'int'],
             'price_item' => ['required', 'int']
         ]);
 
@@ -91,9 +91,9 @@ class PenjualanController extends Controller
         $data = [
             'id' => $id,
             'iditems' => $req['iditems'],
-            'count' => $req['count'],
+            'total_item' => $req['total_item'],
             'price_item' => $req['price_item'],
-            'price_total' => ($req['price_item'] * $req['count']),
+            'price_total' => ($req['price_item'] * $req['total_item']),
         ];
 
         if (Transactions::where('idtransactions', $idtransactions)->update($data)) 

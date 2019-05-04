@@ -61,6 +61,9 @@ class BarangController extends Controller
             'title' => ['required', 'string', 'max:150'],
             'stock' => ['required', 'int', 'max:1000'],
             'price' => ['required', 'int', 'max:1000000'],
+            'discount' => ['int', 'min:0', 'max:100'],
+            'price_order' => ['required', 'int', 'max:1000000'],
+            'price_store' => ['required', 'int', 'max:1000000'],
             'expire_date' => ['required', 'date'],
             'idcategories' => ['required', 'int', 'max:10'],
             'idetalase' => ['required', 'int', 'max:10']
@@ -73,6 +76,9 @@ class BarangController extends Controller
             'title' => $req['title'],
             'stock' => $req['stock'],
             'price' => $req['price'],
+            'discount' => $req['discount'],
+            'price_order' => $req['price_order'],
+            'price_store' => $req['price_store'],
             'expire_date' => $req['expire_date']
         ];
 
@@ -94,6 +100,9 @@ class BarangController extends Controller
             'title' => ['required', 'string', 'max:150'],
             'stock' => ['required', 'int', 'max:1000'],
             'price' => ['required', 'int', 'max:1000000'],
+            'discount' => ['int', 'min:0', 'max:100'],
+            'price_order' => ['required', 'int', 'max:1000000'],
+            'price_store' => ['required', 'int', 'max:1000000'],
             'expire_date' => ['required', 'date'],
             'idcategories' => ['required', 'int', 'max:10'],
             'idetalase' => ['required', 'int', 'max:10']
@@ -106,6 +115,9 @@ class BarangController extends Controller
             'title' => $req['title'],
             'stock' => $req['stock'],
             'price' => $req['price'],
+            'discount' => ($req['discount'] / 100),
+            'price_order' => $req['price_order'],
+            'price_store' => $req['price_store'],
             'expire_date' => $req['expire_date']
         ];
 

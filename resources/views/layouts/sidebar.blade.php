@@ -44,7 +44,7 @@
             
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('home') }}">
+                    <a class="nav-link" href="{{ route('pesanan') }}">
                         <i class="fa fa-lg fa-chart-pie text-info"></i>
                         Pesan Barang
                     </a>

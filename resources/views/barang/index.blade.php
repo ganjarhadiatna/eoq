@@ -47,6 +47,9 @@
                         <th scope="col">Brang</th>
                         <th scope="col">Stok</th>
                         <th scope="col">Harga</th>
+                        <th scope="col" width="100">Diskon</th>
+                        <th scope="col">Biaya Pesanan</th>
+                        <th scope="col">Biaya Penyimpanan</th>
                         <th scope="col">Tanggal</th>
                         <th scope="col" width="200">#</th>
                     </tr>
@@ -65,7 +68,16 @@
                                 {{ $etl->stock }}
                             </td>
                             <td>
-                                {{ $etl->price }}
+                                Rp {{ number_format($etl->price) }}
+                            </td>
+                            <td>
+                                {{ $etl->discount * 100 }}%
+                            </td>
+                            <td>
+                                Rp {{ number_format($etl->price_order) }}
+                            </td>
+                            <td>
+                                Rp {{ number_format($etl->price_store) }}
                             </td>
                             <td>
                                 {{ $etl->created_at }}

@@ -123,6 +123,9 @@ CREATE TABLE `items` (
   `title` varchar(150) NOT NULL,
   `stock` int(10) unsigned NOT NULL,
   `price` int(10) unsigned NOT NULL,
+  `discount` double NULL,
+  `price_order` int(10) unsigned NOT NULL,
+  `price_store` int(10) unsigned NOT NULL,
   `expire_date` date NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -239,7 +242,6 @@ DROP TABLE IF EXISTS `transactions`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `transactions` (
   `idtransactions` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `count` int(10) unsigned NOT NULL,
   `price_item` int(10) unsigned NOT NULL,
   `price_total` int(10) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
