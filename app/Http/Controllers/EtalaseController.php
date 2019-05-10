@@ -27,16 +27,16 @@ class EtalaseController extends Controller
      */
     public function index()
     {
-        $etalase = Etalase::orderBy('idetalase', 'desc')->paginate(5);
+        $etalase = Etalase::orderBy('id', 'desc')->paginate(5);
         return view('etalase.index', ['etalase' => $etalase]);
     }
     public function tambah()
     {
         return view('etalase.create');
     }
-    public function edit($idetalase)
+    public function edit($id)
     {
-        $etalase = Etalase::where('idetalase', $idetalase)->get();
+        $etalase = Etalase::where('id', $id)->get();
         return view('etalase.edit', ['etalase' => $etalase]);
     }
 
@@ -47,10 +47,10 @@ class EtalaseController extends Controller
             'etalase' => ['required', 'string', 'max:150'],
         ]);
 
-        $id = Auth::id();
+        $idusers = Auth::id();
         $etalase = $req['etalase'];
         $data = [
-            'id' => $id,
+            'id' => $idusers,
             'etalase' => $etalase
         ];
 
@@ -70,31 +70,31 @@ class EtalaseController extends Controller
             'etalase' => ['required', 'string', 'max:150'],
         ]);
 
-        $id = Auth::id();
-        $idetalase = $req['idetalase'];
+        $idusers = Auth::id();
+        $id = $req['id'];
         $etalase = $req['etalase'];
         $data = [
-            'id' => $id,
+            'id' => $idusers,
             'etalase' => $etalase
         ];
 
-        if (Etalase::where('idetalase', $idetalase)->update($data)) 
+        if (Etalase::where('id', $id)->update($data)) 
         {
              return redirect(route('etalase'));
         } 
         else 
         {
-             return redirect(route('etalase-edit', $idetalase));
+             return redirect(route('etalase-edit', $id));
         }
     }
 
     public function remove(Request $req)
     {
 
-        $id = Auth::id();
-        $idetalase = $req['idetalase'];
+        $idusers = Auth::id();
+        $id = $req['id'];
 
-        if (Etalase::where('idetalase', $idetalase)->delete())
+        if (Etalase::where('id', $id)->delete())
         {
              return redirect(route('etalase'));
         } 

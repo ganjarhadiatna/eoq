@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Transactions;
-Use App\Items;
+use App\Penjualan;
+Use App\Barang;
 
 use Auth;
 
@@ -18,31 +18,37 @@ class PesananController extends Controller
     public function index() {
 
         // variable
-        $idbarang = 2;
+        $id = 2;
 
         // total biaya pesanan
-        $C = Items::where('iditems', $idbarang)->value('price_order');
+        $C = 30000;// Barang::where('id', $id)->value('biaya_pesanan');
 
         // jumlah permintaan costumer
-        $R = Transactions::where('iditems', $idbarang)->count();
+        $R = 8000;// Penjualan::where('id', $id)->count();
 
         // Harga barang
-        $P = Items::where('iditems', $idbarang)->value('price');
+        $P = 10000;// Barang::where('id', $id)->value('harga');
 
         // persentase dari harga barang
-        $T = Items::where('iditems', $idbarang)->value('discount');
+        $T = Barang::where('id', $id)->value('diskon');
 
         // biaya penyimpanan
-        $H = Items::where('iditems', $idbarang)->value('price_store');
+        $H = 3000;// Barang::where('id', $id)->value('biaya_penyimpanan');
+
+        // lead time per-suplier : per-minggu
+        $L = 2;
+
+        // waktu operasional
+        $N = 50;
 
         // jumlah pesanan optimum
-        $Q = number_format(sqrt(((2 * $C * $R) / ($P * $T))), 2);
+        $Q = number_format(sqrt(((2 * $C * $R) / $H)), 0);
 
-        // unit
-        $CR = $C * $R;
-        $HQ = $H * $Q;
-        $Qq = $Q * 2;
-        $TC = number_format(($R * $P) + ($CR / 2) + ($HQ / 2), 2);
+        $TC = ($P * $R) + ($H * $Q);
+
+        $F = $R / $Q;
+
+        $B = ($R * $L) / $N;
 
         echo "<h1>EOQ Sederhana: </h1>";
         echo "Total biaya pesanan: " . $C . "<br>";
@@ -51,9 +57,13 @@ class PesananController extends Controller
         echo "Persentase barang: " . $T . "<br>";
         echo "Biaya penyimpanan: " . $H . "<br>";
         echo "<br>";
-        echo "Jumlah pesanan optimum: " . $Q;
+        echo "Jumlah unit: " . $Q;
         echo "<br><br>";
-        echo "Jumlah unit: " . $TC;
+        echo "Total cost persediaan: " . $TC;
+        echo "<br><br>";
+        echo "Frekuensi pembelian per-tahun: " . $F;
+        echo "<br><br>";
+        echo "Re-order point: " . $B;
     }
 
 }

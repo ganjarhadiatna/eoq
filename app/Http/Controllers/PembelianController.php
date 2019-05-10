@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Buying;
-use App\Items;
+use App\Pembelian;
+use App\Barang;
 use App\Supplier;
 
 use Auth;
@@ -29,27 +29,27 @@ class PembelianController extends Controller
      */
     public function index()
     {
-        $buying = Buying::orderBy('idbuying', 'desc')->paginate(5);
-        return view('pembelian.index', ['buying' => $buying]);
+        $pembelian = Pembelian::orderBy('id', 'desc')->paginate(5);
+        return view('pembelian.index', ['pembelian' => $pembelian]);
     }
     public function tambah()
     {
-        $items = Items::orderBy('iditems', 'desc')->get();
-        $suppliers = Supplier::orderBy('idsuppliers', 'desc')->get();
+        $items = Barang::orderBy('id', 'desc')->get();
+        $suppliers = Supplier::orderBy('id', 'desc')->get();
         return view('pembelian.create', [
             'items' => $items,
             'suppliers' => $suppliers
         ]);
     }
-    public function edit($idbuying)
+    public function edit($id)
     {
-        $buying = Buying::where('idbuying', $idbuying)->get();
-        $items = Items::orderBy('iditems', 'desc')->get();
-        $suppliers = Supplier::orderBy('idsuppliers', 'desc')->get();
+        $pembelian = Pembelian::where('id', $id)->get();
+        $items = Barang::orderBy('id', 'desc')->get();
+        $suppliers = Supplier::orderBy('id', 'desc')->get();
         return view('pembelian.edit', [
             'items' => $items,
             'suppliers' => $suppliers,
-            'buying' => $buying
+            'pembelian' => $pembelian
         ]);
     }
 
@@ -65,9 +65,9 @@ class PembelianController extends Controller
             'price_manage' => ['required', 'int',],
         ]);
 
-        $id = Auth::id();
+        $idusers = Auth::id();
         $data = [
-            'id' => $id,
+            'id' => $idusers,
             'iditems' => $req['iditems'],
             'idsuppliers' => $req['idsuppliers'],
             'count' => $req['count'],
@@ -76,7 +76,7 @@ class PembelianController extends Controller
             'status' => $req['status'],
         ];
 
-        if (Buying::Insert($data)) 
+        if (Pembelian::Insert($data)) 
         {
              return redirect(route('pembelian'));
         } 
@@ -97,10 +97,10 @@ class PembelianController extends Controller
             'price_manage' => ['required', 'int',],
         ]);
 
-        $id = Auth::id();
-        $idbuying = $req['idbuying'];
+        $idusers = Auth::id();
+        $id = $req['id'];
         $data = [
-            'id' => $id,
+            'id' => $idusers,
             'iditems' => $req['iditems'],
             'idsuppliers' => $req['idsuppliers'],
             'count' => $req['count'],
@@ -109,23 +109,23 @@ class PembelianController extends Controller
             'status' => $req['status'],
         ];
 
-        if (Buying::where('idbuying', $idbuying)->update($data)) 
+        if (Pembelian::where('id', $id)->update($data)) 
         {
              return redirect(route('pembelian'));
         } 
         else 
         {
-             return redirect(route('pembelian-edit', $idbuying));
+             return redirect(route('pembelian-edit', $id));
         }
     }
 
     public function remove(Request $req)
     {
 
-        $id = Auth::id();
-        $idbuying = $req['idbuying'];
+        $idusers = Auth::id();
+        $id = $req['id'];
 
-        if (Buying::where('idbuying', $idbuying)->delete())
+        if (Pembelian::where('id', $id)->delete())
         {
              return redirect(route('pembelian'));
         } 

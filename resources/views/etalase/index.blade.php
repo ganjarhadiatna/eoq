@@ -20,20 +20,20 @@
                     </form>
                 </div>
                 <div class="col-2 text-right">
-                    <!-- <button 
+                    <button 
                         type="button" 
                         class="btn btn-primary" 
                         data-toggle="modal" 
                         data-target="#createModal">
                         <i class="fa fa-lg fa-plus"></i>
                         Tambah
-                    </button> -->
-                    <a href="{{ route('etalase-tambah') }}">
+                    </button>
+                    <!-- <a href="{{ route('etalase-tambah') }}">
                         <button type="button" class="btn btn-primary" >
                             <i class="fa fa-lg fa-plus"></i>
                             Tambah
                         </button>
-                    </a>
+                    </a> -->
                 </div>
             </div>
             
@@ -85,11 +85,18 @@
                                         value="{{ $etl->idetalase }}">
                                 </form>
 
-                                <a href="{{ route('etalase-edit', $etl->idetalase) }}">
+                                <button 
+                                    class="btn btn-success" 
+                                    data-toggle="modal" 
+                                    data-target="#createModal">
+                                    Ubah
+                                </button>
+
+                                <!-- <a href="{{ route('etalase-edit', $etl->idetalase) }}">
                                     <button class="btn btn-success">
                                         Ubah
                                     </button>
-                                </a>
+                                </a> -->
                             </td>
                         </tr>
                     @endforeach
@@ -102,7 +109,7 @@
     </div>
 
     <!-- Modal -->
-    <!-- <div 
+    <div 
         class="modal fade" 
         id="createModal" 
         tabindex="-1" 
@@ -128,7 +135,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group{{ $errors->has('etalase') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="input-etalase">{{ __('etalase') }}</label>
+                            <label class="form-control-label" for="input-etalase">{{ __('Etalase') }}</label>
                             <input 
                                 type="text" 
                                 name="etalase" 
@@ -152,9 +159,9 @@
                 </form>
             </div>
         </div>
-    </div> -->
+    </div>
 
-    <!-- <div 
+    <div 
         class="modal fade" 
         id="editModal" 
         tabindex="-1" 
@@ -163,22 +170,46 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">
-                        Ubah etalase
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary">Simpan Perubahan</button>
-                </div>
+                <form 
+                    method="post" 
+                    action="javascript:void(0)" 
+                    autocomplete="off" 
+                    id="form-create"
+                    onsubmit="publish()">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">
+                            Ubah Etalase
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group{{ $errors->has('etalase') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="input-etalase">{{ __('Etalase') }}</label>
+                            <input 
+                                type="text" 
+                                name="etalase" 
+                                id="input-etalase" 
+                                class="form-control form-control-alternative{{ $errors->has('etalase') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('Masukan etalase') }}"  
+                                required 
+                                autofocus>
+
+                            @if ($errors->has('etalase'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('etalase') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div> -->
+    </div>
 @endsection

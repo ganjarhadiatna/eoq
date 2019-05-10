@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Items;
-use App\Category;
+use App\Barang;
+use App\Kategori;
 use App\Etalase;
 
 use Auth;
@@ -29,29 +29,31 @@ class BarangController extends Controller
      */
     public function index()
     {
-        $items = Items::orderBy('iditems', 'desc')->paginate(5);
-        return view('barang.index', ['items' => $items]);
+        $etalase = Etalase::orderBy('id', 'desc')->get();
+        $kategori = Kategori::orderBy('id', 'desc')->get();
+        $barang = Barang::orderBy('id', 'desc')->paginate(5);
+        return view('barang.index', ['barang' => $barang, 'etalase' => $etalase, 'kategori' => $kategori]);
     }
     public function tambah()
     {
-        $etalase = Etalase::orderBy('idetalase', 'desc')->get();
-        $category = Category::orderBy('idcategories', 'desc')->get();
-        return view('barang.create', ['etalase' => $etalase, 'category' => $category]);
+        $etalase = Etalase::orderBy('id', 'desc')->get();
+        $kategori = Kategori::orderBy('id', 'desc')->get();
+        return view('barang.create', ['etalase' => $etalase, 'kategori' => $kategori]);
     }
-    public function edit($iditems)
+    public function edit($id)
     {
-        $items = Items::where('iditems', $iditems)->get();
-        $etalase = Etalase::orderBy('idetalase', 'desc')->get();
-        $category = Category::orderBy('idcategories', 'desc')->get();
-        return view('barang.edit', ['items' => $items, 'etalase' => $etalase, 'category' => $category]);
+        $barang = Barang::where('id', $id)->get();
+        $etalase = Etalase::orderBy('id', 'desc')->get();
+        $kategori = Kategori::orderBy('id', 'desc')->get();
+        return view('barang.edit', ['barang' => $barang, 'etalase' => $etalase, 'kategori' => $kategori]);
     }
 
     // CRUD
-    public function price_item($iditems)
+    public function price_item($id)
     {
-        $price = Items::where('iditems', $iditems)->value('price');
+        $price = Barang::where('id', $id)->value('price');
         return json_encode([
-            'iditems' => $iditems, 
+            'id' => $id, 
             'price' => $price
         ]);
     }
@@ -65,13 +67,13 @@ class BarangController extends Controller
             'price_order' => ['required', 'int', 'max:1000000'],
             'price_store' => ['required', 'int', 'max:1000000'],
             'expire_date' => ['required', 'date'],
-            'idcategories' => ['required', 'int', 'max:10'],
+            'idkategori' => ['required', 'int', 'max:10'],
             'idetalase' => ['required', 'int', 'max:10']
         ]);
 
         $data = [
             'id' => Auth::id(),
-            'idcategories' => $req['idcategories'],
+            'idkategori' => $req['idkategori'],
             'idetalase' => $req['idetalase'],
             'title' => $req['title'],
             'stock' => $req['stock'],
@@ -84,7 +86,7 @@ class BarangController extends Controller
 
         // echo json_encode($data);
 
-        if (Items::Insert($data)) 
+        if (Barang::Insert($data)) 
         {
              return redirect(route('barang'));
         } 
@@ -104,13 +106,13 @@ class BarangController extends Controller
             'price_order' => ['required', 'int', 'max:1000000'],
             'price_store' => ['required', 'int', 'max:1000000'],
             'expire_date' => ['required', 'date'],
-            'idcategories' => ['required', 'int', 'max:10'],
+            'idkategori' => ['required', 'int', 'max:10'],
             'idetalase' => ['required', 'int', 'max:10']
         ]);
 
         $data = [
             'id' => Auth::id(),
-            'idcategories' => $req['idcategories'],
+            'idkategori' => $req['idkategori'],
             'idetalase' => $req['idetalase'],
             'title' => $req['title'],
             'stock' => $req['stock'],
@@ -123,23 +125,23 @@ class BarangController extends Controller
 
         // echo json_encode($data);
 
-        if (Items::where('iditems', $req['iditems'])->update($data)) 
+        if (Barang::where('id', $req['id'])->update($data)) 
         {
             return redirect(route('barang'));
         } 
         else 
         {
-            return redirect(route('barang-edit', $req['iditems']));
+            return redirect(route('barang-edit', $req['id']));
         }
     }
 
     public function remove(Request $req)
     {
 
-        $id = Auth::id();
-        $iditems = $req['iditems'];
+        $idusers = Auth::id();
+        $id = $req['id'];
 
-        if (Items::where('iditems', $iditems)->delete())
+        if (Barang::where('id', $id)->delete())
         {
              return redirect(route('barang'));
         } 

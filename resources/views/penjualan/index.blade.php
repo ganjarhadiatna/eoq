@@ -20,14 +20,22 @@
                     </form>
                 </div>
                 <div class="col-2 text-right">
-                    <a href="{{ route('penjualan-tambah') }}">
+                    <button 
+                        type="button" 
+                        class="btn btn-primary"
+                        data-toggle="modal" 
+                        data-target="#createModal">
+                        <i class="fa fa-lg fa-plus"></i>
+                        Tambah
+                    </button>
+                    <!-- <a href="{{ route('penjualan-tambah') }}">
                         <button 
                             type="button" 
                             class="btn btn-primary" >
                             <i class="fa fa-lg fa-plus"></i>
                             Tambah
                         </button>
-                    </a>
+                    </a> -->
                 </div>
             </div>
             
@@ -46,33 +54,33 @@
                 </thead>
                 <tbody>
                     <?php $i = 1; ?>
-                    @foreach ($transactions as $tr)
+                    @foreach ($penjualan as $tr)
                         <tr>
                             <th>
                                 {{ $i++ }}
                             </th>
                             <td>
-                                {{ $tr->total_item }}
+                                {{ $tr->jumlah_barang }}
                             </td>
                             <td>
-                                {{ $tr->price_item }}
+                                {{ $tr->harga_barang }}
                             </td>
                             <td>
-                                {{ $tr->price_total }}
+                                {{ $tr->total_biaya }}
                             </td>
                             <td>
                                 <a 
                                     href="{{ route('penjualan-remove') }}" 
                                     onclick="
                                         event.preventDefault();
-                                        document.getElementById('hapus-items-{{ $tr->idtransactions }}').submit();">
+                                        document.getElementById('hapus-items-{{ $tr->id }}').submit();">
                                     <button class="btn btn-danger">
                                         Hapus
                                     </button>
                                 </a>
 
                                 <form 
-                                    id="hapus-items-{{ $tr->idtransactions }}" 
+                                    id="hapus-items-{{ $tr->id }}" 
                                     action="{{ route('penjualan-remove') }}" 
                                     method="POST" 
                                     style="display: none;">
@@ -80,30 +88,37 @@
                                     <input 
                                         type="hidden" 
                                         name="idtransactions" 
-                                        value="{{ $tr->idtransactions }}">
+                                        value="{{ $tr->id }}">
                                 </form>
 
-                                <a href="{{ route('penjualan-edit', $tr->idtransactions) }}">
+                                <button 
+                                    data-toggle="modal" 
+                                    data-target="#editModal"
+                                    class="btn btn-success">
+                                    Ubah
+                                </button>
+
+                                <!-- <a href="{{ route('penjualan-edit', $tr->id) }}">
                                     <button 
                                         class="btn btn-success"
                                         data-toggle="modal" 
                                         data-target="#editModal">
                                         Ubah
                                     </button>
-                                </a>
+                                </a> -->
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
             <div class="col col-8">
-                {{ $transactions->links() }}
+                {{ $penjualan->links() }}
             </div>
         </div>
     </div>
 
     <!-- Modal -->
-    <!-- <div 
+    <div 
         class="modal fade" 
         id="createModal" 
         tabindex="-1" 
@@ -114,7 +129,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createModalLabel">
-                        Buat penjualan Baru
+                        Buat Penjualan Baru
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -142,7 +157,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editModalLabel">
-                        Ubah penjualan
+                        Ubah Penjualan
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -157,5 +172,5 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 @endsection

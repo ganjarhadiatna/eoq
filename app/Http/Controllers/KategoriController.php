@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Category;
+use App\Kategori;
 
 use Auth;
 
@@ -29,34 +29,34 @@ class KategoriController extends Controller
      */
     public function index()
     {
-        $category = Category::orderBy('idcategories', 'desc')->paginate(5);
-        return view('kategori.index', ['category' => $category]);
+        $kategori = Kategori::orderBy('id', 'desc')->paginate(5);
+        return view('kategori.index', ['kategori' => $kategori]);
     }
     public function tambah()
     {
         return view('kategori.create');
     }
-    public function edit($idcategories)
+    public function edit($id)
     {
-        $category = Category::where('idcategories', $idcategories)->get();
-        return view('kategori.edit', ['category' => $category]);
+        $kategori = Kategori::where('id', $id)->get();
+        return view('kategori.edit', ['kategori' => $kategori]);
     }
 
     // CRUD
     public function push(Request $req)
     {
         $this->validate($req, [
-            'category' => ['required', 'string', 'max:150'],
+            'kategori' => ['required', 'string', 'max:150'],
         ]);
 
-        $id = Auth::id();
-        $category = $req['category'];
+        $idusers = Auth::id();
+        $kategori = $req['kategori'];
         $data = [
-            'id' => $id,
-            'category' => $category
+            'id' => $idusers,
+            'kategori' => $kategori
         ];
 
-        if (Category::Insert($data)) 
+        if (Kategori::Insert($data)) 
         {
              return redirect(route('kategori'));
         } 
@@ -69,18 +69,18 @@ class KategoriController extends Controller
     public function put(Request $req)
     {
         $this->validate($req, [
-            'category' => ['required', 'string', 'max:150'],
+            'kategori' => ['required', 'string', 'max:150'],
         ]);
 
-        $id = Auth::id();
-        $idcategories = $req['idcategories'];
-        $category = $req['category'];
+        $idusers = Auth::id();
+        $id = $req['id'];
+        $kategori = $req['kategori'];
         $data = [
-            'id' => $id,
-            'category' => $category
+            'id' => $idusers,
+            'kategori' => $kategori
         ];
 
-        if (Category::where('idcategories', $idcategories)->update($data)) 
+        if (Kategori::where('id', $id)->update($data)) 
         {
              return redirect(route('kategori'));
         } 
@@ -93,10 +93,10 @@ class KategoriController extends Controller
     public function remove(Request $req)
     {
 
-        $id = Auth::id();
-        $idcategories = $req['idcategories'];
+        $idusers = Auth::id();
+        $id = $req['id'];
 
-        if (Category::where('idcategories', $idcategories)->delete())
+        if (Kategori::where('id', $id)->delete())
         {
              return redirect(route('kategori'));
         } 

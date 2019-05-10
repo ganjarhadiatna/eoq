@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Transactions;
+use App\Penjualan;
 use App\Items;
 
 use Auth;
@@ -28,23 +28,23 @@ class PenjualanController extends Controller
      */
     public function index()
     {
-        $transactions = Transactions::orderBy('idtransactions', 'desc')->paginate(5);
-        return view('penjualan.index', ['transactions' => $transactions]);
+        $penjualan = Penjualan::orderBy('id', 'desc')->paginate(5);
+        return view('penjualan.index', ['penjualan' => $penjualan]);
     }
     public function tambah()
     {
-        $items = Items::orderBy('iditems', 'desc')->get();
+        $items = Items::orderBy('id', 'desc')->get();
         return view('penjualan.create', [
             'items' => $items,
         ]);
     }
-    public function edit($idtransactions)
+    public function edit($id)
     {
-        $transactions = Transactions::where('idtransactions', $idtransactions)->get();
-        $items = Items::orderBy('iditems', 'desc')->get();
+        $penjualan = Penjualan::where('id', $id)->get();
+        $items = Items::orderBy('id', 'desc')->get();
         return view('penjualan.edit', [
             'items' => $items,
-            'transactions' => $transactions
+            'penjualan' => $penjualan
         ]);
     }
 
@@ -57,9 +57,9 @@ class PenjualanController extends Controller
             'price_item' => ['required', 'int']
         ]);
 
-        $id = Auth::id();
+        $idusers = Auth::id();
         $data = [
-            'id' => $id,
+            'id' => $idusers,
             'iditems' => $req['iditems'],
             'total_item' => $req['total_item'],
             'price_item' => $req['price_item'],
@@ -68,7 +68,7 @@ class PenjualanController extends Controller
 
         // echo json_encode($data);
 
-        if (Transactions::Insert($data)) 
+        if (Penjualan::Insert($data)) 
         {
              return redirect(route('penjualan'));
         } 
@@ -86,33 +86,33 @@ class PenjualanController extends Controller
             'price_item' => ['required', 'int']
         ]);
 
-        $id = Auth::id();
-        $idtransactions = $req['idtransactions'];
+        $idusers = Auth::id();
+        $id = $req['id'];
         $data = [
-            'id' => $id,
+            'id' => $idusers,
             'iditems' => $req['iditems'],
             'total_item' => $req['total_item'],
             'price_item' => $req['price_item'],
             'price_total' => ($req['price_item'] * $req['total_item']),
         ];
 
-        if (Transactions::where('idtransactions', $idtransactions)->update($data)) 
+        if (Penjualan::where('id', $id)->update($data)) 
         {
              return redirect(route('penjualan'));
         } 
         else 
         {
-             return redirect(route('penjualan-edit', $idtransactions));
+             return redirect(route('penjualan-edit', $id));
         }
     }
 
     public function remove(Request $req)
     {
 
-        $id = Auth::id();
-        $idtransactions = $req['idtransactions'];
+        $idusers = Auth::id();
+        $id = $req['id'];
 
-        if (Transactions::where('idtransactions', $idtransactions)->delete())
+        if (Penjualan::where('id', $id)->delete())
         {
              return redirect(route('penjualan'));
         } 

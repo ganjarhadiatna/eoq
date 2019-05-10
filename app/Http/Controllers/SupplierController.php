@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Supplier;
-use App\Items;
+use App\Barang;
 
 use Auth;
 
@@ -28,16 +28,16 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $supplier = Supplier::orderBy('idsuppliers', 'desc')->paginate(5);
+        $supplier = Supplier::orderBy('od', 'desc')->paginate(5);
         return view('supplier.index', ['supplier' => $supplier]);
     }
     public function tambah()
     {
         return view('supplier.create');
     }
-    public function edit($idsuppliers)
+    public function edit($od)
     {
-        $supplier = Supplier::where('idsuppliers', $idsuppliers)->get();
+        $supplier = Supplier::where('od', $od)->get();
         return view('supplier.edit', ['supplier' => $supplier]);
     }
 
@@ -51,9 +51,9 @@ class SupplierController extends Controller
             'address' => ['required', 'string', 'max:150']
         ]);
 
-        $id = Auth::id();
+        $idusers = Auth::id();
         $data = [
-            'id' => $id,
+            'id' => $idusers,
             'name' => $req['name'],
             'email' => $req['email'],
             'phone_number' => $req['phone_number'],
@@ -79,33 +79,33 @@ class SupplierController extends Controller
             'address' => ['required', 'string', 'max:150']
         ]);
 
-        $id = Auth::id();
-        $idsuppliers = $req['idsuppliers'];
+        $idusers = Auth::id();
+        $od = $req['od'];
         $data = [
-            'id' => $id,
+            'id' => $idusers,
             'name' => $req['name'],
             'email' => $req['email'],
             'phone_number' => $req['phone_number'],
             'address' => $req['address']
         ];
 
-        if (Supplier::where('idsuppliers', $idsuppliers)->update($data)) 
+        if (Supplier::where('od', $od)->update($data)) 
         {
              return redirect(route('supplier'));
         } 
         else 
         {
-             return redirect(route('supplier-edit', $idsuppliers));
+             return redirect(route('supplier-edit', $od));
         }
     }
 
     public function remove(Request $req)
     {
 
-        $id = Auth::id();
-        $idsuppliers = $req['idsuppliers'];
+        $idusers = Auth::id();
+        $od = $req['od'];
 
-        if (Supplier::where('idsuppliers', $idsuppliers)->delete())
+        if (Supplier::where('od', $od)->delete())
         {
              return redirect(route('supplier'));
         } 
