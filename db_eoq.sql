@@ -169,10 +169,13 @@ DROP TABLE IF EXISTS `pembelian`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pembelian` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `kode_transaksi` varchar(30) NOT NULL,
   `jumlah_pembelian` int(10) unsigned NOT NULL,
   `harga_barang` int(10) unsigned NOT NULL,
   `biaya_gudang` int(10) unsigned NOT NULL,
   `status` enum('menunggu','peroses','selesai') NOT NULL,
+  `satuan` varchar(30) NOT NULL,
+  `tanggal_pembelian` date NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `idusers` int(10) unsigned NOT NULL,
@@ -206,9 +209,12 @@ DROP TABLE IF EXISTS `penjualan`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `penjualan` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `kode_transaksi` varchar(30) NOT NULL,
   `jumlah_barang` int(10) unsigned NOT NULL,
   `harga_barang` int(10) unsigned NOT NULL,
   `total_biaya` int(10) unsigned NOT NULL,
+  `satuan` varchar(50) NOT NULL,
+  `tanggal_penjualan` date NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `idusers` int(10) unsigned NOT NULL,
@@ -301,4 +307,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-11  0:23:49
+-- Dump completed on 2019-05-11 11:01:51
