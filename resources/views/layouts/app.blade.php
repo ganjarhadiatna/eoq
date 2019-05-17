@@ -11,7 +11,7 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css"> -->
 
     <!-- Styles -->
     <link href="{{ asset('/css/argon.min.css') }}" rel="stylesheet">
@@ -25,6 +25,20 @@
     <script src="{{ asset('/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 
     <script src="{{ asset('/js/argon.js?v=1.0.0') }}"></script>
+
+    <style type="text/css">
+        
+        /*@import url('https://fonts.googleapis.com/css?family=Nunito+Sans');*/
+        @font-face {
+            font-family: "FontFirst";
+            src: url('{{ asset("/fonts/Nunito_Sans/NunitoSans-Regular.ttf") }}');
+        }
+
+        * {
+            font-family: 'FontFirst', sans-serif;
+        }
+
+    </style>
 
 </head>
 <body>

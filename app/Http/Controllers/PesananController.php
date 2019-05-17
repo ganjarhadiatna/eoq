@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Penjualan;
+use App\Pesanan;
 Use App\Barang;
 
 use Auth;
@@ -15,7 +16,7 @@ class PesananController extends Controller
         $this->middleware('auth');
     }
 
-    public function index() {
+    public function eoq() {
 
         // variable
         $id = 2;
@@ -64,6 +65,21 @@ class PesananController extends Controller
         echo "Frekuensi pembelian per-tahun: " . $F;
         echo "<br><br>";
         echo "Re-order point: " . $B;
+    }
+
+    public function index()
+    {
+        $pesanan = Barang::orderBy('id', 'desc')->paginate(5);
+        return view('pesanan.index', ['pesanan' => $pesanan]);
+    }
+    public function tambah()
+    {
+        return view('pesanan.create');
+    }
+    public function edit($id)
+    {
+        $pesanan = Barang::where('id', $id)->get();
+        return view('pesanan.edit', ['pesanan' => $pesanan]);
     }
 
 }

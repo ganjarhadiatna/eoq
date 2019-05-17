@@ -40,22 +40,9 @@
             </ul>
 
             <hr class="my-3">
-            <h6 class="navbar-heading text-muted">Manajemen Persediaan</h6>
-            
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('pesanan') }}">
-                        <i class="fa fa-lg fa-chart-pie text-info"></i>
-                        Pesan Barang
-                    </a>
-                </li>
-            </ul>
-
-            <hr class="my-3">
             <h6 class="navbar-heading text-muted">Master Data</h6>
             
             <ul class="navbar-nav">
-
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('kategori') }}">
                         <i class="fa fa-lg fa-th-list text-green"></i>
@@ -69,15 +56,26 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('supplier') }}">
+                        <i class="fa fa-lg fa-users text-red"></i>
+                        Supplier
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ route('barang') }}">
                         <i class="fa fa-lg fa-star text-blue"></i>
                         Barang
                     </a>
                 </li>
+            </ul>
+
+            <hr class="my-3">
+            <h6 class="navbar-heading text-muted">Transaksi</h6>
+            <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('supplier') }}">
-                        <i class="fa fa-lg fa-users text-red"></i>
-                        Supplier
+                    <a class="nav-link" href="{{ route('pesanan') }}">
+                        <i class="fa fa-lg fa-chart-pie text-info"></i>
+                        Pemesanan
                     </a>
                 </li>
                 <li class="nav-item">

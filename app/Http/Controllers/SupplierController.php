@@ -28,36 +28,40 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $supplier = Supplier::orderBy('od', 'desc')->paginate(5);
+        $supplier = Supplier::orderBy('id', 'desc')->paginate(5);
         return view('supplier.index', ['supplier' => $supplier]);
     }
     public function tambah()
     {
         return view('supplier.create');
     }
-    public function edit($od)
+    public function edit($id)
     {
-        $supplier = Supplier::where('od', $od)->get();
+        $supplier = Supplier::where('id', $id)->get();
         return view('supplier.edit', ['supplier' => $supplier]);
     }
 
     // CRUD
+    public function byid($id)
+    {
+        return json_encode(Supplier::where('id', $id)->get());
+    }
     public function push(Request $req)
     {
         $this->validate($req, [
-            'name' => ['required', 'string', 'max:150'],
+            'nama' => ['required', 'string', 'max:150'],
             'email' => ['required', 'string', 'max:150'],
-            'phone_number' => ['required', 'string', 'max:15'],
-            'address' => ['required', 'string', 'max:150']
+            'no_telpon' => ['required', 'string', 'max:15'],
+            'alamat' => ['required', 'string', 'max:150']
         ]);
 
         $idusers = Auth::id();
         $data = [
-            'id' => $idusers,
-            'name' => $req['name'],
+            'idusers' => $idusers,
+            'nama' => $req['nama'],
             'email' => $req['email'],
-            'phone_number' => $req['phone_number'],
-            'address' => $req['address']
+            'no_telpon' => $req['no_telpon'],
+            'alamat' => $req['alamat']
         ];
 
         if (Supplier::Insert($data)) 
@@ -73,29 +77,29 @@ class SupplierController extends Controller
     public function put(Request $req)
     {
         $this->validate($req, [
-            'name' => ['required', 'string', 'max:150'],
+            'nama' => ['required', 'string', 'max:150'],
             'email' => ['required', 'string', 'max:150'],
-            'phone_number' => ['required', 'string', 'max:15'],
-            'address' => ['required', 'string', 'max:150']
+            'no_telpon' => ['required', 'string', 'max:15'],
+            'alamat' => ['required', 'string', 'max:150']
         ]);
 
         $idusers = Auth::id();
-        $od = $req['od'];
+        $id = $req['id'];
         $data = [
-            'id' => $idusers,
-            'name' => $req['name'],
+            'idusers' => $idusers,
+            'nama' => $req['nama'],
             'email' => $req['email'],
-            'phone_number' => $req['phone_number'],
-            'address' => $req['address']
+            'no_telpon' => $req['no_telpon'],
+            'alamat' => $req['alamat']
         ];
 
-        if (Supplier::where('od', $od)->update($data)) 
+        if (Supplier::where('id', $id)->update($data)) 
         {
              return redirect(route('supplier'));
         } 
         else 
         {
-             return redirect(route('supplier-edit', $od));
+             return redirect(route('supplier'));
         }
     }
 
@@ -103,9 +107,9 @@ class SupplierController extends Controller
     {
 
         $idusers = Auth::id();
-        $od = $req['od'];
+        $id = $req['id'];
 
-        if (Supplier::where('od', $od)->delete())
+        if (Supplier::where('id', $id)->delete())
         {
              return redirect(route('supplier'));
         } 

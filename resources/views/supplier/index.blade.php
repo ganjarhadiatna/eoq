@@ -21,8 +21,7 @@
                 </div>
                 <div class="col-2 text-right">
                     <button 
-                        data-toggle="modal" 
-                        data-target="#createModal"
+                        onclick="openCreateForm()" 
                         class="btn btn-primary" >
                         <i class="fa fa-lg fa-plus"></i>
                         Tambah
@@ -95,8 +94,7 @@
                                 </form>
 
                                 <button 
-                                    data-toggle="modal" 
-                                    data-target="#editModal"
+                                    onclick="openEditForm({{ $sp->id }})" 
                                     class="btn btn-success">
                                     Ubah
                                 </button>
@@ -132,27 +130,31 @@
 
                     <div class="modal-header">
                         <h5 class="modal-title" id="createModalLabel">
-                            Buat Suplier Baru
+                            Tambah Suplier Baru
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button 
+                            type="button" 
+                            class="close" 
+                            onclick="openCreateForm()" 
+                            aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
 
-                        <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="name">{{ __('Nama') }}</label>
+                        <div class="form-group{{ $errors->has('nama') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="nama">{{ __('Nama') }}</label>
                             <input 
                                 type="text" 
-                                name="name" 
-                                id="name" 
+                                name="nama" 
+                                id="nama" 
                                 class="form-control form-control-alternative{{ $errors->has('name') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('Masukan nama') }}"  
                                 required 
                                 autofocus>
-                                @if ($errors->has('name'))
+                                @if ($errors->has('nama'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('name') }}</strong>
+                                        <strong>{{ $errors->first('nama') }}</strong>
                                     </span>
                                 @endif
                         </div>
@@ -173,42 +175,45 @@
                                 @endif
                         </div>
 
-                        <div class="form-group{{ $errors->has('phone_number') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="phone_number">{{ __('Nomor Telpon') }}</label>
+                        <div class="form-group{{ $errors->has('no_telpon') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="no_telpon">{{ __('Nomor Telpon') }}</label>
                             <input 
                                 type="text" 
-                                name="phone_number" 
-                                id="phone_number" 
-                                class="form-control form-control-alternative{{ $errors->has('phone_number') ? ' is-invalid' : '' }}" 
+                                name="no_telpon" 
+                                id="no_telpon" 
+                                class="form-control form-control-alternative{{ $errors->has('no_telpon') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('Masukan nomor telpon') }}"  
                                 required>
-                                @if ($errors->has('phone_number'))
+                                @if ($errors->has('no_telpon'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('phone_number') }}</strong>
+                                        <strong>{{ $errors->first('no_telpon') }}</strong>
                                     </span>
                                 @endif
                         </div>
 
-                        <div class="form-group{{ $errors->has('address') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="address">{{ __('Alamat') }}</label>
+                        <div class="form-group{{ $errors->has('alamat') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="alamat">{{ __('Alamat') }}</label>
                             <input 
-                                type="address" 
-                                name="address" 
-                                id="address" 
-                                class="form-control form-control-alternative{{ $errors->has('address') ? ' is-invalid' : '' }}" 
+                                type="alamat" 
+                                name="alamat" 
+                                id="alamat" 
+                                class="form-control form-control-alternative{{ $errors->has('alamat') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('Masukan alamat') }}"  
                                 required>
-                                @if ($errors->has('address'))
+                                @if ($errors->has('alamat'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('address') }}</strong>
+                                        <strong>{{ $errors->first('alamat') }}</strong>
                                     </span>
                                 @endif
                         </div>
                         
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                        <button type="button" class="btn btn-primary">Simpan Suplier</button>
+                        <button 
+                            type="button" 
+                            class="btn btn-secondary" 
+                            onclick="openCreateForm()">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Tambahkan</button>
                     </div>
                 </div>
             </form>
@@ -224,40 +229,48 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form method="post" action="{{ route('supplier-push') }}" autocomplete="off">
+                <form 
+                    method="post" 
+                    action="{{ route('supplier-put') }}" 
+                    autocomplete="off">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="editModalLabel">
-                            Ubah Suplier
+                            Ubah Data Suplier
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button 
+                            onclick="openEditForm()" 
+                            type="button" 
+                            class="close" 
+                            aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="name">{{ __('Nama') }}</label>
+                        <input type="hidden" name="id" id="ubah_id">
+                        <div class="form-group{{ $errors->has('nama') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="ubah_nama">{{ __('Nama') }}</label>
                             <input 
                                 type="text" 
-                                name="name" 
-                                id="name" 
+                                name="nama" 
+                                id="ubah_nama" 
                                 class="form-control form-control-alternative{{ $errors->has('name') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('Masukan nama') }}"  
                                 required 
                                 autofocus>
-                                @if ($errors->has('name'))
+                                @if ($errors->has('nama'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('name') }}</strong>
+                                        <strong>{{ $errors->first('nama') }}</strong>
                                     </span>
                                 @endif
                         </div>
 
                         <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="email">{{ __('Email') }}</label>
+                            <label class="form-control-label" for="ubah_email">{{ __('Email') }}</label>
                             <input 
                                 type="email" 
                                 name="email" 
-                                id="email" 
+                                id="ubah_email" 
                                 class="form-control form-control-alternative{{ $errors->has('email') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('Masukan email') }}"  
                                 required>
@@ -268,44 +281,104 @@
                                 @endif
                         </div>
 
-                        <div class="form-group{{ $errors->has('phone_number') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="phone_number">{{ __('Nomor Telpon') }}</label>
+                        <div class="form-group{{ $errors->has('no_telpon') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="ubah_no_telpon">{{ __('Nomor Telpon') }}</label>
                             <input 
                                 type="text" 
-                                name="phone_number" 
-                                id="phone_number" 
-                                class="form-control form-control-alternative{{ $errors->has('phone_number') ? ' is-invalid' : '' }}" 
+                                name="no_telpon" 
+                                id="ubah_no_telpon" 
+                                class="form-control form-control-alternative{{ $errors->has('no_telpon') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('Masukan nomor telpon') }}"  
                                 required>
-                                @if ($errors->has('phone_number'))
+                                @if ($errors->has('no_telpon'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('phone_number') }}</strong>
+                                        <strong>{{ $errors->first('no_telpon') }}</strong>
                                     </span>
                                 @endif
                         </div>
 
-                        <div class="form-group{{ $errors->has('address') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="address">{{ __('Alamat') }}</label>
+                        <div class="form-group{{ $errors->has('alamat') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="alamat">{{ __('Alamat') }}</label>
                             <input 
-                                type="address" 
-                                name="address" 
-                                id="address" 
-                                class="form-control form-control-alternative{{ $errors->has('address') ? ' is-invalid' : '' }}" 
+                                type="alamat" 
+                                name="alamat" 
+                                id="ubah_alamat" 
+                                class="form-control form-control-alternative{{ $errors->has('alamat') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('Masukan alamat') }}"  
                                 required>
-                                @if ($errors->has('address'))
+                                @if ($errors->has('alamat'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('address') }}</strong>
+                                        <strong>{{ $errors->first('alamat') }}</strong>
                                     </span>
                                 @endif
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                        <button type="button" class="btn btn-primary">Simpan Perubahan</button>
+                        <button 
+                            onclick="openEditForm()" 
+                            type="button" 
+                            class="btn btn-secondary" 
+                            data-dismiss="modal">Tutup</button>
+                        <button 
+                            type="submit" 
+                            class="btn btn-primary">Simpan Perubahan</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    
+    <script type="text/javascript">
+
+        
+        var clNow = "modal fade";
+        var clOpen = "modal fade show";
+
+        function openEditForm(id = 0) {
+
+            var tr = $('#editModal').attr('class');
+            var route = '{{ url("supplier/byid/") }}' + '/' + id;
+
+            if (tr == clNow) {
+
+                $.ajax({
+                    url: route,
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(data) {
+                    $('#editModal').attr('class', clOpen).show();
+                    $('#ubah_id').val(data[0].id);
+                    $('#ubah_nama').val(data[0].nama);
+                    $('#ubah_email').val(data[0].email);
+                    $('#ubah_no_telpon').val(data[0].no_telpon);
+                    $('#ubah_alamat').val(data[0].alamat);
+
+                    console.log(data);
+                })
+                .fail(function(e) {
+                    console.log("error " + e);
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+                
+
+            } else {
+                $('#editModal').attr('class', clNow).hide();
+            }
+
+        }
+
+        function openCreateForm() {
+            var tr = $('#createModal').attr('class');
+
+            if (tr == clNow) {
+                $('#createModal').attr('class', clOpen).show();
+            } else {
+                $('#createModal').attr('class', clNow).hide();
+            }
+        }
+    </script>
+
 @endsection

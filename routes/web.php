@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function() {
 
     // supplier
     Route::get('/supplier', 'SupplierController@index')->name('supplier');
+    Route::get('/supplier/byid/{idsuppliers}', 'SupplierController@byid')->name('supplier_byid');
     Route::get('/supplier/tambah', 'SupplierController@tambah')->name('supplier-tambah');
     Route::get('/supplier/edit/{idsuppliers}', 'SupplierController@edit')->name('supplier-edit');
     
