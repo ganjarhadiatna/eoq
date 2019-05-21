@@ -41,6 +41,10 @@ class EtalaseController extends Controller
     }
 
     // CRUD
+    public function byid($id)
+    {
+        return json_encode(Etalase::where('id', $id)->get());
+    }
     public function push(Request $req)
     {
         $this->validate($req, [
@@ -50,7 +54,7 @@ class EtalaseController extends Controller
         $idusers = Auth::id();
         $etalase = $req['etalase'];
         $data = [
-            'id' => $idusers,
+            'idusers' => $idusers,
             'etalase' => $etalase
         ];
 
@@ -60,7 +64,7 @@ class EtalaseController extends Controller
         } 
         else 
         {
-             return redirect(route('etalase-tambah'));
+             return redirect(route('etalase'));
         }
     }
 
@@ -74,7 +78,7 @@ class EtalaseController extends Controller
         $id = $req['id'];
         $etalase = $req['etalase'];
         $data = [
-            'id' => $idusers,
+            'idusers' => $idusers,
             'etalase' => $etalase
         ];
 
@@ -84,7 +88,7 @@ class EtalaseController extends Controller
         } 
         else 
         {
-             return redirect(route('etalase-edit', $id));
+             return redirect(route('etalase', $id));
         }
     }
 

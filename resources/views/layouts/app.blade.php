@@ -38,6 +38,10 @@
             font-family: 'FontFirst', sans-serif;
         }
 
+        .modal {
+            overflow-y: auto !important;
+        }
+
     </style>
 
 </head>

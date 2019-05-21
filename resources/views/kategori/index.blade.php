@@ -22,9 +22,8 @@
                 <div class="col-2 text-right">
                     <button 
                         type="button" 
-                        class="btn btn-primary" 
-                        data-toggle="modal" 
-                        data-target="#createModal">
+                        class="btn btn-primary"
+                        onclick="openCreateForm()">
                         <i class="fa fa-lg fa-plus"></i>
                         Tambah
                     </button>
@@ -67,36 +66,37 @@
                                     href="{{ route('kategori-remove') }}" 
                                     onclick="
                                         event.preventDefault();
-                                        document.getElementById('hapus-kategori-{{ $ctr->idcategories }}').submit();">
+                                        document.getElementById('hapus-kategori-{{ $ctr->id }}').submit();">
                                     <button class="btn btn-danger">
                                         Hapus
                                     </button>
                                 </a>
 
                                 <form 
-                                    id="hapus-kategori-{{ $ctr->idcategories }}" 
+                                    id="hapus-kategori-{{ $ctr->id }}" 
                                     action="{{ route('kategori-remove') }}" 
                                     method="POST" 
                                     style="display: none;">
                                     @csrf
                                     <input 
                                         type="hidden" 
-                                        name="idcategories" 
-                                        value="{{ $ctr->idcategories }}">
+                                        name="id" 
+                                        value="{{ $ctr->id }}">
                                 </form>
 
-                                <button 
+                                <!-- <button 
                                     data-toggle="modal" 
                                     data-target="#editModal"
                                     class="btn btn-success">
                                     Ubah
+                                </button> -->
+
+                                <button 
+                                    onclick="openEditForm({{ $ctr->id }})" 
+                                    class="btn btn-success">
+                                    Ubah
                                 </button>
 
-                                <!-- <a href="{{ route('kategori-edit', $ctr->idcategories) }}">
-                                    <button class="btn btn-success">
-                                        Ubah
-                                    </button>
-                                </a> -->
                             </td>
                         </tr>
                     @endforeach
@@ -120,16 +120,19 @@
             <div class="modal-content">
                 <form 
                     method="post" 
-                    action="javascript:void(0)" 
+                    action="{{ route('kategori-push') }}"
                     autocomplete="off" 
-                    id="form-create"
-                    onsubmit="publish()">
+                    id="form-create">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="createModalLabel">
                             Buat Kategori Baru
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button 
+                            type="button" 
+                            class="close" 
+                            onclick="openCreateForm()" 
+                            aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -153,8 +156,13 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan Kategori</button>
+                        <button 
+                            type="button" 
+                            class="btn btn-secondary" 
+                            onclick="openCreateForm()">Tutup</button>
+                        <button 
+                            type="submit" 
+                            class="btn btn-primary">Simpan Kategori</button>
                     </div>
                 </form>
             </div>
@@ -172,26 +180,37 @@
             <div class="modal-content">
                 <form 
                     method="post" 
-                    action="javascript:void(0)" 
+                    action="{{ route('kategori-put') }}"
                     autocomplete="off" 
-                    id="form-create"
-                    onsubmit="publish()">
+                    id="form-edit">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="createModalLabel">
                             Ubah Kategori
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button 
+                            type="button" 
+                            class="close" 
+                            onclick="openEditForm()" 
+                            aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
+                        
+                        <input 
+                            type="hidden" 
+                            name="id" 
+                            id="ubah_id">
+
                         <div class="form-group{{ $errors->has('kategori') ? ' has-danger' : '' }}">
+                            
                             <label class="form-control-label" for="input-kategori">{{ __('Kategori') }}</label>
+
                             <input 
                                 type="text" 
                                 name="kategori" 
-                                id="input-kategori" 
+                                id="ubah_kategori" 
                                 class="form-control form-control-alternative{{ $errors->has('kategori') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('Masukan kategori') }}"  
                                 required 
@@ -205,11 +224,68 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        <button 
+                            type="button" 
+                            class="btn btn-secondary" 
+                            onclick="openEditForm()"
+                            data-dismiss="modal">Tutup</button>
+                        <button 
+                            type="submit" 
+                            class="btn btn-primary">Simpan Perubahan</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+
+        
+        var clNow = "modal fade";
+        var clOpen = "modal fade show";
+
+        function openEditForm(id = 0) {
+
+            var tr = $('#editModal').attr('class');
+            var route = '{{ url("kategori/byid/") }}' + '/' + id;
+
+            if (tr == clNow) {
+
+                $.ajax({
+                    url: route,
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(data) {
+                    $('#editModal').attr('class', clOpen).show();
+                    $('#ubah_id').val(data[0].id);
+                    $('#ubah_kategori').val(data[0].kategori);
+
+                    console.log(data);
+                })
+                .fail(function(e) {
+                    console.log("error " + e);
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+                
+
+            } else {
+                $('#editModal').attr('class', clNow).hide();
+            }
+
+        }
+
+        function openCreateForm() {
+            var tr = $('#createModal').attr('class');
+
+            if (tr == clNow) {
+                $('#createModal').attr('class', clOpen).show();
+            } else {
+                $('#createModal').attr('class', clNow).hide();
+            }
+        }
+    </script>
+
 @endsection

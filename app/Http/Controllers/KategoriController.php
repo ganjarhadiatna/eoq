@@ -43,6 +43,10 @@ class KategoriController extends Controller
     }
 
     // CRUD
+    public function byid($id)
+    {
+        return json_encode(Kategori::where('id', $id)->get());
+    }
     public function push(Request $req)
     {
         $this->validate($req, [
@@ -52,7 +56,7 @@ class KategoriController extends Controller
         $idusers = Auth::id();
         $kategori = $req['kategori'];
         $data = [
-            'id' => $idusers,
+            'idusers' => $idusers,
             'kategori' => $kategori
         ];
 
@@ -62,7 +66,7 @@ class KategoriController extends Controller
         } 
         else 
         {
-             return redirect(route('kategori-tambah'));
+             return redirect(route('kategori'));
         }
     }
 
@@ -76,7 +80,7 @@ class KategoriController extends Controller
         $id = $req['id'];
         $kategori = $req['kategori'];
         $data = [
-            'id' => $idusers,
+            'idusers' => $idusers,
             'kategori' => $kategori
         ];
 
@@ -86,7 +90,7 @@ class KategoriController extends Controller
         } 
         else 
         {
-             return redirect(route('kategori-edit'));
+             return redirect(route('kategori'));
         }
     }
 

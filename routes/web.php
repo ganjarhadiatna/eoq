@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/kategori/edit/{idcategories}', 'KategoriController@edit')->name('kategori-edit');
     
     // crud
+    Route::get('/kategori/byid/{idkategori}', 'KategoriController@byid')->name('kategori_byid');
     Route::post('/kategori/push', 'KategoriController@push')->name('kategori-push');
     Route::post('/kategori/put', 'KategoriController@put')->name('kategori-put');
     Route::post('/kategori/remove', 'KategoriController@remove')->name('kategori-remove');
@@ -37,6 +38,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/etalase/edit/{idetalase}', 'EtalaseController@edit')->name('etalase-edit');
     
     // crud
+    Route::get('/etalase/byid/{idkategori}', 'EtalaseController@byid')->name('etalase_byid');
     Route::post('/etalase/push', 'EtalaseController@push')->name('etalase-push');
     Route::post('/etalase/put', 'EtalaseController@put')->name('etalase-put');
     Route::post('/etalase/remove', 'EtalaseController@remove')->name('etalase-remove');
@@ -47,6 +49,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/barang/edit/{iditems}', 'BarangController@edit')->name('barang-edit');
     
     // crud
+    Route::get('/barang/byid/{idbarang}', 'BarangController@byid')->name('barang_byid');
     Route::get('/barang/price_item/{idiems}', 'BarangController@price_item')->name('barang-price-item');
     Route::post('/barang/push', 'BarangController@push')->name('barang-push');
     Route::post('/barang/put', 'BarangController@put')->name('barang-put');
@@ -89,4 +92,8 @@ Route::middleware('auth')->group(function() {
     Route::get('/pesanan/edit/{idtransactions}', 'PesananController@edit')->name('pesanan-edit');
 
     // crud
+    Route::get('/pesanan/eoq/{idbarang}', 'PesananController@generate_eoq')->name('pesanan-eoq');
+    Route::post('/pesanan/push', 'PesananController@push')->name('pesanan-push');
+    Route::post('/pesanan/remove', 'PesananController@remove')->name('pesanan-remove');
+
 });

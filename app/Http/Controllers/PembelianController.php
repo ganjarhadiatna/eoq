@@ -34,11 +34,11 @@ class PembelianController extends Controller
     }
     public function tambah()
     {
-        $items = Barang::orderBy('id', 'desc')->get();
-        $suppliers = Supplier::orderBy('id', 'desc')->get();
+        $barang = Barang::orderBy('id', 'desc')->get();
+        $supplier = Supplier::orderBy('id', 'desc')->get();
         return view('pembelian.create', [
-            'items' => $items,
-            'suppliers' => $suppliers
+            'barang' => $barang,
+            'supplier' => $supplier
         ]);
     }
     public function edit($id)

@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Penjualan;
-use App\Pesanan;
+use App\Pemesanan;
 Use App\Barang;
+Use App\Supplier;
 
 use Auth;
 
@@ -31,7 +32,7 @@ class PesananController extends Controller
         $P = 10000;// Barang::where('id', $id)->value('harga');
 
         // persentase dari harga barang
-        $T = Barang::where('id', $id)->value('diskon');
+        $T = 0.02;
 
         // biaya penyimpanan
         $H = 3000;// Barang::where('id', $id)->value('biaya_penyimpanan');
@@ -67,10 +68,61 @@ class PesananController extends Controller
         echo "Re-order point: " . $B;
     }
 
+    public function generate_eoq($idbarang)
+    {
+        // $idbarang = $req['idbarang'];
+        // $idsupplier = $req['idsupplier'];
+        $idsupplier = Barang::where('id', $idbarang)->value('idsupplier');
+
+        // total biaya pesanan
+        $C = Barang::where('id', $idbarang)->value('biaya_pemesanan');
+
+        // jumlah permintaan costumer
+        $R = 100;// Penjualan::where('id', $id)->count();
+
+        // Harga barang
+        $P = Barang::where('id', $idbarang)->value('harga_barang');
+
+        // persentase dari harga barang
+        $T = 0.02;
+
+        // biaya penyimpanan
+        $H = Barang::where('id', $idbarang)->value('biaya_penyimpanan');
+
+        // lead time per-suplier : per-minggu
+        $L = Supplier::where('id', $idsupplier)->value('leadtime');
+
+        // waktu operasional
+        $N = 10;
+
+        $Q = number_format(sqrt(((2 * $C * $R) / $H)), 0);
+
+        $TC = ($P * $R) + ($H * $Q);
+
+        $F = number_format(($R / $Q), 2);
+
+        $B = ($R * $L) / $N;
+
+        $data = [
+            'jumlah_unit' => $Q,
+            'total_cost' => $TC,
+            'frekuensi_pembelian' => $F,
+            'reorder_point' => $B
+        ];
+
+        return json_encode($data);
+    }
+
     public function index()
     {
-        $pesanan = Barang::orderBy('id', 'desc')->paginate(5);
-        return view('pesanan.index', ['pesanan' => $pesanan]);
+        $barang = Barang::orderBy('id', 'desc')->get();
+        $supplier = Supplier::orderBy('id', 'desc')->get();
+        $pemesanan = Pemesanan::orderBy('id', 'desc')->paginate(5);
+        return view('pesanan.index', [
+            'barang' => $barang,
+            'supplier' => $supplier,
+            'pemesanan' => $pemesanan
+        ]);
     }
     public function tambah()
     {
@@ -80,6 +132,55 @@ class PesananController extends Controller
     {
         $pesanan = Barang::where('id', $id)->get();
         return view('pesanan.edit', ['pesanan' => $pesanan]);
+    }
+
+    // crud
+    public function push(Request $req)
+    {
+        $this->validate($req, [
+            'idbarang' => ['required', 'integer'],
+            'jumlah_unit' => ['required', 'integer'],
+            'total_cost' => ['required', 'integer'],
+            'frekuensi_pembelian' => ['required'],
+            'reorder_point' => ['required', 'integer']
+        ]);
+
+        $idusers = Auth::id();
+        $data = [
+            'idusers' => $idusers,
+            'idbarang' => $req['idbarang'],
+            'jumlah_unit' => $req['jumlah_unit'],
+            'total_cost' => $req['total_cost'],
+            'frekuensi_pembelian' => $req['frekuensi_pembelian'],
+            'reorder_point' => $req['reorder_point']
+        ];
+
+        // echo json_encode($data);
+
+        if (Pemesanan::Insert($data)) 
+        {
+             return redirect(route('pesanan'));
+        } 
+        else 
+        {
+             return redirect(route('pesanan'));
+        }
+    }
+
+    public function remove(Request $req)
+    {
+
+        $idusers = Auth::id();
+        $id = $req['id'];
+
+        if (Pemesanan::where('id', $id)->delete())
+        {
+             return redirect(route('pesanan'));
+        } 
+        else 
+        {
+             return redirect(route('pesanan'));
+        }
     }
 
 }

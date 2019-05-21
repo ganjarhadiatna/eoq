@@ -48,6 +48,7 @@
                         <th scope="col">Email</th>
                         <th scope="col">Nomor Telpon</th>
                         <th scope="col">Alamat</th>
+                        <th scope="col">Leadtime</th>
                         <th scope="col" width="200">#</th>
                     </tr>
                 </thead>
@@ -69,6 +70,9 @@
                             </td>
                             <td>
                                 {{ $sp->alamat }}
+                            </td>
+                            <td>
+                                {{ $sp->leadtime }}
                             </td>
                             <td>
                                 <a 
@@ -194,7 +198,7 @@
                         <div class="form-group{{ $errors->has('alamat') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="alamat">{{ __('Alamat') }}</label>
                             <input 
-                                type="alamat" 
+                                type="text" 
                                 name="alamat" 
                                 id="alamat" 
                                 class="form-control form-control-alternative{{ $errors->has('alamat') ? ' is-invalid' : '' }}" 
@@ -203,6 +207,22 @@
                                 @if ($errors->has('alamat'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('alamat') }}</strong>
+                                    </span>
+                                @endif
+                        </div>
+
+                        <div class="form-group{{ $errors->has('leadtime') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="leadtime">{{ __('Leadtime') }}</label>
+                            <input 
+                                type="number" 
+                                name="leadtime" 
+                                id="leadtime" 
+                                class="form-control form-control-alternative{{ $errors->has('leadtime') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('Masukan leadtime') }}"  
+                                required>
+                                @if ($errors->has('leadtime'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('leadtime') }}</strong>
                                     </span>
                                 @endif
                         </div>
@@ -312,6 +332,23 @@
                                     </span>
                                 @endif
                         </div>
+
+                        <div class="form-group{{ $errors->has('leadtime') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="leadtime">{{ __('Leadtime') }}</label>
+                            <input 
+                                type="number" 
+                                name="leadtime" 
+                                id="ubah_leadtime" 
+                                class="form-control form-control-alternative{{ $errors->has('leadtime') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('Masukan leadtime') }}"  
+                                required>
+                                @if ($errors->has('leadtime'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('leadtime') }}</strong>
+                                    </span>
+                                @endif
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button 
@@ -353,6 +390,7 @@
                     $('#ubah_email').val(data[0].email);
                     $('#ubah_no_telpon').val(data[0].no_telpon);
                     $('#ubah_alamat').val(data[0].alamat);
+                    $('#ubah_leadtime').val(data[0].leadtime);
 
                     console.log(data);
                 })

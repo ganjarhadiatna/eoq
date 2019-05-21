@@ -15,168 +15,100 @@
                                     <i class="fa fa-lg fa-search"></i>
                                 </span>
                             </div>
-                            <input class="form-control" placeholder="Cari pembelian" type="text">
+                            <input class="form-control" placeholder="Cari pesanan" type="text">
                         </div>
                     </form>
                 </div>
                 <div class="col-2 text-right">
-                    
-                    <button 
-                        type="button" 
-                        class="btn btn-primary"
-                        data-toggle="modal" 
-                        data-target="#createModal">
-                        <i class="fa fa-lg fa-plus"></i>
-                        Tambah
-                    </button>
-
-                    <!-- <a href="{{ route('pembelian-tambah') }}">
-                        <button 
-                            type="button" 
-                            class="btn btn-primary" >
-                            <i class="fa fa-lg fa-plus"></i>
-                            Tambah
-                        </button>
-                    </a> -->
+                	<a href="{{ route('pesanan') }}">
+	                    <button 
+	                        class="btn btn-primary" >
+	                        <i class="fa fa-lg fa-plus"></i>
+	                        Tambah
+	                    </button>
+	                </a>
                 </div>
             </div>
-            
         </div>
+
         <div class="table-responsive">
             <!-- Projects table -->
             <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col" width="100">NO</th>
-                        <th scope="col">Jumlah Barang</th>
-                        <th scope="col">Harga Barang</th>
-                        <th scope="col">Biaya Gudang</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">Nama</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Nomor Telpon</th>
+                        <th scope="col">Alamat</th>
                         <th scope="col" width="200">#</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $i = 1; ?>
-                    @foreach ($pembelian as $by)
-                        <tr>
-                            <th>
-                                {{ $i++ }}
-                            </th>
-                            <td>
-                                {{ $by->jumlah_pembelian }}
-                            </td>
-                            <td>
-                                {{ $by->harga_barang }}
-                            </td>
-                            <td>
-                                {{ $by->biaya_gudang }}
-                            </td>
-                            <td>
-                                {{ $by->status }}
-                            </td>
-                            <td>
-                                <a 
-                                    href="{{ route('pembelian-remove') }}" 
-                                    onclick="
-                                        event.preventDefault();
-                                        document.getElementById('hapus-items-{{ $by->id }}').submit();">
-                                    <button class="btn btn-danger">
-                                        Hapus
-                                    </button>
-                                </a>
-
-                                <form 
-                                    id="hapus-items-{{ $by->id }}" 
-                                    action="{{ route('pembelian-remove') }}" 
-                                    method="POST" 
-                                    style="display: none;">
-                                    @csrf
-                                    <input 
-                                        type="hidden" 
-                                        name="idpembelian" 
-                                        value="{{ $by->id }}">
-                                </form>
-
-                                <button 
-                                    data-toggle="modal" 
-                                    data-target="#editModal"
-                                    class="btn btn-success">
-                                    Ubah
-                                </button>
-
-                                <!-- <a href="{{ route('pembelian-edit', $by->id) }}">
-                                    <button 
-                                        class="btn btn-success"
-                                        data-toggle="modal" 
-                                        data-target="#editModal">
-                                        Ubah
-                                    </button>
-                                </a> -->
-                            </td>
-                        </tr>
-                    @endforeach
+                	<tr>
+                		<th></th>
+                		<th></th>
+                		<th></th>
+                		<th></th>
+                		<th></th>
+                	</tr>
                 </tbody>
             </table>
-            <div class="col col-8">
-                {{ $pembelian->links() }}
-            </div>
         </div>
+
     </div>
 
-    <!-- Modal -->
-    <div 
-        class="modal fade" 
-        id="createModal" 
-        tabindex="-1" 
-        role="dialog" 
-        aria-labelledby="createModalLabel" 
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createModalLabel">
-                        Buat Pembelian Baru
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary">Simpan Pembelian</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <script type="text/javascript">
 
-    <div 
-        class="modal fade" 
-        id="editModal" 
-        tabindex="-1" 
-        role="dialog" 
-        aria-labelledby="editModalLabel" 
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">
-                        Ubah Pembelian
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary">Simpan Perubahan</button>
-                </div>
-            </div>
-        </div>
-    </div>
+        
+        var clNow = "modal fade";
+        var clOpen = "modal fade show";
+
+        function openEditForm(id = 0) {
+
+            var tr = $('#editModal').attr('class');
+            var route = '{{ url("supplier/byid/") }}' + '/' + id;
+
+            if (tr == clNow) {
+
+                $.ajax({
+                    url: route,
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(data) {
+                    $('#editModal').attr('class', clOpen).show();
+                    $('#ubah_id').val(data[0].id);
+                    $('#ubah_nama').val(data[0].nama);
+                    $('#ubah_email').val(data[0].email);
+                    $('#ubah_no_telpon').val(data[0].no_telpon);
+                    $('#ubah_alamat').val(data[0].alamat);
+
+                    console.log(data);
+                })
+                .fail(function(e) {
+                    console.log("error " + e);
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+                
+
+            } else {
+                $('#editModal').attr('class', clNow).hide();
+            }
+
+        }
+
+        function openCreateForm() {
+            var tr = $('#createModal').attr('class');
+
+            if (tr == clNow) {
+                $('#createModal').attr('class', clOpen).show();
+            } else {
+                $('#createModal').attr('class', clNow).hide();
+            }
+        }
+    </script>
+
 @endsection

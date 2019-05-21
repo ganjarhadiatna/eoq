@@ -23,8 +23,7 @@
                     <button 
                         type="button" 
                         class="btn btn-primary" 
-                        data-toggle="modal" 
-                        data-target="#createModal">
+                        onclick="openCreateForm()" >
                         <i class="fa fa-lg fa-plus"></i>
                         Tambah
                     </button>
@@ -44,12 +43,13 @@
                 <thead class="thead-light">
                     <tr>
                         <th scope="col" width="100">NO</th>
-                        <th scope="col">Brang</th>
+                        <th scope="col">Barang</th>
                         <th scope="col">Stok</th>
                         <th scope="col">Harga</th>
-                        <th scope="col" width="100">Diskon</th>
+                        <!-- <th scope="col" width="100">Diskon</th> -->
                         <th scope="col">Biaya Pesanan</th>
                         <th scope="col">Biaya Penyimpanan</th>
+                        <th scope="col">Tanggal Kadaluarsa</th>
                         <th scope="col">Tanggal</th>
                         <th scope="col" width="200">#</th>
                     </tr>
@@ -62,22 +62,25 @@
                                 {{ $i++ }}
                             </th>
                             <td>
-                                {{ $etl->judul }}
+                                {{ $etl->nama_barang }}
                             </td>
                             <td>
                                 {{ $etl->stok }}
                             </td>
                             <td>
-                                Rp {{ number_format($etl->harga) }}
+                                Rp {{ number_format($etl->harga_barang) }}
                             </td>
-                            <td>
+                            <!-- <td>
                                 {{ $etl->diskon * 100 }}%
-                            </td>
+                            </td> -->
                             <td>
-                                Rp {{ number_format($etl->biaya_pesanan) }}
+                                Rp {{ number_format($etl->biaya_pemesanan) }}
                             </td>
                             <td>
                                 Rp {{ number_format($etl->biaya_penyimpanan) }}
+                            </td>
+                            <td>
+                                {{ $etl->tanggal_kadaluarsa }}
                             </td>
                             <td>
                                 {{ $etl->created_at }}
@@ -106,8 +109,7 @@
                                 </form>
 
                                 <button 
-                                    data-toggle="modal" 
-                                    data-target="#editModal"
+                                    onclick="openEditForm({{ $etl->id }})"
                                     class="btn btn-success">
                                     Ubah
                                 </button>
@@ -138,78 +140,75 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px">
             <div class="modal-content">
-                <form 
-                    method="post" 
-                    action="javascript:void(0)" 
-                    autocomplete="off" 
-                    id="form-create"
-                    onsubmit="publish()">
+                <form method="post" action="{{ route('barang-push') }}" autocomplete="off">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="createModalLabel">
                             Tambah Barang Baru
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button 
+                            onclick="openCreateForm()" 
+                            type="button" class="close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group{{ $errors->has('title') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="title">{{ __('Nama Barang *') }}</label>
+                        <div class="form-group{{ $errors->has('nama_barang') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="nama_barang">{{ __('Nama Barang *') }}</label>
                             <input 
                                 type="text" 
-                                name="title" 
-                                id="title" 
-                                class="form-control form-control-alternative{{ $errors->has('title') ? ' is-invalid' : '' }}" 
+                                name="nama_barang" 
+                                id="nama_barang" 
+                                class="form-control form-control-alternative{{ $errors->has('nama_barang') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('Nama barang') }}"  
                                 required 
                                 autofocus>
-                                @if ($errors->has('title'))
+                                @if ($errors->has('nama_barang'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('title') }}</strong>
+                                        <strong>{{ $errors->first('nama_barang') }}</strong>
                                     </span>
                                 @endif
                             
                         </div>
 
-                        <div class="form-group{{ $errors->has('stock') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="stock">{{ __('Stok *') }}</label>
+                        <div class="form-group{{ $errors->has('stok') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="stok">{{ __('Stok *') }}</label>
                             <input 
                                 type="number" 
-                                name="stock" 
-                                id="stock" 
-                                class="form-control form-control-alternative{{ $errors->has('stock') ? ' is-invalid' : '' }}" 
+                                name="stok" 
+                                id="stok" 
+                                class="form-control form-control-alternative{{ $errors->has('stok') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('1 .. 1000') }}"  
                                 min="0"
                                 max="1000"
                                 required >
-                                @if ($errors->has('stock'))
+                                @if ($errors->has('stok'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('stock') }}</strong>
+                                        <strong>{{ $errors->first('stok') }}</strong>
                                     </span>
                                 @endif
                             
                         </div>
 
-                        <div class="form-group{{ $errors->has('price') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="price">{{ __('Harga *') }}</label>
+                        <div class="form-group{{ $errors->has('harga_barang') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="harga_barang">{{ __('Harga *') }}</label>
                             <input 
                                 type="number" 
-                                name="price" 
-                                id="price" 
-                                class="form-control form-control-alternative{{ $errors->has('price') ? ' is-invalid' : '' }}" 
+                                name="harga_barang" 
+                                id="harga_barang" 
+                                class="form-control form-control-alternative{{ $errors->has('harga_barang') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('500000') }}"  
                                 min="0"
                                 required >
-                                @if ($errors->has('price'))
+                                @if ($errors->has('harga_barang'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('price') }}</strong>
+                                        <strong>{{ $errors->first('harga_barang') }}</strong>
                                     </span>
                                 @endif
                             
                         </div>
 
-                        <div class="form-group{{ $errors->has('discount') ? ' has-danger' : '' }}">
+                        <!-- <div class="form-group{{ $errors->has('discount') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="discount">{{ __('Diskon dalam persen (ex: 25)') }}</label>
                             <input 
                                 type="number" 
@@ -226,62 +225,62 @@
                                     </span>
                                 @endif
                             
-                        </div>
+                        </div> -->
 
-                        <div class="form-group{{ $errors->has('price_order') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="price">{{ __('Biaya pemesanan barang *') }}</label>
+                        <div class="form-group{{ $errors->has('biaya_pemesanan') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="biaya_pemesanan">{{ __('Biaya pemesanan barang *') }}</label>
                             <input 
                                 type="number" 
-                                name="price_order" 
-                                id="price-order" 
-                                class="form-control form-control-alternative{{ $errors->has('price_order') ? ' is-invalid' : '' }}" 
+                                name="biaya_pemesanan" 
+                                id="biaya_pemesanan" 
+                                class="form-control form-control-alternative{{ $errors->has('biaya_pemesanan') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('500000') }}"  
                                 min="0"
                                 required >
-                                @if ($errors->has('price_order'))
+                                @if ($errors->has('biaya_pemesanan'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('price') }}</strong>
+                                        <strong>{{ $errors->first('biaya_pemesanan') }}</strong>
                                     </span>
                                 @endif
                             
                         </div>
 
-                        <div class="form-group{{ $errors->has('price_store') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="price">{{ __('Biaya penyimpanan barang *') }}</label>
+                        <div class="form-group{{ $errors->has('biaya_penyimpanan') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="biaya_penyimpanan">{{ __('Biaya penyimpanan barang *') }}</label>
                             <input 
                                 type="number" 
-                                name="price_store" 
-                                id="price_store" 
-                                class="form-control form-control-alternative{{ $errors->has('price_store') ? ' is-invalid' : '' }}" 
+                                name="biaya_penyimpanan" 
+                                id="biaya_penyimpanan" 
+                                class="form-control form-control-alternative{{ $errors->has('biaya_penyimpanan') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('500000') }}"  
                                 min="0"
                                 required >
-                                @if ($errors->has('price_store'))
+                                @if ($errors->has('biaya_penyimpanan'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('price') }}</strong>
+                                        <strong>{{ $errors->first('biaya_penyimpanan') }}</strong>
                                     </span>
                                 @endif
                             
                         </div>
 
-                        <div class="form-group{{ $errors->has('expire_date') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="expire_date">{{ __('Tanggal kadaluarsa *') }}</label>
+                        <div class="form-group{{ $errors->has('tanggal_kadaluarsa') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="tanggal_kadaluarsa">{{ __('Tanggal kadaluarsa *') }}</label>
                             <input 
                                 type="date" 
-                                name="expire_date" 
-                                id="expire_date" 
-                                class="form-control form-control-alternative{{ $errors->has('expire_date') ? ' is-invalid' : '' }}" 
+                                name="tanggal_kadaluarsa" 
+                                id="tanggal_kadaluarsa" 
+                                class="form-control form-control-alternative{{ $errors->has('tanggal_kadaluarsa') ? ' is-invalid' : '' }}" 
                                 required >
-                                @if ($errors->has('expire_date'))
+                                @if ($errors->has('tanggal_kadaluarsa'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('expire_date') }}</strong>
+                                        <strong>{{ $errors->first('tanggal_kadaluarsa') }}</strong>
                                     </span>
                                 @endif
                             
                         </div>
 
                         <div class="form-group{{ $errors->has('idkategori') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="idkategori">{{ __('Kategori *') }}</label>
+                            <label class="form-control-label" for="idkategori">{{ __('Pilih Kategori *') }}</label>
                             <select 
                                 name="idkategori" 
                                 id="idkategori" 
@@ -300,7 +299,7 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('idetalase') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="idetalase">{{ __('Etalase *') }}</label>
+                            <label class="form-control-label" for="idetalase">{{ __('Pilih Etalase *') }}</label>
                             <select 
                                 name="idetalase" 
                                 id="idetalase" 
@@ -317,10 +316,35 @@
                                 @endif
                             
                         </div>
+
+                        <div class="form-group{{ $errors->has('idsupplier') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="idsupplier">{{ __('Pilih Supplier *') }}</label>
+                            <select 
+                                name="idsupplier" 
+                                id="idsupplier" 
+                                class="form-control form-control-alternative{{ $errors->has('idsupplier') ? ' is-invalid' : '' }}" 
+                                required>
+                                @foreach ($supplier as $sup)
+                                    <option value="{{ $sup->id }}">{{ $sup->nama }}</option>
+                                @endforeach
+                            </select>
+                                @if ($errors->has('idsupplier'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('idsupplier') }}</strong>
+                                    </span>
+                                @endif
+                            
+                        </div>
+
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan barang</button>
+                        <button 
+                            type="button" 
+                            class="btn btn-secondary" 
+                            onclick="openCreateForm()">Tutup</button>
+                        <button 
+                            type="submit" 
+                            class="btn btn-primary">Simpan barang</button>
                     </div>
                 </form>
             </div>
@@ -336,83 +360,84 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px">
             <div class="modal-content">
-                <form 
-                    method="post" 
-                    action="javascript:void(0)" 
-                    autocomplete="off" 
-                    id="form-create"
-                    onsubmit="publish()">
+                <form method="post" action="{{ route('barang-put') }}" autocomplete="off">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="createModalLabel">
                             Ubah Barang
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button 
+                            onclick="openEditForm()"
+                            type="button" 
+                            class="close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group{{ $errors->has('title') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="title">{{ __('Nama Barang *') }}</label>
+                        
+                        <input type="hidden" name="id" id="ubah_id">
+
+                        <div class="form-group{{ $errors->has('nama_barang') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="nama_barang">{{ __('Nama Barang *') }}</label>
                             <input 
                                 type="text" 
-                                name="title" 
-                                id="title" 
-                                class="form-control form-control-alternative{{ $errors->has('title') ? ' is-invalid' : '' }}" 
+                                name="nama_barang" 
+                                id="ubah_nama_barang" 
+                                class="form-control form-control-alternative{{ $errors->has('nama_barang') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('Nama barang') }}"  
                                 required 
                                 autofocus>
-                                @if ($errors->has('title'))
+                                @if ($errors->has('nama_barang'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('title') }}</strong>
+                                        <strong>{{ $errors->first('nama_barang') }}</strong>
                                     </span>
                                 @endif
                             
                         </div>
 
-                        <div class="form-group{{ $errors->has('stock') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="stock">{{ __('Stok *') }}</label>
+                        <div class="form-group{{ $errors->has('stok') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="stok">{{ __('Stok *') }}</label>
                             <input 
                                 type="number" 
-                                name="stock" 
-                                id="stock" 
-                                class="form-control form-control-alternative{{ $errors->has('stock') ? ' is-invalid' : '' }}" 
+                                name="stok" 
+                                id="ubah_stok" 
+                                class="form-control form-control-alternative{{ $errors->has('stok') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('1 .. 1000') }}"  
                                 min="0"
                                 max="1000"
                                 required >
-                                @if ($errors->has('stock'))
+                                @if ($errors->has('stok'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('stock') }}</strong>
+                                        <strong>{{ $errors->first('stok') }}</strong>
                                     </span>
                                 @endif
                             
                         </div>
 
-                        <div class="form-group{{ $errors->has('price') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="price">{{ __('Harga *') }}</label>
+                        <div class="form-group{{ $errors->has('harga_barang') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="harga_barang">{{ __('Harga *') }}</label>
                             <input 
                                 type="number" 
-                                name="price" 
-                                id="price" 
-                                class="form-control form-control-alternative{{ $errors->has('price') ? ' is-invalid' : '' }}" 
+                                name="harga_barang" 
+                                id="ubah_harga_barang" 
+                                class="form-control form-control-alternative{{ $errors->has('harga_barang') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('500000') }}"  
                                 min="0"
                                 required >
-                                @if ($errors->has('price'))
+                                @if ($errors->has('harga_barang'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('price') }}</strong>
+                                        <strong>{{ $errors->first('harga_barang') }}</strong>
                                     </span>
                                 @endif
                             
                         </div>
 
-                        <div class="form-group{{ $errors->has('discount') ? ' has-danger' : '' }}">
+                        <!-- <div class="form-group{{ $errors->has('discount') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="discount">{{ __('Diskon dalam persen (ex: 25)') }}</label>
                             <input 
                                 type="number" 
                                 name="discount" 
-                                id="discount" 
+                                id="ubah_discount" 
                                 class="form-control form-control-alternative{{ $errors->has('discount') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('0 - 100') }}"  
                                 min="0"
@@ -424,69 +449,69 @@
                                     </span>
                                 @endif
                             
-                        </div>
+                        </div> -->
 
-                        <div class="form-group{{ $errors->has('price_order') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="price">{{ __('Biaya pemesanan barang *') }}</label>
+                        <div class="form-group{{ $errors->has('biaya_pemesanan') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="biaya_pemesanan">{{ __('Biaya pemesanan barang *') }}</label>
                             <input 
                                 type="number" 
-                                name="price_order" 
-                                id="price-order" 
-                                class="form-control form-control-alternative{{ $errors->has('price_order') ? ' is-invalid' : '' }}" 
+                                name="biaya_pemesanan" 
+                                id="ubah_biaya_pemesanan" 
+                                class="form-control form-control-alternative{{ $errors->has('biaya_pemesanan') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('500000') }}"  
                                 min="0"
                                 required >
-                                @if ($errors->has('price_order'))
+                                @if ($errors->has('biaya_pemesanan'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('price') }}</strong>
+                                        <strong>{{ $errors->first('biaya_pemesanan') }}</strong>
                                     </span>
                                 @endif
                             
                         </div>
 
-                        <div class="form-group{{ $errors->has('price_store') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="price">{{ __('Biaya penyimpanan barang *') }}</label>
+                        <div class="form-group{{ $errors->has('biaya_penyimpanan') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="biaya_penyimpanan">{{ __('Biaya penyimpanan barang *') }}</label>
                             <input 
                                 type="number" 
-                                name="price_store" 
-                                id="price_store" 
-                                class="form-control form-control-alternative{{ $errors->has('price_store') ? ' is-invalid' : '' }}" 
+                                name="biaya_penyimpanan" 
+                                id="ubah_biaya_penyimpanan" 
+                                class="form-control form-control-alternative{{ $errors->has('biaya_penyimpanan') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('500000') }}"  
                                 min="0"
                                 required >
-                                @if ($errors->has('price_store'))
+                                @if ($errors->has('biaya_penyimpanan'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('price') }}</strong>
+                                        <strong>{{ $errors->first('biaya_penyimpanan') }}</strong>
                                     </span>
                                 @endif
                             
                         </div>
 
-                        <div class="form-group{{ $errors->has('expire_date') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="expire_date">{{ __('Tanggal kadaluarsa *') }}</label>
+                        <div class="form-group{{ $errors->has('tanggal_kadaluarsa') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="tanggal_kadaluarsa">{{ __('Tanggal kadaluarsa *') }}</label>
                             <input 
                                 type="date" 
-                                name="expire_date" 
-                                id="expire_date" 
-                                class="form-control form-control-alternative{{ $errors->has('expire_date') ? ' is-invalid' : '' }}" 
+                                name="tanggal_kadaluarsa" 
+                                id="ubah_tanggal_kadaluarsa" 
+                                class="form-control form-control-alternative{{ $errors->has('tanggal_kadaluarsa') ? ' is-invalid' : '' }}" 
                                 required >
-                                @if ($errors->has('expire_date'))
+                                @if ($errors->has('tanggal_kadaluarsa'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('expire_date') }}</strong>
+                                        <strong>{{ $errors->first('tanggal_kadaluarsa') }}</strong>
                                     </span>
                                 @endif
                             
                         </div>
 
                         <div class="form-group{{ $errors->has('idkategori') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="idkategori">{{ __('Kategori *') }}</label>
+                            <label class="form-control-label" for="idkategori">{{ __('Pilih Kategori *') }}</label>
                             <select 
                                 name="idkategori" 
-                                id="idkategori" 
+                                id="ubah_idkategori" 
                                 class="form-control form-control-alternative{{ $errors->has('idkategori') ? ' is-invalid' : '' }}" 
                                 required>
                                 @foreach ($kategori as $ctr)
-                                    <option value="{{ $ctr->idkategori }}">{{ $ctr->kategori }}</option>
+                                    <option value="{{ $ctr->id }}">{{ $ctr->kategori }}</option>
                                 @endforeach
                             </select>
                                 @if ($errors->has('idkategori'))
@@ -498,10 +523,10 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('idetalase') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="idetalase">{{ __('Etalase *') }}</label>
+                            <label class="form-control-label" for="idetalase">{{ __('Pilih Etalase *') }}</label>
                             <select 
                                 name="idetalase" 
-                                id="idetalase" 
+                                id="ubah_idetalase" 
                                 class="form-control form-control-alternative{{ $errors->has('idetalase') ? ' is-invalid' : '' }}" 
                                 required>
                                 @foreach ($etalase as $etl)
@@ -515,13 +540,97 @@
                                 @endif
                             
                         </div>
+
+                        <div class="form-group{{ $errors->has('idsupplier') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="idsupplier">{{ __('Pilih Supplier *') }}</label>
+                            <select 
+                                name="idsupplier" 
+                                id="ubah_idsupplier" 
+                                class="form-control form-control-alternative{{ $errors->has('idsupplier') ? ' is-invalid' : '' }}" 
+                                required>
+                                @foreach ($supplier as $sup)
+                                    <option value="{{ $sup->id }}">{{ $sup->nama }}</option>
+                                @endforeach
+                            </select>
+                                @if ($errors->has('idsupplier'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('idsupplier') }}</strong>
+                                    </span>
+                                @endif
+                            
+                        </div>
+
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        <button 
+                            type="button" 
+                            class="btn btn-secondary"
+                            onclick="openEditForm()">Tutup</button>
+                        <button 
+                            type="submit" 
+                            class="btn btn-primary">Simpan perubahan</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+
+        
+        var clNow = "modal fade";
+        var clOpen = "modal fade show";
+
+        function openEditForm(id = 0) {
+
+            var tr = $('#editModal').attr('class');
+            var route = '{{ url("barang/byid/") }}' + '/' + id;
+
+            if (tr == clNow) {
+
+                $.ajax({
+                    url: route,
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(data) {
+                    $('#editModal').attr('class', clOpen).show();
+                    $('#ubah_id').val(data[0].id);
+                    $('#ubah_nama_barang').val(data[0].nama_barang);
+                    $('#ubah_stok').val(data[0].stok);
+                    $('#ubah_harga_barang').val(data[0].harga_barang);
+                    $('#ubah_biaya_pemesanan').val(data[0].biaya_pemesanan);
+                    $('#ubah_biaya_penyimpanan').val(data[0].biaya_penyimpanan);
+                    $('#ubah_tanggal_kadaluarsa').val(data[0].tanggal_kadaluarsa);
+                    $('#ubah_idkategori').val(data[0].idkategori);
+                    $('#ubah_idetalase').val(data[0].idetalase);
+                    $('#ubah_idsupplier').val(data[0].idsupplier);
+
+                    console.log(data);
+                })
+                .fail(function(e) {
+                    console.log("error " + e);
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+                
+
+            } else {
+                $('#editModal').attr('class', clNow).hide();
+            }
+
+        }
+
+        function openCreateForm() {
+            var tr = $('#createModal').attr('class');
+
+            if (tr == clNow) {
+                $('#createModal').attr('class', clOpen).show();
+            } else {
+                $('#createModal').attr('class', clNow).hide();
+            }
+        }
+    </script>
+
 @endsection

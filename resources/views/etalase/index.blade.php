@@ -24,7 +24,7 @@
                         type="button" 
                         class="btn btn-primary" 
                         data-toggle="modal" 
-                        data-target="#createModal">
+                        onclick="openCreateForm()">
                         <i class="fa fa-lg fa-plus"></i>
                         Tambah
                     </button>
@@ -67,36 +67,30 @@
                                     href="{{ route('etalase-remove') }}" 
                                     onclick="
                                         event.preventDefault();
-                                        document.getElementById('hapus-etalase-{{ $etl->idetalase }}').submit();">
+                                        document.getElementById('hapus-etalase-{{ $etl->id }}').submit();">
                                     <button class="btn btn-danger">
                                         Hapus
                                     </button>
                                 </a>
 
                                 <form 
-                                    id="hapus-etalase-{{ $etl->idetalase }}" 
+                                    id="hapus-etalase-{{ $etl->id }}" 
                                     action="{{ route('etalase-remove') }}" 
                                     method="POST" 
                                     style="display: none;">
                                     @csrf
                                     <input 
                                         type="hidden" 
-                                        name="idetalase" 
-                                        value="{{ $etl->idetalase }}">
+                                        name="id" 
+                                        value="{{ $etl->id }}">
                                 </form>
 
                                 <button 
                                     class="btn btn-success" 
-                                    data-toggle="modal" 
-                                    data-target="#createModal">
+                                    onclick="openEditForm({{ $etl->id }})" >
                                     Ubah
                                 </button>
 
-                                <!-- <a href="{{ route('etalase-edit', $etl->idetalase) }}">
-                                    <button class="btn btn-success">
-                                        Ubah
-                                    </button>
-                                </a> -->
                             </td>
                         </tr>
                     @endforeach
@@ -120,16 +114,19 @@
             <div class="modal-content">
                 <form 
                     method="post" 
-                    action="javascript:void(0)" 
+                    action="{{ route('etalase-push') }}"
                     autocomplete="off" 
-                    id="form-create"
-                    onsubmit="publish()">
+                    id="form-create">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="createModalLabel">
                             Buat etalase Baru
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button 
+                            type="button" 
+                            class="close" 
+                            onclick="openCreateForm()" 
+                            aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -153,8 +150,13 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan etalase</button>
+                        <button 
+                            type="button" 
+                            class="btn btn-secondary" 
+                            onclick="openCreateForm()">Tutup</button>
+                        <button 
+                            type="submit" 
+                            class="btn btn-primary">Simpan etalase</button>
                     </div>
                 </form>
             </div>
@@ -172,26 +174,35 @@
             <div class="modal-content">
                 <form 
                     method="post" 
-                    action="javascript:void(0)" 
+                    action="{{ route('etalase-put') }}"
                     autocomplete="off" 
-                    id="form-create"
-                    onsubmit="publish()">
+                    id="form-create">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="createModalLabel">
                             Ubah Etalase
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button 
+                            type="button" 
+                            class="close" 
+                            onclick="openEditForm()" 
+                            aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
+
+                        <input 
+                            type="hidden" 
+                            name="id" 
+                            id="ubah_id">
+
                         <div class="form-group{{ $errors->has('etalase') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="input-etalase">{{ __('Etalase') }}</label>
+                            <label class="form-control-label" for="ubah-etalase">{{ __('Etalase') }}</label>
                             <input 
                                 type="text" 
                                 name="etalase" 
-                                id="input-etalase" 
+                                id="ubah_etalase" 
                                 class="form-control form-control-alternative{{ $errors->has('etalase') ? ' is-invalid' : '' }}" 
                                 placeholder="{{ __('Masukan etalase') }}"  
                                 required 
@@ -205,11 +216,67 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        <button 
+                            type="button" 
+                            class="btn btn-secondary" 
+                            onclick="openEditForm()" >Tutup</button>
+                        <button 
+                            type="submit" 
+                            class="btn btn-primary">Simpan Perubahan</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+
+        
+        var clNow = "modal fade";
+        var clOpen = "modal fade show";
+
+        function openEditForm(id = 0) {
+
+            var tr = $('#editModal').attr('class');
+            var route = '{{ url("etalase/byid/") }}' + '/' + id;
+
+            if (tr == clNow) {
+
+                $.ajax({
+                    url: route,
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(data) {
+                    $('#editModal').attr('class', clOpen).show();
+                    $('#ubah_id').val(data[0].id);
+                    $('#ubah_etalase').val(data[0].etalase);
+
+                    console.log(data);
+                })
+                .fail(function(e) {
+                    console.log("error " + e);
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+                
+
+            } else {
+                $('#editModal').attr('class', clNow).hide();
+            }
+
+        }
+
+        function openCreateForm() {
+            var tr = $('#createModal').attr('class');
+
+            if (tr == clNow) {
+                $('#createModal').attr('class', clOpen).show();
+            } else {
+                $('#createModal').attr('class', clNow).hide();
+            }
+        }
+    </script>
+
 @endsection
