@@ -24,26 +24,28 @@ DROP TABLE IF EXISTS `barang`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `barang` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `judul` varchar(150) NOT NULL,
+  `nama_barang` varchar(150) NOT NULL,
   `stok` int(10) unsigned NOT NULL,
-  `harga` int(10) unsigned NOT NULL,
-  `diskon` double DEFAULT NULL,
-  `harga_pesanan` int(10) unsigned DEFAULT NULL,
-  `harga_penyimpanan` int(10) unsigned DEFAULT NULL,
+  `harga_barang` int(10) unsigned NOT NULL,
+  `biaya_pemesanan` int(10) unsigned NOT NULL,
+  `biaya_penyimpanan` int(10) unsigned NOT NULL,
   `tanggal_kadaluarsa` date NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `idusers` int(10) unsigned NOT NULL,
+  `idsupplier` int(10) unsigned NOT NULL,
   `idkategori` int(10) unsigned NOT NULL,
   `idetalase` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_idusers_barang` (`idusers`),
   KEY `fk_idkategori_barang` (`idkategori`),
   KEY `fk_idetalase_barang` (`idetalase`),
+  KEY `fk_idsupplier_barang` (`idsupplier`),
   CONSTRAINT `fk_idetalase_barang` FOREIGN KEY (`idetalase`) REFERENCES `etalase` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `fk_idkategori_barang` FOREIGN KEY (`idkategori`) REFERENCES `kategori` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_idsupplier_barang` FOREIGN KEY (`idsupplier`) REFERENCES `supplier` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `fk_idusers_barang` FOREIGN KEY (`idusers`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,6 +54,7 @@ CREATE TABLE `barang` (
 
 LOCK TABLES `barang` WRITE;
 /*!40000 ALTER TABLE `barang` DISABLE KEYS */;
+INSERT INTO `barang` VALUES (1,'Test 1',100,15000,1000,1000,'2021-05-23','2019-05-20 16:49:23','2019-05-20 10:06:36',2,2,2,2),(2,'Test 2',150,20000,500,500,'2021-12-24','2019-05-20 17:07:45',NULL,2,1,2,2);
 /*!40000 ALTER TABLE `barang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -63,7 +66,7 @@ DROP TABLE IF EXISTS `etalase`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `etalase` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `etalase` varchar(150) NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -71,7 +74,7 @@ CREATE TABLE `etalase` (
   PRIMARY KEY (`id`),
   KEY `fk_idusers_etalase` (`idusers`),
   CONSTRAINT `fk_idusers_etalase` FOREIGN KEY (`idusers`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,6 +83,7 @@ CREATE TABLE `etalase` (
 
 LOCK TABLES `etalase` WRITE;
 /*!40000 ALTER TABLE `etalase` DISABLE KEYS */;
+INSERT INTO `etalase` VALUES (2,'AAAbbb','2019-05-19 14:49:37','2019-05-19 07:53:33',2);
 /*!40000 ALTER TABLE `etalase` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,7 +95,7 @@ DROP TABLE IF EXISTS `kategori`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `kategori` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `kategori` varchar(150) NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -99,7 +103,7 @@ CREATE TABLE `kategori` (
   PRIMARY KEY (`id`),
   KEY `fk_idusers_kategori` (`idusers`),
   CONSTRAINT `fk_idusers_kategori` FOREIGN KEY (`idusers`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -108,6 +112,7 @@ CREATE TABLE `kategori` (
 
 LOCK TABLES `kategori` WRITE;
 /*!40000 ALTER TABLE `kategori` DISABLE KEYS */;
+INSERT INTO `kategori` VALUES (2,'aaabbb','2019-05-19 14:20:49','2019-05-19 07:37:09',2);
 /*!40000 ALTER TABLE `kategori` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,9 +178,9 @@ CREATE TABLE `pembelian` (
   `jumlah_pembelian` int(10) unsigned NOT NULL,
   `harga_barang` int(10) unsigned NOT NULL,
   `biaya_gudang` int(10) unsigned NOT NULL,
-  `status` enum('menunggu','peroses','selesai') NOT NULL,
-  `satuan` varchar(30) NOT NULL,
+  `diskon` double DEFAULT NULL,
   `tanggal_pembelian` date NOT NULL,
+  `status` enum('aktif','selesai') DEFAULT 'aktif',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `idusers` int(10) unsigned NOT NULL,
@@ -198,6 +203,41 @@ CREATE TABLE `pembelian` (
 LOCK TABLES `pembelian` WRITE;
 /*!40000 ALTER TABLE `pembelian` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pembelian` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pemesanan`
+--
+
+DROP TABLE IF EXISTS `pemesanan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pemesanan` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `jumlah_unit` int(10) unsigned NOT NULL,
+  `total_cost` int(10) unsigned NOT NULL,
+  `reorder_point` int(10) unsigned NOT NULL,
+  `frekuensi_pembelian` double unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `idusers` int(10) unsigned NOT NULL,
+  `idbarang` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_idusers_pemesanan` (`idusers`),
+  KEY `fk_idbarang_pemesanan` (`idbarang`),
+  CONSTRAINT `fk_idbarang_pemesanan` FOREIGN KEY (`idbarang`) REFERENCES `barang` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_idusers_pemesanan` FOREIGN KEY (`idusers`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pemesanan`
+--
+
+LOCK TABLES `pemesanan` WRITE;
+/*!40000 ALTER TABLE `pemesanan` DISABLE KEYS */;
+INSERT INTO `pemesanan` VALUES (1,14,2007000,30,7.14,'2019-05-20 19:00:09',NULL,2,2),(2,14,1514000,20,7.14,'2019-05-20 19:06:47',NULL,2,1),(5,14,2007000,30,7.14,'2019-05-20 19:15:05',NULL,2,2),(6,14,1514000,20,7.14,'2019-05-20 19:16:45',NULL,2,1);
+/*!40000 ALTER TABLE `pemesanan` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -249,13 +289,14 @@ CREATE TABLE `supplier` (
   `email` varchar(150) NOT NULL,
   `no_telpon` varchar(15) NOT NULL,
   `alamat` varchar(150) NOT NULL,
+  `leadtime` int(10) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `idusers` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_idusers_supplier` (`idusers`),
   CONSTRAINT `fk_idusers_supplier` FOREIGN KEY (`idusers`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -264,6 +305,7 @@ CREATE TABLE `supplier` (
 
 LOCK TABLES `supplier` WRITE;
 /*!40000 ALTER TABLE `supplier` DISABLE KEYS */;
+INSERT INTO `supplier` VALUES (1,'AAA BBB','aaa@gmail.com','111222333444','jl. aaa',3,'2019-05-14 03:42:05','2019-05-20 11:32:32',2),(2,'BBB','bbb@gmail.com','222233334444','jl. bbb',2,'2019-05-14 04:37:18','2019-05-20 08:59:23',2);
 /*!40000 ALTER TABLE `supplier` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -294,7 +336,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Ganjar Hadiatna','ganjarhadiatna.gh@gmail.com',NULL,'$2y$10$1o7CYuAuQM5vCZZ2tRJpUuvr6jHHhf60.yLlgfRevNsvlBwHteKLa','R8b66L3pstgj4Aok99PUFSpJjfzETzREW5kKzJpxAp1juLQHySxamoSpo5Bi','2019-03-08 20:41:37','2019-03-08 20:41:37'),(2,'Ganjar Hadiatna','ganjardbc@gmail.com',NULL,'$2y$10$e4obUbdolHN.NiEGedXKG.UWuuNnbF.mhMSsOeXWchPXYecM8kBVS','4weFBtPU77L3lH4fD70ByQ3bXAmrczFQSICvGPYCtUhnIkTQxEPJoCa5XdZH','2019-03-08 20:42:53','2019-03-08 20:42:53');
+INSERT INTO `users` VALUES (1,'Ganjar Hadiatna','ganjarhadiatna.gh@gmail.com',NULL,'$2y$10$1o7CYuAuQM5vCZZ2tRJpUuvr6jHHhf60.yLlgfRevNsvlBwHteKLa','R8b66L3pstgj4Aok99PUFSpJjfzETzREW5kKzJpxAp1juLQHySxamoSpo5Bi','2019-03-08 20:41:37','2019-03-08 20:41:37'),(2,'Ganjar Hadiatna','ganjardbc@gmail.com',NULL,'$2y$10$e4obUbdolHN.NiEGedXKG.UWuuNnbF.mhMSsOeXWchPXYecM8kBVS','4eJgwvHTtDch4SUnBGibg9oNPqQsOwOU9ATHQdsc6Kb7DYybR2IpIGSxNIVZ','2019-03-08 20:42:53','2019-03-08 20:42:53');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -307,4 +349,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-11 11:01:51
+-- Dump completed on 2019-05-21 15:54:58
