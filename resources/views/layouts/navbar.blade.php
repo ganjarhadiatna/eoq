@@ -33,11 +33,13 @@
                     <div class=" dropdown-header noti-title">
                         <h6 class="text-overflow m-0">{{ __('Welcome!') }}</h6>
                     </div>
-                    {{-- <a href="#" class="dropdown-item">
+                    <a 
+                        href="{{ route('profile') }}" 
+                        class="dropdown-item">
                         <i class="fa fa-lg fa-user"></i>
-                        <span>{{ __('My profile') }}</span>
+                        <span>{{ __('Profile pengguna') }}</span>
                     </a>
-                    <a href="#" class="dropdown-item">
+                    <!-- <a href="#" class="dropdown-item">
                         <i class="fa fa-lg fa-cog"></i>
                         <span>{{ __('Settings') }}</span>
                     </a>
@@ -48,8 +50,8 @@
                     <a href="#" class="dropdown-item">
                         <i class="fa fa-lg fa-info-circle"></i>
                         <span>{{ __('Support') }}</span>
-                    </a>
-                    <div class="dropdown-divider"></div> --}}
+                    </a> -->
+                    <div class="dropdown-divider"></div>
                     <a 
                         href="{{ route('logout') }}" 
                         class="dropdown-item" 
@@ -59,8 +61,8 @@
                         <span>{{ __('Logout') }}</span>
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
+                        @csrf
+                    </form>
                 </div>
             </li>
         </ul>

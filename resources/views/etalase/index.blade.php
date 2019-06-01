@@ -96,9 +96,10 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="col col-8">
-                {{ $etalase->links() }}
-            </div>
+        </div>
+
+        <div class="col col-8" style="padding-top: 15px">
+            {{ $etalase->links() }}
         </div>
     </div>
 

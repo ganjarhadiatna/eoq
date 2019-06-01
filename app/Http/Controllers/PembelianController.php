@@ -29,7 +29,7 @@ class PembelianController extends Controller
      */
     public function index()
     {
-        $pembelian = Pembelian::orderBy('id', 'desc')->paginate(5);
+        $pembelian = Pembelian::GetAll(5);
         return view('pembelian.index', ['pembelian' => $pembelian]);
     }
     public function tambah()
@@ -132,6 +132,41 @@ class PembelianController extends Controller
         else 
         {
              return redirect(route('pembelian'));
+        }
+    }
+
+    public function done(Request $req)
+    {
+
+        $idusers = Auth::id();
+        $id = $req['id'];
+        $data = [
+            'status' => 'selesai'
+        ];
+
+        $idbarang = Pembelian::where('id', $id)->value('idbarang');
+        $new_stok = Pembelian::where('id', $id)->value('jumlah_pembelian');
+        $old_stok = Barang::where('id', $idbarang)->value('stok');
+        $fresh_stok = $new_stok + $old_stok;
+        $stok = [
+            'stok' => $fresh_stok
+        ];
+
+        // update stok barang
+        if (Barang::where('id', $idbarang)->update($stok)) 
+        {
+            if (Pembelian::where('id', $id)->update($data))
+            {
+                return redirect(route('pembelian'));
+            } 
+            else 
+            {
+                return redirect(route('pembelian'));
+            }
+        } 
+        else 
+        {
+            return redirect(route('pembelian'));
         }
     }
 }

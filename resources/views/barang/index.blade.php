@@ -46,11 +46,12 @@
                         <th scope="col">Barang</th>
                         <th scope="col">Stok</th>
                         <th scope="col">Harga</th>
-                        <!-- <th scope="col" width="100">Diskon</th> -->
                         <th scope="col">Biaya Pesanan</th>
                         <th scope="col">Biaya Penyimpanan</th>
                         <th scope="col">Tanggal Kadaluarsa</th>
-                        <th scope="col">Tanggal</th>
+                        <th scope="col">Supplier</th>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Etalase</th>
                         <th scope="col" width="200">#</th>
                     </tr>
                 </thead>
@@ -65,14 +66,15 @@
                                 {{ $etl->nama_barang }}
                             </td>
                             <td>
-                                {{ $etl->stok }}
+                                @if ($etl->stok < 10)
+                                    <b class="text-red">{{ $etl->stok }}</b>
+                                @else
+                                    <b class="text-green">{{ $etl->stok }}</b>
+                                @endif
                             </td>
                             <td>
                                 Rp {{ number_format($etl->harga_barang) }}
                             </td>
-                            <!-- <td>
-                                {{ $etl->diskon * 100 }}%
-                            </td> -->
                             <td>
                                 Rp {{ number_format($etl->biaya_pemesanan) }}
                             </td>
@@ -83,7 +85,13 @@
                                 {{ $etl->tanggal_kadaluarsa }}
                             </td>
                             <td>
-                                {{ $etl->created_at }}
+                                {{ $etl->nama_supplier }}
+                            </td>
+                            <td>
+                                {{ $etl->kategori }}
+                            </td>
+                            <td>
+                                {{ $etl->etalase }}
                             </td>
                             <td>
                                 <a 
@@ -124,9 +132,9 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="col col-8">
-                {{ $barang->links() }}
-            </div>
+        </div>
+        <div class="col col-8" style="padding-top: 15px">
+            {{ $barang->links() }}
         </div>
     </div>
 

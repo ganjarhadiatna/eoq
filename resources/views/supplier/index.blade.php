@@ -49,6 +49,7 @@
                         <th scope="col">Nomor Telpon</th>
                         <th scope="col">Alamat</th>
                         <th scope="col">Leadtime</th>
+                        <th scope="col">Waktu Operasional</th>
                         <th scope="col" width="200">#</th>
                     </tr>
                 </thead>
@@ -73,6 +74,9 @@
                             </td>
                             <td>
                                 {{ $sp->leadtime }}
+                            </td>
+                            <td>
+                                {{ $sp->waktu_operasional }}
                             </td>
                             <td>
                                 <a 
@@ -113,9 +117,9 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="col col-8">
-                {{ $supplier->links() }}
-            </div>
+        </div>
+        <div class="col col-8" style="padding-top: 15px">
+            {{ $supplier->links() }}
         </div>
     </div>
 
@@ -223,6 +227,22 @@
                                 @if ($errors->has('leadtime'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('leadtime') }}</strong>
+                                    </span>
+                                @endif
+                        </div>
+
+                        <div class="form-group{{ $errors->has('waktu_operasional') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="waktu_operasional">{{ __('Waktu Operasional') }}</label>
+                            <input 
+                                type="number" 
+                                name="waktu_operasional" 
+                                id="waktu_operasional" 
+                                class="form-control form-control-alternative{{ $errors->has('waktu_operasional') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('Masukan waktu operasional') }}"  
+                                required>
+                                @if ($errors->has('waktu_operasional'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('waktu_operasional') }}</strong>
                                     </span>
                                 @endif
                         </div>
@@ -349,6 +369,22 @@
                                 @endif
                         </div>
 
+                        <div class="form-group{{ $errors->has('waktu_operasional') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="waktu_operasional">{{ __('Waktu Operasional') }}</label>
+                            <input 
+                                type="number" 
+                                name="waktu_operasional" 
+                                id="ubah_waktu_operasional" 
+                                class="form-control form-control-alternative{{ $errors->has('waktu_operasional') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('Masukan waktu operasional') }}"  
+                                required>
+                                @if ($errors->has('waktu_operasional'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('waktu_operasional') }}</strong>
+                                    </span>
+                                @endif
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button 
@@ -391,6 +427,7 @@
                     $('#ubah_no_telpon').val(data[0].no_telpon);
                     $('#ubah_alamat').val(data[0].alamat);
                     $('#ubah_leadtime').val(data[0].leadtime);
+                    $('#ubah_waktu_operasional').val(data[0].waktu_operasional);
 
                     console.log(data);
                 })

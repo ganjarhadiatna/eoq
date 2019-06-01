@@ -53,7 +53,8 @@ class SupplierController extends Controller
             'email' => ['required', 'string', 'max:150'],
             'no_telpon' => ['required', 'string', 'max:15'],
             'alamat' => ['required', 'string', 'max:150'],
-            'leadtime' => ['required', 'integer', 'max:10']
+            'leadtime' => ['required', 'integer', 'max:20'],
+            'waktu_operasional' => ['required', 'integer', 'max:20']
         ]);
 
         $idusers = Auth::id();
@@ -63,7 +64,8 @@ class SupplierController extends Controller
             'email' => $req['email'],
             'no_telpon' => $req['no_telpon'],
             'alamat' => $req['alamat'],
-            'leadtime' => $req['leadtime']
+            'leadtime' => $req['leadtime'],
+            'waktu_operasional' => $req['waktu_operasional']
         ];
 
         if (Supplier::Insert($data)) 
@@ -83,7 +85,8 @@ class SupplierController extends Controller
             'email' => ['required', 'string', 'max:150'],
             'no_telpon' => ['required', 'string', 'max:15'],
             'alamat' => ['required', 'string', 'max:150'],
-            'leadtime' => ['required', 'integer', 'max:10']
+            'leadtime' => ['required', 'integer', 'max:20'],
+            'waktu_operasional' => ['required', 'integer', 'max:20']
         ]);
 
         $idusers = Auth::id();
@@ -94,7 +97,8 @@ class SupplierController extends Controller
             'email' => $req['email'],
             'no_telpon' => $req['no_telpon'],
             'alamat' => $req['alamat'],
-            'leadtime' => $req['leadtime']
+            'leadtime' => $req['leadtime'],
+            'waktu_operasional' => $req['waktu_operasional']
         ];
 
         if (Supplier::where('id', $id)->update($data)) 

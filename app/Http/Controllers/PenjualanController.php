@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Penjualan;
-use App\Items;
+use App\Barang;
 
 use Auth;
 
@@ -28,22 +28,26 @@ class PenjualanController extends Controller
      */
     public function index()
     {
-        $penjualan = Penjualan::orderBy('id', 'desc')->paginate(5);
-        return view('penjualan.index', ['penjualan' => $penjualan]);
+        $barang = Barang::orderBy('id', 'desc')->get();
+        $penjualan = Penjualan::GetAll(5);
+        return view('penjualan.index', [
+            'penjualan' => $penjualan,
+            'barang' => $barang
+        ]);
     }
     public function tambah()
     {
-        $items = Items::orderBy('id', 'desc')->get();
+        $barang = Barang::orderBy('id', 'desc')->get();
         return view('penjualan.create', [
-            'items' => $items,
+            'barang' => $barang,
         ]);
     }
     public function edit($id)
     {
         $penjualan = Penjualan::where('id', $id)->get();
-        $items = Items::orderBy('id', 'desc')->get();
+        $barang = Barang::orderBy('id', 'desc')->get();
         return view('penjualan.edit', [
-            'items' => $items,
+            'barang' => $barang,
             'penjualan' => $penjualan
         ]);
     }
@@ -52,53 +56,82 @@ class PenjualanController extends Controller
     public function push(Request $req)
     {
         $this->validate($req, [
-            'iditems' => ['required', 'int'],
-            'total_item' => ['required', 'int'],
-            'price_item' => ['required', 'int']
+            'idbarang' => ['required', 'int'],
+            'jumlah_barang' => ['required', 'int'],
+            'harga_barang' => ['required', 'int']
         ]);
 
         $idusers = Auth::id();
+        $idbarang = $req['idbarang'];
         $data = [
-            'id' => $idusers,
-            'iditems' => $req['iditems'],
-            'total_item' => $req['total_item'],
-            'price_item' => $req['price_item'],
-            'price_total' => ($req['price_item'] * $req['total_item']),
+            'idusers' => $idusers,
+            'idbarang' => $idbarang,
+            'kode_transaksi' => 'BBB-222',
+            'jumlah_barang' => $req['jumlah_barang'],
+            'harga_barang' => $req['harga_barang'],
+            'total_biaya' => ($req['harga_barang'] * $req['jumlah_barang']),
+            'satuan' => 'PCS',
+            'tanggal_penjualan' => date('Y:m:d')
         ];
 
-        // echo json_encode($data);
-
-        if (Penjualan::Insert($data)) 
+        if (Penjualan::insert($data)) 
         {
-             return redirect(route('penjualan'));
+            $old_stok = Barang::where('id', $idbarang)->value('stok');
+            $fresh_stok = $old_stok - $req['jumlah_barang'];
+            $stok = [
+                'stok' => $fresh_stok
+            ];
+
+            if (Barang::where('id', $idbarang)->update($stok)) 
+            {
+                return redirect(route('penjualan'));
+            }
+            else
+            {
+                return redirect(route('penjualan'));
+            }
         } 
         else 
         {
-             return redirect(route('penjualan-tambah'));
+             return redirect(route('penjualan'));
         }
     }
 
     public function put(Request $req)
     {
         $this->validate($req, [
-            'iditems' => ['required', 'int'],
-            'total_item' => ['required', 'int'],
-            'price_item' => ['required', 'int']
+            'idbarang' => ['required', 'int'],
+            'jumlah_barang' => ['required', 'int'],
+            'harga_barang' => ['required', 'int']
         ]);
 
         $idusers = Auth::id();
+        $idbarang = $req['idbarang'];
         $id = $req['id'];
         $data = [
-            'id' => $idusers,
-            'iditems' => $req['iditems'],
-            'total_item' => $req['total_item'],
-            'price_item' => $req['price_item'],
-            'price_total' => ($req['price_item'] * $req['total_item']),
+            'idusers' => $idusers,
+            'idbarang' => $idbarang,
+            'jumlah_barang' => $req['jumlah_barang'],
+            'harga_barang' => $req['harga_barang'],
+            'total_biaya' => ($req['harga_barang'] * $req['jumlah_barang']),
         ];
 
         if (Penjualan::where('id', $id)->update($data)) 
         {
-             return redirect(route('penjualan'));
+            $old_stok = Barang::where('id', $idbarang)->value('stok');
+            $fresh_stok = $old_stok - $req['jumlah_barang'];
+            $stok = [
+                'stok' => $fresh_stok
+            ];
+
+            if (Barang::where('id', $idbarang)->update($stok)) 
+            {
+                return redirect(route('penjualan'));
+            }
+            else
+            {
+                return redirect(route('penjualan'));
+            }
         } 
         else 
         {
@@ -108,17 +141,31 @@ class PenjualanController extends Controller
 
     public function remove(Request $req)
     {
-
         $idusers = Auth::id();
         $id = $req['id'];
+        $idbarang = Penjualan::where('id', $id)->value('idbarang');
+        $old_stok = Penjualan::where('id', $id)->value('jumlah_barang');
 
-        if (Penjualan::where('id', $id)->delete())
+        $set_stok = Barang::where('id', $idbarang)->value('stok');
+        $fresh_stok = $set_stok + $old_stok;
+        $stok = [
+            'stok' => $fresh_stok
+        ];
+
+        if (Barang::where('id', $idbarang)->update($stok))
         {
-             return redirect(route('penjualan'));
+            if (Penjualan::where('id', $id)->delete()) 
+            {
+                return redirect(route('penjualan'));
+            }
+            else
+            {
+                return redirect(route('penjualan'));
+            }
         } 
         else 
         {
-             return redirect(route('penjualan'));
+            return redirect(route('penjualan'));
         }
     }
 }

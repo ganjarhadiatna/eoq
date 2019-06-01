@@ -21,6 +21,9 @@ Route::middleware('auth')->group(function() {
     // home
     Route::get('/', 'HomeController@index')->name('home');
 
+    // user
+    Route::get('/profile', 'HomeController@profile')->name('profile');
+
     // kategori
     Route::get('/kategori', 'KategoriController@index')->name('kategori');
     Route::get('/kategori/tambah', 'KategoriController@tambah')->name('kategori-tambah');
@@ -75,6 +78,7 @@ Route::middleware('auth')->group(function() {
     Route::post('/pembelian/push', 'PembelianController@push')->name('pembelian-push');
     Route::post('/pembelian/put', 'PembelianController@put')->name('pembelian-put');
     Route::post('/pembelian/remove', 'PembelianController@remove')->name('pembelian-remove');
+    Route::post('/pembelian/done', 'PembelianController@done')->name('pembelian-done');
 
     // penjualan
     Route::get('/penjualan', 'PenjualanController@index')->name('penjualan');
@@ -87,13 +91,19 @@ Route::middleware('auth')->group(function() {
     Route::post('/penjualan/remove', 'PenjualanController@remove')->name('penjualan-remove');
 
     // orders
-    Route::get('/pesanan', 'PesananController@index')->name('pesanan');
-    Route::get('/pesanan/tambah', 'PesananController@tambah')->name('pesanan-tambah');
-    Route::get('/pesanan/edit/{idtransactions}', 'PesananController@edit')->name('pesanan-edit');
+    Route::get('/pesanan', 'PemesananController@index')->name('pesanan');
+    Route::get('/pesanan/tambah', 'PemesananController@tambah')->name('pesanan-tambah');
+    Route::get('/pesanan/edit/{idtransactions}', 'PemesananController@edit')->name('pesanan-edit');
 
     // crud
-    Route::get('/pesanan/eoq/{idbarang}', 'PesananController@generate_eoq')->name('pesanan-eoq');
-    Route::post('/pesanan/push', 'PesananController@push')->name('pesanan-push');
-    Route::post('/pesanan/remove', 'PesananController@remove')->name('pesanan-remove');
+    Route::get('/pesanan/eoq/{idbarang}', 'PemesananController@generate_eoq')->name('pesanan-eoq');
+    Route::get('/pesanan/backorder/{idbarang}/{biaya_backorder}', 'PemesananController@generate_backorder')->name('pesanan-backorder');
+
+    Route::post('/pesanan/push', 'PemesananController@push')->name('pesanan-push');
+
+    Route::post('/pesanan/remove', 'PemesananController@remove')->name('pesanan-remove');
+
+    // 
+    Route::post('/pesanan/create', 'PemesananController@create')->name('pesanan-create');
 
 });

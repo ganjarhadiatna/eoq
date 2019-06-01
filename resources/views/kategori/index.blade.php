@@ -84,13 +84,6 @@
                                         value="{{ $ctr->id }}">
                                 </form>
 
-                                <!-- <button 
-                                    data-toggle="modal" 
-                                    data-target="#editModal"
-                                    class="btn btn-success">
-                                    Ubah
-                                </button> -->
-
                                 <button 
                                     onclick="openEditForm({{ $ctr->id }})" 
                                     class="btn btn-success">
@@ -102,10 +95,12 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="col col-8">
-                {{ $kategori->links() }}
-            </div>
         </div>
+
+        <div class="col col-8" style="padding-top: 15px">
+            {{ $kategori->links() }}
+        </div>
+
     </div>
 
     <!-- Modal -->

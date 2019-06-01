@@ -33,7 +33,7 @@ class BarangController extends Controller
         $etalase = Etalase::orderBy('id', 'desc')->get();
         $kategori = Kategori::orderBy('id', 'desc')->get();
         $supplier = Supplier::orderBy('id', 'desc')->get();
-        $barang = Barang::orderBy('id', 'desc')->paginate(5);
+        $barang = Barang::GetAll(5);
         return view('barang.index', [
             'barang' => $barang, 
             'etalase' => $etalase, 
@@ -62,10 +62,12 @@ class BarangController extends Controller
     }
     public function price_item($id)
     {
-        $price = Barang::where('id', $id)->value('price');
+        $harga_barang = Barang::where('id', $id)->value('harga_barang');
+        $stok_barang = Barang::where('id', $id)->value('stok');
         return json_encode([
             'id' => $id, 
-            'price' => $price
+            'harga_barang' => $harga_barang,
+            'stok_barang' => $stok_barang
         ]);
     }
     public function push(Request $req)
