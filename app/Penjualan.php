@@ -20,7 +20,7 @@ class Penjualan extends Model
     		'penjualan.total_biaya',
     		'penjualan.satuan',
     		'penjualan.tanggal_penjualan',
-    		'barang.nama_barang',
+    		'barang.nama_barang'
     	)
     	->join('barang', 'barang.id', '=', 'penjualan.idbarang')
     	->orderBy('penjualan.id', 'desc')
