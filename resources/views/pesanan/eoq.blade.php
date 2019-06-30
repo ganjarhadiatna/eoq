@@ -43,7 +43,7 @@
                         type="button" 
                         class="btn btn-success" 
                         onclick="generate_eoq()">
-                        Generate EOQ
+                        Generate Metode
                     </button>
 	           </div>
            </div>

@@ -53,8 +53,8 @@ class SupplierController extends Controller
             'email' => ['required', 'string', 'max:150'],
             'no_telpon' => ['required', 'string', 'max:15'],
             'alamat' => ['required', 'string', 'max:150'],
-            'leadtime' => ['required', 'integer', 'max:20'],
-            'waktu_operasional' => ['required', 'integer', 'max:20']
+            'leadtime' => ['required', 'integer', 'max:1000'],
+            'waktu_operasional' => ['required', 'integer', 'max:1000']
         ]);
 
         $idusers = Auth::id();
@@ -85,8 +85,8 @@ class SupplierController extends Controller
             'email' => ['required', 'string', 'max:150'],
             'no_telpon' => ['required', 'string', 'max:15'],
             'alamat' => ['required', 'string', 'max:150'],
-            'leadtime' => ['required', 'integer', 'max:20'],
-            'waktu_operasional' => ['required', 'integer', 'max:20']
+            'leadtime' => ['required', 'integer', 'max:1000'],
+            'waktu_operasional' => ['required', 'integer', 'max:1000']
         ]);
 
         $idusers = Auth::id();

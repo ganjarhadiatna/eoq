@@ -9,6 +9,14 @@ class Penjualan extends Model
 {
     protected $table = 'penjualan';
 
+    public function scopeGetTotalOrderByMonth($query, $id, $month)
+    {
+        return DB::table($this->table)
+        ->where('idbarang', $id)
+        ->whereMonth('tanggal_penjualan', $month)
+        ->sum('jumlah_barang');
+    }
+
     public function scopeGetAll($query, $limit)
     {
     	return DB::table($this->table)

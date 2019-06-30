@@ -58,6 +58,16 @@ Route::middleware('auth')->group(function() {
     Route::post('/barang/put', 'BarangController@put')->name('barang-put');
     Route::post('/barang/remove', 'BarangController@remove')->name('barang-remove');
 
+    // dikson
+    Route::get('/barang/{idbarang}/diskon', 'DiskonController@index')->name('diskon');
+
+    // crud
+    Route::get('/diskon/byid/{iddiskon}', 'DiskonController@byid')->name('diskon_byid');
+    Route::get('/diskon/price_item/{idiems}', 'DiskonController@price_item')->name('diskon-price-item');
+    Route::post('/diskon/push', 'DiskonController@push')->name('diskon-push');
+    Route::post('/diskon/put', 'DiskonController@put')->name('diskon-put');
+    Route::post('/diskon/remove', 'DiskonController@remove')->name('diskon-remove');
+
     // supplier
     Route::get('/supplier', 'SupplierController@index')->name('supplier');
     Route::get('/supplier/byid/{idsuppliers}', 'SupplierController@byid')->name('supplier_byid');
@@ -98,6 +108,8 @@ Route::middleware('auth')->group(function() {
     // crud
     Route::get('/pesanan/eoq/{idbarang}', 'PemesananController@generate_eoq')->name('pesanan-eoq');
     Route::get('/pesanan/backorder/{idbarang}/{biaya_backorder}', 'PemesananController@generate_backorder')->name('pesanan-backorder');
+    Route::get('/pesanan/special_price/{idbarang}/{price}', 'PemesananController@special_price')->name('special-price');
+    Route::get('/pesanan/increases_price/{idbarang}/{price}', 'PemesananController@increases_price')->name('increases-price');
 
     Route::post('/pesanan/push', 'PemesananController@push')->name('pesanan-push');
 

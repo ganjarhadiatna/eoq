@@ -75,7 +75,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('pesanan') }}">
                         <i class="fa fa-lg fa-chart-pie text-info"></i>
-                        Pemesanan
+                        Pemesanan Per-barang
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('pesanan') }}">
+                        <i class="fa fa-lg fa-chart-pie text-info"></i>
+                        Pemesanan Per-supplier
                     </a>
                 </li>
                 <li class="nav-item">

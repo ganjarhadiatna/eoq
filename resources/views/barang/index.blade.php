@@ -48,6 +48,7 @@
                         <th scope="col">Harga</th>
                         <th scope="col">Biaya Pesanan</th>
                         <th scope="col">Biaya Penyimpanan</th>
+                        <th scope="col">Diskon</th>
                         <th scope="col">Tanggal Kadaluarsa</th>
                         <th scope="col">Supplier</th>
                         <th scope="col">Kategori</th>
@@ -80,6 +81,13 @@
                             </td>
                             <td>
                                 Rp {{ number_format($etl->biaya_penyimpanan) }}
+                            </td>
+                            <td>
+                                <a href="{{ route('diskon', $etl->id) }}">
+                                    <button class="btn btn-white">
+                                        Kelola
+                                    </button>
+                                </a>
                             </td>
                             <td>
                                 {{ $etl->tanggal_kadaluarsa }}

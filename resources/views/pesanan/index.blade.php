@@ -4,7 +4,7 @@
 	<div class="card bg-secondary shadow">
 
         <div class="card-header border-0">
-            <h3 class="mb-0">Daftar Perhigtungan Manajemen Stok</h3>
+            <h3 class="mb-0">Daftar Perhitungan Manajemen Stok</h3>
             <div class="nav-wrapper">
                 <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
                     <!-- <li class="nav-item">
@@ -24,17 +24,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">
-                            Method 3
+                            Special Order
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-4-tab" data-toggle="tab" href="#tabs-icons-text-4" role="tab" aria-controls="tabs-icons-text-4" aria-selected="false">
-                            Method 4
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-5-tab" data-toggle="tab" href="#tabs-icons-text-5" role="tab" aria-controls="tabs-icons-text-5" aria-selected="false">
-                            Method 5
+                            Known Price Increases
                         </a>
                     </li>
                 </ul>
@@ -81,6 +76,7 @@
                     id="tabs-icons-text-3" 
                     role="tabpanel" 
                     aria-labelledby="tabs-icons-text-3-tab">
+                    @include('pesanan.hargaSpesial')
                 </div>
 
                 <div 
@@ -88,13 +84,7 @@
                     id="tabs-icons-text-4" 
                     role="tabpanel" 
                     aria-labelledby="tabs-icons-text-4-tab">
-                </div>
-
-                <div 
-                    class="tab-pane fade show" 
-                    id="tabs-icons-text-5" 
-                    role="tabpanel" 
-                    aria-labelledby="tabs-icons-text-5-tab">
+                    @include('pesanan.kenaikanHarga')
                 </div>
 
 

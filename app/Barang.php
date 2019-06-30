@@ -9,6 +9,34 @@ class Barang extends Model
 {
     protected $table = 'barang';
 
+    public function scopeGetIdsupplier($query, $id)
+    {
+        return DB::table($this->table)
+        ->where('id', $id)
+        ->value('idsupplier');
+    }
+
+    public function scopeGetBiayaPemesanan($query, $id)
+    {
+        return DB::table($this->table)
+        ->where('id', $id)
+        ->value('biaya_pemesanan');
+    }
+
+    public function scopeGetHargaBarang($query, $id)
+    {
+        return DB::table($this->table)
+        ->where('id', $id)
+        ->value('harga_barang');
+    }
+
+    public function scopeGetBiayaPenyimpanan($query, $id)
+    {
+        return DB::table($this->table)
+        ->where('id', $id)
+        ->value('biaya_penyimpanan');
+    }
+
     public function scopeGetAll($query, $limit)
     {
     	return DB::table($this->table)
