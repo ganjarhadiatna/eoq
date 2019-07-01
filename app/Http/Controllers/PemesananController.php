@@ -132,13 +132,13 @@ class PemesananController extends Controller
         $idsupplier = Barang::GetIdsupplier($idbarang);
 
         // total biaya pesanan
-        $C = 30000;//Barang::GetBiayaPemesanan($idbarang);
+        $C = Barang::GetBiayaPemesanan($idbarang);
 
         // jumlah permintaan costumer
-        $R = 8000;//Penjualan::GetTotalOrderByMonth($idbarang, $month);
+        $R = Penjualan::GetTotalOrderByMonth($idbarang, $month);
 
         // Harga barang
-        $P = 10000;//Barang::GetHargaBarang($idbarang);
+        $P = Barang::GetHargaBarang($idbarang);
 
         // persentase dari harga barang
         $T = 0.3;
@@ -147,12 +147,12 @@ class PemesananController extends Controller
         $H = Barang::GetBiayaPenyimpanan($idbarang);
 
         // lead time per-suplier : per-minggu(
-        $L = 2;//Supplier::GetLeadtime($idsupplier);
+        $L = Supplier::GetLeadtime($idsupplier);
         
         // waktu operasional
-        $N = 50;//Supplier::GetWaktuOperasional($idsupplier);
+        $N = Supplier::GetWaktuOperasional($idsupplier);
         
-        $d = 1000; //($P - $price);
+        $d = ($P - $price);
         
         // EOQ sebelum potongan harga
         $Qs = sqrt((2 * $C * $R) / ($P * $T));
@@ -181,7 +181,7 @@ class PemesananController extends Controller
             'reorder_point' => $B
         ];
 
-        return json_encode(dump($data));
+        return json_encode($data);
 
     }
 
@@ -196,13 +196,13 @@ class PemesananController extends Controller
         $idsupplier = Barang::GetIdsupplier($idbarang);
 
         // total biaya pesanan
-        $C = 30000;//Barang::GetBiayaPemesanan($idbarang);
+        $C = Barang::GetBiayaPemesanan($idbarang);
 
         // jumlah permintaan costumer
-        $R = 8000;//Penjualan::GetTotalOrderByMonth($idbarang, $month);
+        $R = Penjualan::GetTotalOrderByMonth($idbarang, $month);
 
         // Harga barang
-        $P = 10000;//Barang::GetHargaBarang($idbarang);
+        $P = Barang::GetHargaBarang($idbarang);
 
         // persentase dari harga barang
         $T = 0.3;
@@ -211,14 +211,14 @@ class PemesananController extends Controller
         $H = Barang::GetBiayaPenyimpanan($idbarang);
 
         // lead time per-suplier : per-minggu(
-        $L = 2;//Supplier::GetLeadtime($idsupplier);
+        $L = Supplier::GetLeadtime($idsupplier);
         
         // waktu operasional
-        $N = 50;//Supplier::GetWaktuOperasional($idsupplier);
+        $N = Supplier::GetWaktuOperasional($idsupplier);
 
-        $q = 346;//Barang::where('id', $idbarang)->value('stok');
+        $q = Barang::where('id', $idbarang)->value('stok');
  
-        $K = 1000;//($price - $P);
+        $K = ($price - $P);
 
         // 
         $B = ($R * $L) / $N;
@@ -260,7 +260,7 @@ class PemesananController extends Controller
             'reorder_point' => $B
         ];
 
-        return json_encode(dump($data));
+        return json_encode($data);
 
     }
 
@@ -291,17 +291,35 @@ class PemesananController extends Controller
         $this->validate($req, [
             'idbarang' => ['required', 'integer'],
             'jumlah_unit' => ['required', 'integer'],
-            'total_cost' => ['required', 'integer'],
+            // 'total_cost' => ['required', 'integer'],
             'frekuensi_pembelian' => ['required'],
             'reorder_point' => ['required']
         ]);
+
+        if ($req['total_cost']) 
+        {
+            $tc = $req['total_cost'];
+        } 
+        else 
+        {
+            $tc = $req['besar_penghematan'];
+        }
+
+        if ($tc <= 0) 
+        {
+            $tcn = 0;
+        }
+        else
+        {
+            $tcn = $tc;
+        }
 
         $idusers = Auth::id();
         $data = [
             'idusers' => $idusers,
             'idbarang' => $req['idbarang'],
             'jumlah_unit' => $req['jumlah_unit'],
-            'total_cost' => $req['total_cost'],
+            'total_cost' => $tcn,
             'frekuensi_pembelian' => $req['frekuensi_pembelian'],
             'reorder_point' => $req['reorder_point']
         ];

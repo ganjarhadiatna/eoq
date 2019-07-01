@@ -145,37 +145,174 @@
 
 </form>
 
+<!-- Modal -->
+<div 
+    class="modal fade show" 
+    id="e-generate" 
+    tabindex="-1" 
+    role="dialog" 
+    aria-labelledby="eGenerateModal" 
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 1000px">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h3 class="modal-title" id="createModalLabel">
+                    Hasil Keputusan
+                </h3>
+                <!-- <button 
+                    onclick="openCreateForm()" 
+                    type="button" class="close">
+                    <span aria-hidden="true">&times;</span>
+                </button> -->
+            </div>
+
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col" width="100">NO</th>
+                                <th scope="col">Diskon</th>
+                                <th scope="col">Jumlah Unit</th>
+                                <th scope="col">Total Cost</th>
+                                <th scope="col">Diskon</th>
+                                <th scope="col">Min - Max</th>
+                                <th scope="col">Tipe</th>
+                                <th scope="col" width="200">#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td><b>EOQ<b></td>
+                                <td>
+                                    <button onclick="op_e_generate('close')" class="btn btn-primary">
+                                        Pilih Ini
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td><b>Unit Discount</b></td>
+                                <td>
+                                    <button onclick="op_e_generate('close')" class="btn btn-primary">
+                                        Pilih Ini
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td><b>Incremental Discount</b></td>
+                                <td>
+                                    <button onclick="op_e_generate('close')" class="btn btn-primary">
+                                        Pilih Ini
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td><b>Incremental Discount</b></td>
+                                <td>
+                                    <button onclick="op_e_generate('close')" class="btn btn-primary">
+                                        Pilih Ini
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td>XXX</td>
+                                <td><b>Incremental Discount</b></td>
+                                <td>
+                                    <button onclick="op_e_generate('close')" class="btn btn-primary">
+                                        Pilih Ini
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
+    var clNow = "modal fade";
+    var clOpen = "modal fade show";
 
-        function generate_eoq() 
-        {
-            var idbarang = $('#idbarang').val();
-            var route = '{{ url("/pesanan/eoq/") }}' + '/' + idbarang;
+    function generate_eoq() 
+    {
+        op_e_generate('open');
+        // var idbarang = $('#idbarang').val();
+        // var route = '{{ url("/pesanan/eoq/") }}' + '/' + idbarang;
 
-            if (idbarang == 0) {
-                alert('pilih barang terlebih dahulu.');
-            } else {
-                $.ajax({
-                    url: route,
-                    type: 'GET',
-                    processData: false,
-                    contentType: false,
-                    dataType: 'JSON',
-                })
-                .done(function(data) {
-                    $('#jumlah_unit').val(data.jumlah_unit);
-                    $('#total_cost').val(data.total_cost);
-                    $('#frekuensi_pembelian').val(data.frekuensi_pembelian);
-                    $('#reorder_point').val(data.reorder_point);
-                })
-                .fail(function(e) {
-                    console.log("error " + e.responseJSON.message);
-                })
-                .always(function() {
-                    console.log("complete");
-                });
-            }
+        // if (idbarang == 0) {
+        //     alert('pilih barang terlebih dahulu.');
+        // } else {
+        //     $.ajax({
+        //         url: route,
+        //         type: 'GET',
+        //         processData: false,
+        //         contentType: false,
+        //         dataType: 'JSON',
+        //     })
+        //     .done(function(data) {
+        //         $('#jumlah_unit').val(data.jumlah_unit);
+        //         $('#total_cost').val(data.total_cost);
+        //         $('#frekuensi_pembelian').val(data.frekuensi_pembelian);
+        //         $('#reorder_point').val(data.reorder_point);
+        //     })
+        //     .fail(function(e) {
+        //         console.log("error " + e.responseJSON.message);
+        //     })
+        //     .always(function() {
+        //         console.log("complete");
+        //     });
+        // }
             
+    }
+
+    function op_e_generate(stt) 
+    {
+        if (stt == 'open') 
+        {
+            $('#e-generate').attr('class', clOpen).show();
+        } 
+        else 
+        {
+            $('#e-generate').attr('class', clNow).hide();
         }
+        
+    }
+
+    $(document).ready(function () {
+        // op_e_generate('open');
+    });
 
 </script>

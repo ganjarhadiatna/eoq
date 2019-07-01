@@ -124,7 +124,7 @@
                         <th scope="col">Supplier</th>
                         <th scope="col">Barang</th>
                         <th scope="col">Jumlah Unit</th>
-                        <th scope="col">Total Cost</th>
+                        <th scope="col">Total Cost / Besar Penghematan</th>
                         <th scope="col">Frekuensi Pembelian</th>
                         <th scope="col">Reorder Point</th>
                         <th scope="col" width="200">#</th>

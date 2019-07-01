@@ -97,24 +97,24 @@
                 @endif
             </div>
 
-            <div class="form-group{{ $errors->has('jumlah_unit_spesial') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="jumlah_unit_spesial">{{ __('Jumlah unit harga sepesial') }}</label>
+            <div class="form-group{{ $errors->has('jumlah_unit_khusus') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="jumlah_unit_khusus">{{ __('Jumlah unit harga sepesial') }}</label>
                 <input 
                     type="text" 
-                    name="jumlah_unit_spesial" 
-                    id="hs_jumlah_unit_spesial" 
-                    class="form-control form-control-alternative{{ $errors->has('jumlah_unit_spesial') ? ' is-invalid' : '' }}" 
+                    name="jumlah_unit" 
+                    id="hs_jumlah_unit_khusus" 
+                    class="form-control form-control-alternative{{ $errors->has('jumlah_unit_khusus') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     readonly="true" 
                     required>
-                @if ($errors->has('jumlah_unit_spesial'))
+                @if ($errors->has('jumlah_unit_khusus'))
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('jumlah_unit_spesial') }}</strong>
+                        <strong>{{ $errors->first('jumlah_unit_khusus') }}</strong>
                     </span>
                 @endif
             </div>
 
-            <div class="form-group{{ $errors->has('total_cost_n') ? ' has-danger' : '' }}">
+            <!-- <div class="form-group{{ $errors->has('total_cost_n') ? ' has-danger' : '' }}">
                 <label class="form-control-label" for="hs_total_cost_n">{{ __('Total cost persediaan (s)') }}</label>
                 <input 
                     type="text" 
@@ -144,6 +144,23 @@
                 @if ($errors->has('total_cost_n'))
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->first('total_cost_n') }}</strong>
+                    </span>
+                @endif
+            </div> -->
+
+            <div class="form-group{{ $errors->has('besar_penghematan') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="besar_penghematan">{{ __('Besar Penghematan') }}</label>
+                <input 
+                    type="text" 
+                    name="besar_penghematan" 
+                    id="hs_besar_penghematan" 
+                    class="form-control form-control-alternative{{ $errors->has('besar_penghematan') ? ' is-invalid' : '' }}" 
+                    placeholder="0" 
+                    readonly="true" 
+                    required>
+                @if ($errors->has('besar_penghematan'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('besar_penghematan') }}</strong>
                     </span>
                 @endif
             </div>
@@ -229,14 +246,15 @@
                 })
                 .done(function(data) {
                     $('#hs_jumlah_unit_sebelumnya').val(data.jumlah_unit_sebelumnya);
-                    $('#hs_jumlah_unit_spesial').val(data.jumlah_unit_spesial);
+                    $('#hs_jumlah_unit_khusus').val(data.jumlah_unit_khusus);
                     $('#hs_total_cost_s').val(data.total_cost_s);
                     $('#hs_total_cost_n').val(data.total_cost_n);
                     $('#hs_frekuensi_pembelian').val(data.frekuensi_pembelian);
                     $('#hs_reorder_point').val(data.reorder_point);
+                    $('#hs_besar_penghematan').val(data.besar_penghematan);
                 })
                 .fail(function(e) {
-                    console.log("error " + e.responseJSON.message);
+                    console.log("error " + e);
                 })
                 .always(function() {
                     console.log("complete");

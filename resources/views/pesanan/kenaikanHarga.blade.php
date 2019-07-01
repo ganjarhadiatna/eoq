@@ -80,22 +80,6 @@
     <div class="row mb-2">
 
         <div class="col-sm">
-            <div class="form-group{{ $errors->has('jumlah_unit_sebelumnya') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="jumlah_unit_sebelumnya">{{ __('Jumlah unit sebelumnya') }}</label>
-                <input 
-                    type="text" 
-                    name="jumlah_unit_sebelumnya" 
-                    id="ip_jumlah_unit_sebelumnya" 
-                    class="form-control form-control-alternative{{ $errors->has('jumlah_unit_sebelumnya') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('jumlah_unit_sebelumnya'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('jumlah_unit_sebelumnya') }}</strong>
-                    </span>
-                @endif
-            </div>
 
             <div class="form-group{{ $errors->has('jumlah_unit_kenaikan') ? ' has-danger' : '' }}">
                 <label class="form-control-label" for="jumlah_unit_kenaikan">{{ __('Jumlah unit setelah kenaikan') }}</label>
@@ -110,6 +94,23 @@
                 @if ($errors->has('jumlah_unit_kenaikan'))
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->first('jumlah_unit_kenaikan') }}</strong>
+                    </span>
+                @endif
+            </div>
+
+            <div class="form-group{{ $errors->has('jumlah_unit_khusus') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="jumlah_unit_khusus">{{ __('Jumlah unit khusus') }}</label>
+                <input 
+                    type="text" 
+                    name="jumlah_unit" 
+                    id="ip_jumlah_unit_khusus" 
+                    class="form-control form-control-alternative{{ $errors->has('jumlah_unit_khusus') ? ' is-invalid' : '' }}" 
+                    placeholder="0" 
+                    readonly="true" 
+                    required>
+                @if ($errors->has('jumlah_unit_khusus'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('jumlah_unit_khusus') }}</strong>
                     </span>
                 @endif
             </div>
@@ -245,16 +246,16 @@
                     dataType: 'JSON',
                 })
                 .done(function(data) {
-                    $('#ip_jumlah_unit_sebelumnya').val(data.jumlah_unit_sebelumnya);
+                    $('#ip_jumlah_unit_khusus').val(data.jumlah_unit_khusus);
                     $('#ip_jumlah_unit_kenaikan').val(data.jumlah_unit_kenaikan);
-                    $('#ip_total_cost_s').val(data.total_cost_s);
-                    $('#ip_total_cost_n').val(data.total_cost_n);
+                    // $('#ip_total_cost_s').val(data.total_cost_s);
+                    // $('#ip_total_cost_n').val(data.total_cost_n);
                     $('#ip_frekuensi_pembelian').val(data.frekuensi_pembelian);
                     $('#ip_reorder_point').val(data.reorder_point);
                     $('#ip_besar_penghematan').val(data.besar_penghematan);
                 })
                 .fail(function(e) {
-                    console.log("error " + e.responseJSON.message);
+                    console.log("error " + e);
                 })
                 .always(function() {
                     console.log("complete");
