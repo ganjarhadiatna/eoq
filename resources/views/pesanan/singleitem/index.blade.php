@@ -4,7 +4,7 @@
 	<div class="card bg-secondary shadow">
 
         <div class="card-header border-0">
-            <h3 class="mb-0">Daftar Perhitungan Manajemen Stok</h3>
+            <h3 class="mb-0">Singleitem Manajemen Stok</h3>
             <div class="nav-wrapper">
                 <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
                     <!-- <li class="nav-item">
@@ -56,11 +56,8 @@
                     id="tabs-icons-text-1" 
                     role="tabpanel" 
                     aria-labelledby="tabs-icons-text-1-tab">
-                    @include('pesanan.eoq')
+                    @include('pesanan.singleitem.eoq')
                 </div>
-
-
-
 
                 <!-- Back Order -->
                 <div 
@@ -68,7 +65,7 @@
                     id="tabs-icons-text-2" 
                     role="tabpanel" 
                     aria-labelledby="tabs-icons-text-2-tab">
-                    @include('pesanan.backorder')
+                    @include('pesanan.singleitem.backorder')
                 </div>
 
                 <div 
@@ -76,7 +73,7 @@
                     id="tabs-icons-text-3" 
                     role="tabpanel" 
                     aria-labelledby="tabs-icons-text-3-tab">
-                    @include('pesanan.hargaSpesial')
+                    @include('pesanan.singleitem.hargaSpesial')
                 </div>
 
                 <div 
@@ -84,7 +81,7 @@
                     id="tabs-icons-text-4" 
                     role="tabpanel" 
                     aria-labelledby="tabs-icons-text-4-tab">
-                    @include('pesanan.kenaikanHarga')
+                    @include('pesanan.singleitem.kenaikanHarga')
                 </div>
 
 
@@ -123,6 +120,7 @@
                         <th scope="col" width="100">NO</th>
                         <th scope="col">Supplier</th>
                         <th scope="col">Barang</th>
+                        <th scope="col">Harga</th>
                         <th scope="col">Jumlah Unit</th>
                         <th scope="col">Total Cost / Besar Penghematan</th>
                         <th scope="col">Frekuensi Pembelian</th>
@@ -143,6 +141,9 @@
 	                		<td>
 	                			{{ $ps->nama_barang }}
 	                		</td>
+                            <td>
+                                {{ $ps->harga_barang }}
+                            </td>
 	                		<td>
 	                			<b class="text-green">
                                     {{ $ps->jumlah_unit }}
@@ -159,18 +160,18 @@
 	                		</td>
 	                		<td>
 	                			<a 
-                                    href="{{ route('pesanan-remove') }}" 
+                                    href="{{ route('pesanan-singleitem-remove') }}" 
                                     onclick="
                                         event.preventDefault();
-                                        document.getElementById('hapus-pesanan-{{ $ps->id }}').submit();">
+                                        document.getElementById('hapus-pesanan-singleitem-{{ $ps->id }}').submit();">
                                     <button class="btn btn-danger">
                                         Hapus
                                     </button>
                                 </a>
 
                                 <form 
-                                    id="hapus-pesanan-{{ $ps->id }}" 
-                                    action="{{ route('pesanan-remove') }}" 
+                                    id="hapus-pesanan-singleitem-{{ $ps->id }}" 
+                                    action="{{ route('pesanan-singleitem-remove') }}" 
                                     method="POST" 
                                     style="display: none;">
                                     @csrf
@@ -187,7 +188,7 @@
                                 </button> -->
 
                                 <a 
-                                    href="{{ route('pesanan-create') }}" 
+                                    href="{{ route('pesanan-singleitem-create') }}" 
                                     onclick="
                                         event.preventDefault();
                                         document.getElementById('buat-pesanan-{{ $ps->id }}').submit();">
@@ -198,7 +199,7 @@
 
                                 <form 
                                     id="buat-pesanan-{{ $ps->id }}" 
-                                    action="{{ route('pesanan-create') }}" 
+                                    action="{{ route('pesanan-singleitem-create') }}" 
                                     method="POST" 
                                     style="display: none;">
                                     @csrf

@@ -73,15 +73,15 @@
             <h6 class="navbar-heading text-muted">Transaksi</h6>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('pesanan') }}">
+                    <a class="nav-link" href="{{ route('pesanan-singleitem') }}">
                         <i class="fa fa-lg fa-chart-pie text-info"></i>
-                        Pemesanan Per-barang
+                        Pemesanan Singleitem
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('pesanan') }}">
+                    <a class="nav-link" href="{{ route('pesanan-multiitem') }}">
                         <i class="fa fa-lg fa-chart-pie text-info"></i>
-                        Pemesanan Per-supplier
+                        Pemesanan Multiitem
                     </a>
                 </li>
                 <li class="nav-item">

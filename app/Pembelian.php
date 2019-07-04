@@ -25,9 +25,9 @@ class Pembelian extends Model
     		'barang.nama_barang',
     		'supplier.nama as nama_supplier'
     	)
-    	->join('barang', 'barang.id', '=', $this->table.'.idbarang')
-        ->join('supplier', 'supplier.id', '=', 'barang.id')
-        ->orderBy($this->table.'.id', 'desc')
+    	->leftJoin('barang', 'barang.id', '=', $this->table.'.idbarang')
+        ->leftJoin('supplier', 'supplier.id', '=', $this->table.'.idsupplier')
+        ->orderBy($this->table.'.status', 'asc')
     	->paginate($limit);
     }
 }

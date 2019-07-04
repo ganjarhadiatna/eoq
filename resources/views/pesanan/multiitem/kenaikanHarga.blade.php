@@ -1,9 +1,9 @@
 <form 
-    name="form-generate-special-price" 
+    name="form-generate-increase-price" 
     method="post" 
-    action="{{ route('pesanan-push') }}"
+    action="{{ route('pesanan-multiitem-push') }}"
     autocomplete="off" 
-    id="form-generate-special-price">
+    id="form-generate-increase-price">
 
     @csrf
 
@@ -19,7 +19,7 @@
                 <label class="form-control-label" for="idbarang">{{ __('Pilih barang') }}</label>
                 <select 
                     name="idbarang"
-                    id="hs_idbarang" 
+                    id="ip_idbarang" 
                     class="form-control form-control-alternative{{ $errors->has('idbarang') ? ' is-invalid' : '' }}" 
                     required>
                     <option value="0"></option>
@@ -37,18 +37,18 @@
         </div>
         <div class="col-sm">
 
-            <div class="form-group{{ $errors->has('harga_spesial') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="harga_spesial">{{ __('Harga Spesial') }}</label>
+            <div class="form-group{{ $errors->has('kenaikan_harga') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="kenaikan_harga">{{ __('Kenaikan Harga') }}</label>
                 <input 
                     type="text" 
-                    name="harga_spesial" 
-                    id="hs_harga_spesial" 
-                    class="form-control form-control-alternative{{ $errors->has('harga_spesial') ? ' is-invalid' : '' }}" 
+                    name="kenaikan_harga" 
+                    id="ip_kenaikan_harga" 
+                    class="form-control form-control-alternative{{ $errors->has('kenaikan_harga') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     required>
-                @if ($errors->has('harga_spesial'))
+                @if ($errors->has('kenaikan_harga'))
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('harga_spesial') }}</strong>
+                        <strong>{{ $errors->first('kenaikan_harga') }}</strong>
                     </span>
                 @endif
             </div>
@@ -65,7 +65,7 @@
                     <button 
                         type="button" 
                         class="btn btn-success" 
-                        onclick="generate_special_price()">
+                        onclick="generate_increase_price()">
                         Generate Metode
                     </button>
                 </div>
@@ -80,29 +80,30 @@
     <div class="row mb-2">
 
         <div class="col-sm">
-            <div class="form-group{{ $errors->has('jumlah_unit_sebelumnya') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="jumlah_unit_sebelumnya">{{ __('Jumlah unit sebelumnya') }}</label>
+
+            <div class="form-group{{ $errors->has('jumlah_unit_kenaikan') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="jumlah_unit_kenaikan">{{ __('Jumlah unit setelah kenaikan') }}</label>
                 <input 
                     type="text" 
-                    name="jumlah_unit_sebelumnya" 
-                    id="hs_jumlah_unit_sebelumnya" 
-                    class="form-control form-control-alternative{{ $errors->has('jumlah_unit_sebelumnya') ? ' is-invalid' : '' }}" 
+                    name="jumlah_unit_kenaikan" 
+                    id="ip_jumlah_unit_kenaikan" 
+                    class="form-control form-control-alternative{{ $errors->has('jumlah_unit_kenaikan') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     readonly="true" 
                     required>
-                @if ($errors->has('jumlah_unit_sebelumnya'))
+                @if ($errors->has('jumlah_unit_kenaikan'))
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('jumlah_unit_sebelumnya') }}</strong>
+                        <strong>{{ $errors->first('jumlah_unit_kenaikan') }}</strong>
                     </span>
                 @endif
             </div>
 
             <div class="form-group{{ $errors->has('jumlah_unit_khusus') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="jumlah_unit_khusus">{{ __('Jumlah unit harga sepesial') }}</label>
+                <label class="form-control-label" for="jumlah_unit_khusus">{{ __('Jumlah unit khusus') }}</label>
                 <input 
                     type="text" 
                     name="jumlah_unit" 
-                    id="hs_jumlah_unit_khusus" 
+                    id="ip_jumlah_unit_khusus" 
                     class="form-control form-control-alternative{{ $errors->has('jumlah_unit_khusus') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     readonly="true" 
@@ -114,46 +115,12 @@
                 @endif
             </div>
 
-            <!-- <div class="form-group{{ $errors->has('total_cost_n') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="hs_total_cost_n">{{ __('Total cost persediaan (s)') }}</label>
-                <input 
-                    type="text" 
-                    name="total_cost_n" 
-                    id="hs_total_cost_n" 
-                    class="form-control form-control-alternative{{ $errors->has('total_cost_n') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('total_cost_n'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('total_cost_n') }}</strong>
-                    </span>
-                @endif
-            </div>
-
-            <div class="form-group{{ $errors->has('total_cost_n') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="total_cost_n">{{ __('Total cost persediaan (n)') }}</label>
-                <input 
-                    type="text" 
-                    name="total_cost_n" 
-                    id="hs_total_cost_n" 
-                    class="form-control form-control-alternative{{ $errors->has('total_cost_n') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('total_cost_n'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('total_cost_n') }}</strong>
-                    </span>
-                @endif
-            </div> -->
-
             <div class="form-group{{ $errors->has('besar_penghematan') ? ' has-danger' : '' }}">
                 <label class="form-control-label" for="besar_penghematan">{{ __('Besar Penghematan') }}</label>
                 <input 
                     type="text" 
                     name="besar_penghematan" 
-                    id="hs_besar_penghematan" 
+                    id="ip_besar_penghematan" 
                     class="form-control form-control-alternative{{ $errors->has('besar_penghematan') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     readonly="true" 
@@ -165,6 +132,40 @@
                 @endif
             </div>
 
+            <!--<div class="form-group{{ $errors->has('total_cost_s') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="total_cost_s">{{ __('Total cost persediaan (s)') }}</label>
+                <input 
+                    type="text" 
+                    name="total_cost_s" 
+                    id="ip_total_cost_s" 
+                    class="form-control form-control-alternative{{ $errors->has('total_cost_s') ? ' is-invalid' : '' }}" 
+                    placeholder="0" 
+                    readonly="true" 
+                    required>
+                @if ($errors->has('total_cost_s'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('total_cost_s') }}</strong>
+                    </span>
+                @endif
+            </div>
+
+            <div class="form-group{{ $errors->has('total_cost_n') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="total_cost_n">{{ __('Total cost persediaan (n)') }}</label>
+                <input 
+                    type="text" 
+                    name="total_cost_n" 
+                    id="ip_total_cost_n" 
+                    class="form-control form-control-alternative{{ $errors->has('total_cost_n') ? ' is-invalid' : '' }}" 
+                    placeholder="0" 
+                    readonly="true" 
+                    required>
+                @if ($errors->has('total_cost_n'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('total_cost_n') }}</strong>
+                    </span>
+                @endif
+            </div>-->
+
         </div>
         <div class="col-sm">
                                 
@@ -173,7 +174,7 @@
                 <input 
                     type="text" 
                     name="frekuensi_pembelian" 
-                    id="hs_frekuensi_pembelian" 
+                    id="ip_frekuensi_pembelian" 
                     class="form-control form-control-alternative{{ $errors->has('frekuensi_pembelian') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     readonly="true" 
@@ -190,7 +191,7 @@
                 <input 
                     type="text" 
                     name="reorder_point" 
-                    id="hs_reorder_point" 
+                    id="ip_reorder_point" 
                     class="form-control form-control-alternative{{ $errors->has('reorder_point') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     readonly="true" 
@@ -221,19 +222,19 @@
 
 <script type="text/javascript">
 
-        function generate_special_price()
+        function generate_increase_price()
         {
-            var idbarang = $('#hs_idbarang').val();
-            var harga_spesial = $('#hs_harga_spesial').val();
-            var route = '{{ url("/pesanan/special_price/") }}' + '/' + idbarang + '/' + harga_spesial;
+            var idbarang = $('#ip_idbarang').val();
+            var kenaikan_harga = $('#ip_kenaikan_harga').val();
+            var route = '{{ url("/pesanan/increases_price/") }}' + '/' + idbarang + '/' + kenaikan_harga;
 
             if (idbarang == 0) 
             {
                 alert('pilih barang terlebih dahulu.');
             } 
-            if (harga_spesial == '') 
+            if (kenaikan_harga == '') 
             {
-                alert('harga spesial harus diisi.');
+                alert('biaya increase-price harus diisi.');
             } 
             else 
             {
@@ -245,13 +246,13 @@
                     dataType: 'JSON',
                 })
                 .done(function(data) {
-                    $('#hs_jumlah_unit_sebelumnya').val(data.jumlah_unit_sebelumnya);
-                    $('#hs_jumlah_unit_khusus').val(data.jumlah_unit_khusus);
-                    $('#hs_total_cost_s').val(data.total_cost_s);
-                    $('#hs_total_cost_n').val(data.total_cost_n);
-                    $('#hs_frekuensi_pembelian').val(data.frekuensi_pembelian);
-                    $('#hs_reorder_point').val(data.reorder_point);
-                    $('#hs_besar_penghematan').val(data.besar_penghematan);
+                    $('#ip_jumlah_unit_khusus').val(data.jumlah_unit_khusus);
+                    $('#ip_jumlah_unit_kenaikan').val(data.jumlah_unit_kenaikan);
+                    // $('#ip_total_cost_s').val(data.total_cost_s);
+                    // $('#ip_total_cost_n').val(data.total_cost_n);
+                    $('#ip_frekuensi_pembelian').val(data.frekuensi_pembelian);
+                    $('#ip_reorder_point').val(data.reorder_point);
+                    $('#ip_besar_penghematan').val(data.besar_penghematan);
                 })
                 .fail(function(e) {
                     console.log("error " + e);

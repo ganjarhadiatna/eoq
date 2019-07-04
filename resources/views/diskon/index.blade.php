@@ -40,6 +40,7 @@
                     <tr>
                         <th scope="col" width="100">NO</th>
                         <th scope="col">Diskon</th>
+                        <th scope="col">Harga</th>
                         <th scope="col">Min</th>
                         <th scope="col">Max</th>
                         <th scope="col">Tipe</th>
@@ -57,6 +58,9 @@
                             </th>
                             <td>
                             	{{ ($etl->diskon * 100 ).'%' }}
+                            </td>
+                            <td>
+                                {{ ($etl->harga - ($etl->harga * $etl->diskon)) }}
                             </td>
                             <td>
                             	{{ $etl->min }}
@@ -175,6 +179,23 @@
                             @endif
                         </div>
 
+                        <!-- <div class="form-group{{ $errors->has('harga') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="input-harga">{{ __('Harga') }}</label>
+                            <input 
+                                type="text" 
+                                name="harga" 
+                                id="input-harga" 
+                                class="form-control form-control-alternative{{ $errors->has('harga') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('0') }}"  
+                                required >
+
+                            @if ($errors->has('harga'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('harga') }}</strong>
+                                </span>
+                            @endif
+                        </div> -->
+
                         <div class="form-group{{ $errors->has('tipe') ? ' has-danger' : '' }}">
                         	<label class="form-control-label" for="input_tipe">{{ __('Pilih Tipe Diskon *') }}</label>
                             <select 
@@ -234,7 +255,7 @@
                             onclick="openCreateForm()">Tutup</button>
                         <button 
                             type="submit" 
-                            class="btn btn-primary">Simpan barang</button>
+                            class="btn btn-primary">Simpan diskon</button>
                     </div>
 
 	            </form>
@@ -303,6 +324,23 @@
                                 </span>
                             @endif
                         </div>
+
+                        <!-- <div class="form-group{{ $errors->has('harga') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="ubah_harga">{{ __('Harga') }}</label>
+                            <input 
+                                type="text" 
+                                name="harga" 
+                                id="ubah_harga" 
+                                class="form-control form-control-alternative{{ $errors->has('harga') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('0') }}"
+                                required >
+
+                            @if ($errors->has('harga'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('harga') }}</strong>
+                                </span>
+                            @endif
+                        </div> -->
 
                         <!--<div class="form-group{{ $errors->has('tipe') ? ' has-danger' : '' }}">
                         	<label class="form-control-label" for="ubah_tipe">{{ __('Pilih Kategori *') }}</label>
@@ -393,6 +431,7 @@
                     $('#ubah_id').val(data[0].id);
                     $('#ubah_idbarang').val(data[0].idbarang);
                     $('#ubah_diskon').val((data[0].diskon * 100));
+                    // $('#ubah_harga').val(data[0].harga);
                     $('#ubah_min').val(data[0].min);
                     $('#ubah_max').val(data[0].max);
 

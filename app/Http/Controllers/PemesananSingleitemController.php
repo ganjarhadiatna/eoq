@@ -8,10 +8,11 @@ use App\Pemesanan;
 use App\Pembelian;
 Use App\Barang;
 Use App\Supplier;
+use App\Diskon;
 
 use Auth;
 
-class PemesananController extends Controller
+class PemesananSingleitemController extends Controller
 {
     public function __construct()
     {
@@ -24,6 +25,7 @@ class PemesananController extends Controller
         // $idsupplier = $req['idsupplier'];
 
         $month = date('m', strtotime('-1 month'));
+        $monthCurrent = date('m', strtotime('0 month'));
 
         $idsupplier = Barang::GetIdsupplier($idbarang);
 
@@ -31,7 +33,14 @@ class PemesananController extends Controller
         $C = Barang::GetBiayaPemesanan($idbarang);
 
         // jumlah permintaan costumer
-        $R = Penjualan::GetTotalOrderByMonth($idbarang, $month);
+        if (Penjualan::GetTotalOrderByMonth($idbarang, $monthCurrent) > 0) 
+        {
+            $R = Penjualan::GetTotalOrderByMonth($idbarang, $monthCurrent);
+        }
+        else
+        {
+            $R = Penjualan::GetTotalOrderByMonth($idbarang, $month);
+        }
 
         // Harga barang
         $P = Barang::GetHargaBarang($idbarang);
@@ -48,19 +57,97 @@ class PemesananController extends Controller
         // waktu operasional
         $N = Supplier::GetWaktuOperasional($idsupplier);
 
-        $Q = ceil(sqrt((2 * $C * $R) / $H));
+        $Q = sqrt((2 * $C * $R) / $H);
 
         $TC = ($P * $R) + ($H * $Q);
 
         $F = number_format(($R / $Q), 2);
 
-        $B = ceil(($R * $L) / $N);
+        $B = ($R * $L) / $N;
+
+
+        // diskon unit
+        // satu validasi
+        $diskonUnit = Diskon::GetAllByType($idbarang, 'unit');
+        $dataDiskonUnit = [];
+        foreach ($diskonUnit as $du) {
+            
+            $du_H = ($H - ($H * $du->diskon));
+            $du_Q = sqrt((2 * $C * $R) / ($du->diskon * $du_H));
+
+            $du_P = ($P - ($P * $du->diskon));
+            $du_TC = (($du_P * $R) + (($C * $R) / $du_Q) + (($du_P * $T * $du_Q) / 2));
+
+            $dataDiskonUnit = [
+                'diskon' => $du->diskon,
+                'harga_barang' => $du_P,
+                'jumlah_permintaan' => $R,
+                'biaya_penyimpanan' => $H,
+                'biaya_pemesanan' => $C,
+                'jumlah_unit' => ceil($du_Q),
+                'total_cost' => ceil($du_TC),
+                'min' => $du->min,
+                'max' => $du->max
+            ];
+        }
+
+
+        // diskon incremental
+        $diskonIncremental = Diskon::GetAllByType($idbarang, 'incremental');
+        $dataDiskonIncremetal = [];
+
+        $ds_before = 0;
+
+        foreach ($diskonIncremental as $key => $di) {
+            $ui = ($di->min - 1);
+
+            if ($key != 0) 
+            {
+                $di_before_P = ($P - ($P * $diskonIncremental[$key - 1]->diskon));
+                $di_current_P = ($P - ($P * $di->diskon));
+
+                $pi = $di_before_P - $di_current_P;
+                $ds = $ds_before + ($ui * $pi);
+                $ds_before = $ds;
+            } 
+            else 
+            {
+                $di_before_P = 0;
+                $di_current_P = ($P - ($P * $di->diskon));
+
+                $ds = 0;
+            }
+
+            $di_Q = sqrt(((2 * $R) * ($C + $ds)) / ($di_current_P * $T));
+            $di_TC = ($di_current_P * $R) + ((($C + $ds) * $R) / $di_Q) + (($di_current_P * $T * $di_Q) / 2) + (($T * $ds) / 2);
+
+            $dt = [
+                'diskon' => $di->diskon,
+                'harga_barang' => $di_current_P,
+                'jumlah_permintaan' => $R,
+                'biaya_penyimpanan' => $H,
+                'biaya_pemesanan' => $C,
+                'jumlah_unit' => ceil($di_Q),
+                'total_cost' => ceil($di_TC),
+                'min' => $di->min,
+                'max' => $di->max
+            ];
+
+            array_push($dataDiskonIncremetal, $dt);
+
+        }
 
         $data = [
-            'jumlah_unit' => $Q,
-            'total_cost' => $TC,
+            'harga_barang' => $P,
+            'jumlah_permintaan' => $R,
+            'biaya_penyimpanan' => $H,
+            'biaya_pemesanan' => $C,
+            'jumlah_unit' => ceil($Q),
+            'total_cost' => ceil($TC),
             'frekuensi_pembelian' => $F,
-            'reorder_point' => $B
+            'reorder_point' => $B,
+            'diskon_unit' => $dataDiskonUnit,
+            'diskon_incremental' => $dataDiskonIncremetal,
         ];
         return json_encode($data);
     }
@@ -70,6 +157,7 @@ class PemesananController extends Controller
         // $idbarang = $req['idbarang'];
         // $idsupplier = $req['idsupplier'];
         $month = date('m', strtotime('-1 month'));
+        $monthCurrent = date('m', strtotime('0 month'));
 
         $idsupplier = Barang::GetIdsupplier($idbarang);
 
@@ -77,7 +165,14 @@ class PemesananController extends Controller
         $C = Barang::GetBiayaPemesanan($idbarang);
 
         // jumlah permintaan costumer
-        $R = Penjualan::GetTotalOrderByMonth($idbarang, $month);
+        if (Penjualan::GetTotalOrderByMonth($idbarang, $monthCurrent) > 0) 
+        {
+            $R = Penjualan::GetTotalOrderByMonth($idbarang, $monthCurrent);
+        }
+        else
+        {
+            $R = Penjualan::GetTotalOrderByMonth($idbarang, $month);
+        }
 
         // Harga barang
         $P = Barang::GetHargaBarang($idbarang);
@@ -111,6 +206,8 @@ class PemesananController extends Controller
         $B = ceil(($R * $L) / $N);
 
         $data = [
+            'harga_barang' => $P,
+            'jumlah_permintaan' => $R,
             'jumlah_unit' => $Q,
             'total_cost' => $TC,
             'frekuensi_pembelian' => $F,
@@ -128,6 +225,7 @@ class PemesananController extends Controller
         // $idbarang = $req['idbarang'];
         // $idsupplier = $req['idsupplier'];
         $month = date('m', strtotime('-1 month'));
+        $monthCurrent = date('m', strtotime('0 month'));
 
         $idsupplier = Barang::GetIdsupplier($idbarang);
 
@@ -135,7 +233,14 @@ class PemesananController extends Controller
         $C = Barang::GetBiayaPemesanan($idbarang);
 
         // jumlah permintaan costumer
-        $R = Penjualan::GetTotalOrderByMonth($idbarang, $month);
+        if (Penjualan::GetTotalOrderByMonth($idbarang, $monthCurrent) > 0) 
+        {
+            $R = Penjualan::GetTotalOrderByMonth($idbarang, $monthCurrent);
+        }
+        else
+        {
+            $R = Penjualan::GetTotalOrderByMonth($idbarang, $month);
+        }
 
         // Harga barang
         $P = Barang::GetHargaBarang($idbarang);
@@ -171,6 +276,8 @@ class PemesananController extends Controller
         $B = ceil(($R * $L) / $N);
 
         $data = [
+            'harga_barang' => $P,
+            'jumlah_permintaan' => $R,
             'jumlah_unit_sebelumnya' => ceil($Qs),
             'jumlah_unit_khusus' => ceil($Q),
             'total_cost_s' => ceil($TCs),
@@ -192,6 +299,7 @@ class PemesananController extends Controller
         // $idbarang = $req['idbarang'];
         // $idsupplier = $req['idsupplier'];
         $month = date('m', strtotime('-1 month'));
+        $monthCurrent = date('m', strtotime('0 month'));
 
         $idsupplier = Barang::GetIdsupplier($idbarang);
 
@@ -199,7 +307,14 @@ class PemesananController extends Controller
         $C = Barang::GetBiayaPemesanan($idbarang);
 
         // jumlah permintaan costumer
-        $R = Penjualan::GetTotalOrderByMonth($idbarang, $month);
+        if (Penjualan::GetTotalOrderByMonth($idbarang, $monthCurrent) > 0) 
+        {
+            $R = Penjualan::GetTotalOrderByMonth($idbarang, $monthCurrent);
+        }
+        else
+        {
+            $R = Penjualan::GetTotalOrderByMonth($idbarang, $month);
+        }
 
         // Harga barang
         $P = Barang::GetHargaBarang($idbarang);
@@ -248,7 +363,8 @@ class PemesananController extends Controller
 
 
         $data = [
-            // 'Jumlah_unit_awal' => $Q,
+            'harga_barang' => $P,
+            'jumlah_permintaan' => $R,
             'jumlah_unit_sebelumnya' => ceil($Qs),
             'jumlah_unit_kenaikan' => ceil($Qa),
             'jumlah_unit_khusus' => ceil($Q),
@@ -268,8 +384,8 @@ class PemesananController extends Controller
     {
         $barang = Barang::orderBy('id', 'desc')->get();
         $supplier = Supplier::orderBy('id', 'desc')->get();
-        $pemesanan = Pemesanan::GetAll(5);
-        return view('pesanan.index', [
+        $pemesanan = Pemesanan::GetAllSingleItem(5);
+        return view('pesanan.singleitem.index', [
             'barang' => $barang,
             'supplier' => $supplier,
             'pemesanan' => $pemesanan
@@ -277,12 +393,12 @@ class PemesananController extends Controller
     }
     public function tambah()
     {
-        return view('pesanan.create');
+        return view('pesanan.singleitem.create');
     }
     public function edit($id)
     {
         $pesanan = Barang::where('id', $id)->get();
-        return view('pesanan.edit', ['pesanan' => $pesanan]);
+        return view('pesanan.singleitem.edit', ['pesanan' => $pesanan]);
     }
 
     // crud
@@ -291,7 +407,7 @@ class PemesananController extends Controller
         $this->validate($req, [
             'idbarang' => ['required', 'integer'],
             'jumlah_unit' => ['required', 'integer'],
-            // 'total_cost' => ['required', 'integer'],
+            'harga_barang' => ['required', 'integer'],
             'frekuensi_pembelian' => ['required'],
             'reorder_point' => ['required']
         ]);
@@ -317,22 +433,25 @@ class PemesananController extends Controller
         $idusers = Auth::id();
         $data = [
             'idusers' => $idusers,
+            'idsupplier' => Barang::where('id', $req['idbarang'])->value('idsupplier'),
             'idbarang' => $req['idbarang'],
+            'harga_barang' => $req['harga_barang'],
             'jumlah_unit' => $req['jumlah_unit'],
             'total_cost' => $tcn,
             'frekuensi_pembelian' => $req['frekuensi_pembelian'],
-            'reorder_point' => $req['reorder_point']
+            'reorder_point' => $req['reorder_point'],
+            'tipe' => 'singleitem'
         ];
 
         // echo json_encode($data);
 
         if (Pemesanan::Insert($data)) 
         {
-             return redirect(route('pesanan'));
+             return redirect(route('pesanan-singleitem'));
         } 
         else 
         {
-             return redirect(route('pesanan'));
+             return redirect(route('pesanan-singleitem'));
         }
     }
 
@@ -344,11 +463,11 @@ class PemesananController extends Controller
 
         if (Pemesanan::where('id', $id)->delete())
         {
-             return redirect(route('pesanan'));
+             return redirect(route('pesanan-singleitem'));
         } 
         else 
         {
-             return redirect(route('pesanan'));
+             return redirect(route('pesanan-singleitem'));
         }
     }
 
@@ -376,7 +495,7 @@ class PemesananController extends Controller
         } 
         else 
         {
-            return redirect(route('pesanan'));
+            return redirect(route('pesanan-singleitem'));
         }
 
     }

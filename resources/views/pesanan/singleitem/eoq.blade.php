@@ -1,7 +1,7 @@
 <form 
     name="form-generate-eoq" 
     method="post" 
-    action="{{ route('pesanan-push') }}"
+    action="{{ route('pesanan-singleitem-push') }}"
     autocomplete="off" 
     id="form-generate-eoq">
 
@@ -57,6 +57,24 @@
     <div class="row mb-2">
 
         <div class="col-sm">
+            
+            <div class="form-group{{ $errors->has('harga_barang') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="harga_barang">{{ __('Harga barang') }}</label>
+                <input 
+                    type="text" 
+                    name="harga_barang" 
+                    id="harga_barang" 
+                    class="form-control form-control-alternative{{ $errors->has('harga_barang') ? ' is-invalid' : '' }}" 
+                    placeholder="0" 
+                    readonly="true" 
+                    required>
+                @if ($errors->has('harga_barang'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('harga_barang') }}</strong>
+                    </span>
+                @endif
+            </div>
+
             <div class="form-group{{ $errors->has('jumlah_unit') ? ' has-danger' : '' }}">
                 <label class="form-control-label" for="jumlah_unit">{{ __('Jumlah unit') }}</label>
                 <input 
@@ -160,11 +178,11 @@
                 <h3 class="modal-title" id="createModalLabel">
                     Hasil Keputusan
                 </h3>
-                <!-- <button 
-                    onclick="openCreateForm()" 
+                <button 
+                    onclick="op_e_generate('close')" 
                     type="button" class="close">
                     <span aria-hidden="true">&times;</span>
-                </button> -->
+                </button>
             </div>
 
             <div class="modal-body">
@@ -173,7 +191,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col" width="100">NO</th>
-                                <th scope="col">Diskon</th>
+                                <th scope="col">Harga</th>
                                 <th scope="col">Jumlah Unit</th>
                                 <th scope="col">Total Cost</th>
                                 <th scope="col">Diskon</th>
@@ -182,78 +200,7 @@
                                 <th scope="col" width="200">#</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td><b>EOQ<b></td>
-                                <td>
-                                    <button onclick="op_e_generate('close')" class="btn btn-primary">
-                                        Pilih Ini
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td><b>Unit Discount</b></td>
-                                <td>
-                                    <button onclick="op_e_generate('close')" class="btn btn-primary">
-                                        Pilih Ini
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td><b>Incremental Discount</b></td>
-                                <td>
-                                    <button onclick="op_e_generate('close')" class="btn btn-primary">
-                                        Pilih Ini
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td><b>Incremental Discount</b></td>
-                                <td>
-                                    <button onclick="op_e_generate('close')" class="btn btn-primary">
-                                        Pilih Ini
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td>XXX</td>
-                                <td><b>Incremental Discount</b></td>
-                                <td>
-                                    <button onclick="op_e_generate('close')" class="btn btn-primary">
-                                        Pilih Ini
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
+                        <tbody id="eoq-diskon"></tbody>
                     </table>
                 </div>
             </div>
@@ -268,37 +215,116 @@
 
     function generate_eoq() 
     {
-        op_e_generate('open');
-        // var idbarang = $('#idbarang').val();
-        // var route = '{{ url("/pesanan/eoq/") }}' + '/' + idbarang;
 
-        // if (idbarang == 0) {
-        //     alert('pilih barang terlebih dahulu.');
-        // } else {
-        //     $.ajax({
-        //         url: route,
-        //         type: 'GET',
-        //         processData: false,
-        //         contentType: false,
-        //         dataType: 'JSON',
-        //     })
-        //     .done(function(data) {
-        //         $('#jumlah_unit').val(data.jumlah_unit);
-        //         $('#total_cost').val(data.total_cost);
-        //         $('#frekuensi_pembelian').val(data.frekuensi_pembelian);
-        //         $('#reorder_point').val(data.reorder_point);
-        //     })
-        //     .fail(function(e) {
-        //         console.log("error " + e.responseJSON.message);
-        //     })
-        //     .always(function() {
-        //         console.log("complete");
-        //     });
-        // }
+        var idbarang = $('#idbarang').val();
+        var route = '{{ url("/pesanan/eoq/") }}' + '/' + idbarang;
+
+        if (idbarang == 0) {
+            alert('pilih barang terlebih dahulu.');
+        } else {
+            $.ajax({
+                url: route,
+                type: 'GET',
+                processData: false,
+                contentType: false,
+                dataType: 'JSON',
+            })
+            .done(function(data) {
+
+                op_e_generate('open');
+
+                $('#frekuensi_pembelian').val(data.frekuensi_pembelian);
+                $('#reorder_point').val(data.reorder_point);
+
+                var dt = [];
+
+                // add eoq
+                dt += '\
+                <tr>\
+                    <td>1</td>\
+                    <td>'+data.harga_barang+'</td>\
+                    <td>'+data.jumlah_unit+'</td>\
+                    <td>'+data.total_cost+'</td>\
+                    <td>0</td>\
+                    <td>0</td>\
+                    <td>EOQ</td>\
+                    <td>\
+                        <button onclick="op_e_generate(\
+                            '+'close'+',\
+                            '+data.harga_barang+',\
+                            '+data.jumlah_unit+',\
+                            '+data.total_cost+'\
+                        )" \
+                        class="btn btn-primary">\
+                            Pilih Ini\
+                        </button>\
+                    </td>\
+                </tr>';
+
+                // add diskon
+                dt += '\
+                <tr>\
+                    <td>1</td>\
+                    <td>'+data.diskon_unit.harga_barang+'</td>\
+                    <td>'+data.diskon_unit.jumlah_unit+'</td>\
+                    <td>'+data.diskon_unit.total_cost+'</td>\
+                    <td>'+(data.diskon_unit.diskon * 100)+'%</td>\
+                    <td>0</td>\
+                    <td>Diskon Unit</td>\
+                    <td>\
+                        <button onclick="op_e_generate(\
+                            '+'close'+',\
+                            '+data.diskon_unit.harga_barang+',\
+                            '+data.diskon_unit.jumlah_unit+',\
+                            '+data.diskon_unit.total_cost+'\
+                        )" \
+                        class="btn btn-primary">\
+                            Pilih Ini\
+                        </button>\
+                    </td>\
+                </tr>';
+
+                // add diskon
+                if (data.diskon_incremental.length > 0) {
+                    for (var i = 0; i < data.diskon_incremental.length; i++) {
+                        dt += '\
+                        <tr>\
+                            <td>1</td>\
+                            <td>'+data.diskon_incremental[i].harga_barang+'</td>\
+                            <td>'+data.diskon_incremental[i].jumlah_unit+'</td>\
+                            <td>'+data.diskon_incremental[i].total_cost+'</td>\
+                            <td>'+(data.diskon_incremental[i].diskon * 100)+'%</td>\
+                            <td>'+data.diskon_incremental[i].min+'-'+data.diskon_incremental[i].max+'</td>\
+                            <td>Diskon Incremental</td>\
+                            <td>\
+                                <button onclick="op_e_generate(\
+                                    '+'close'+',\
+                                    '+data.diskon_incremental[i].harga_barang+',\
+                                    '+data.diskon_incremental[i].jumlah_unit+',\
+                                    '+data.diskon_incremental[i].total_cost+'\
+                                )" \
+                                class="btn btn-primary">\
+                                    Pilih Ini\
+                                </button>\
+                            </td>\
+                        </tr>';
+                    }
+                }
+
+                $('#eoq-diskon').html(dt);
+
+            })
+            .fail(function(e) {
+                console.log("error " + e);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+        }
             
     }
 
-    function op_e_generate(stt) 
+    function op_e_generate(stt, harga_barang = 0, jumlah_unit = 0, total_cost = 0) 
     {
         if (stt == 'open') 
         {
@@ -308,6 +334,10 @@
         {
             $('#e-generate').attr('class', clNow).hide();
         }
+        
+        $('#harga_barang').val(harga_barang);
+        $('#jumlah_unit').val(jumlah_unit);
+        $('#total_cost').val(total_cost);
         
     }
 

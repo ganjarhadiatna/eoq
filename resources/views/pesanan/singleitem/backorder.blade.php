@@ -1,7 +1,7 @@
 <form 
     name="form-generate-backorder" 
     method="post" 
-    action="{{ route('pesanan-push') }}"
+    action="{{ route('pesanan-singleitem-push') }}"
     autocomplete="off" 
     id="form-generate-backorder">
 
@@ -80,6 +80,24 @@
     <div class="row mb-2">
 
         <div class="col-sm">
+
+            <div class="form-group{{ $errors->has('harga_barang') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="harga_barang">{{ __('Harga barang') }}</label>
+                <input 
+                    type="text" 
+                    name="harga_barang" 
+                    id="bo_harga_barang" 
+                    class="form-control form-control-alternative{{ $errors->has('harga_barang') ? ' is-invalid' : '' }}" 
+                    placeholder="0" 
+                    readonly="true" 
+                    required>
+                @if ($errors->has('harga_barang'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('harga_barang') }}</strong>
+                    </span>
+                @endif
+            </div>
+
             <div class="form-group{{ $errors->has('jumlah_unit') ? ' has-danger' : '' }}">
                 <label class="form-control-label" for="jumlah_unit">{{ __('Jumlah unit') }}</label>
                 <input 
@@ -194,6 +212,7 @@
                     dataType: 'JSON',
                 })
                 .done(function(data) {
+                    $('$bo_harga_barang').val(data.harga_barang);
                     $('#bo_jumlah_unit').val(data.jumlah_unit);
                     $('#bo_total_cost').val(data.total_cost);
                     $('#bo_frekuensi_pembelian').val(data.frekuensi_pembelian);

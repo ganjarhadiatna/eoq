@@ -60,6 +60,10 @@ class BarangController extends Controller
     {
         return json_encode(Barang::where('id', $id)->get());
     }
+    public function bysupplier($idsupplier)
+    {
+        return json_encode(Barang::where('idsupplier', $idsupplier)->get());
+    }
     public function price_item($id)
     {
         $harga_barang = Barang::where('id', $id)->value('harga_barang');

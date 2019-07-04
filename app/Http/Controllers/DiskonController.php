@@ -15,9 +15,7 @@ class DiskonController extends Controller
 
     public function index($idbarang)
     {
-        $diskon = Diskon::orderBy('id', 'desc')
-        	->where('idbarang', $idbarang)
-        	->paginate(5);
+        $diskon = Diskon::GetAll($idbarang, 5);
         return view('diskon.index', [
         	'diskon' => $diskon, 
         	'idbarang' => $idbarang

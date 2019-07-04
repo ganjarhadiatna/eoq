@@ -1,7 +1,7 @@
 <form 
     name="form-generate-increase-price" 
     method="post" 
-    action="{{ route('pesanan-push') }}"
+    action="{{ route('pesanan-singleitem-push') }}"
     autocomplete="off" 
     id="form-generate-increase-price">
 

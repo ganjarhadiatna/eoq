@@ -19,15 +19,6 @@
                         </div>
                     </form>
                 </div>
-                <!-- <div class="col-2 text-right">
-                	<a href="{{ route('pesanan') }}">
-	                    <button 
-	                        class="btn btn-primary" >
-	                        <i class="fa fa-lg fa-plus"></i>
-	                        Tambah
-	                    </button>
-	                </a>
-                </div> -->
             </div>
         </div>
 

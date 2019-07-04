@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function() {
     // crud
     Route::get('/barang/byid/{idbarang}', 'BarangController@byid')->name('barang_byid');
     Route::get('/barang/price_item/{idiems}', 'BarangController@price_item')->name('barang-price-item');
+    Route::get('/barang/bysupplier/{idsupplier}', 'BarangController@bysupplier')->name('barang_bysupplier');
     Route::post('/barang/push', 'BarangController@push')->name('barang-push');
     Route::post('/barang/put', 'BarangController@put')->name('barang-put');
     Route::post('/barang/remove', 'BarangController@remove')->name('barang-remove');
@@ -100,22 +101,35 @@ Route::middleware('auth')->group(function() {
     Route::post('/penjualan/put', 'PenjualanController@put')->name('penjualan-put');
     Route::post('/penjualan/remove', 'PenjualanController@remove')->name('penjualan-remove');
 
+
+    // single item
     // orders
-    Route::get('/pesanan', 'PemesananController@index')->name('pesanan');
-    Route::get('/pesanan/tambah', 'PemesananController@tambah')->name('pesanan-tambah');
-    Route::get('/pesanan/edit/{idtransactions}', 'PemesananController@edit')->name('pesanan-edit');
+    Route::get('/pesanan', 'PemesananSingleitemController@index')->name('pesanan-singleitem');
+    Route::get('/pesanan/tambah', 'PemesananSingleitemController@tambah')->name('pesanan-singleitem-tambah');
+    Route::get('/pesanan/edit/{idtransactions}', 'PemesananSingleitemController@edit')->name('pesanan-singleitem-edit');
 
     // crud
-    Route::get('/pesanan/eoq/{idbarang}', 'PemesananController@generate_eoq')->name('pesanan-eoq');
-    Route::get('/pesanan/backorder/{idbarang}/{biaya_backorder}', 'PemesananController@generate_backorder')->name('pesanan-backorder');
-    Route::get('/pesanan/special_price/{idbarang}/{price}', 'PemesananController@special_price')->name('special-price');
-    Route::get('/pesanan/increases_price/{idbarang}/{price}', 'PemesananController@increases_price')->name('increases-price');
+    Route::get('/pesanan/eoq/{idbarang}', 'PemesananSingleitemController@generate_eoq')->name('pesanan-singleitem-eoq');
+    Route::get('/pesanan/backorder/{idbarang}/{biaya_backorder}', 'PemesananSingleitemController@generate_backorder')->name('pesanan-singleitem-backorder');
+    Route::get('/pesanan/special_price/{idbarang}/{price}', 'PemesananSingleitemController@special_price')->name('pesanan-singleitemspecial-price');
+    Route::get('/pesanan/increases_price/{idbarang}/{price}', 'PemesananSingleitemController@increases_price')->name('pesanan-singleitemincreases-price');
 
-    Route::post('/pesanan/push', 'PemesananController@push')->name('pesanan-push');
+    Route::post('/pesanan/push', 'PemesananSingleitemController@push')->name('pesanan-singleitem-push');
+    Route::post('/pesanan/remove', 'PemesananSingleitemController@remove')->name('pesanan-singleitem-remove');
+    Route::post('/pesanan/create', 'PemesananSingleitemController@create')->name('pesanan-singleitem-create');
 
-    Route::post('/pesanan/remove', 'PemesananController@remove')->name('pesanan-remove');
 
-    // 
-    Route::post('/pesanan/create', 'PemesananController@create')->name('pesanan-create');
+    // multi item
+    Route::get('/pesanan/multiitem', 'PemesananMultiitemController@index')->name('pesanan-multiitem');
+    Route::get('/pesanan/multiitem/tambah', 'PemesananMultiitemController@tambah')->name('pesanan-multiitem-tambah');
+    Route::get('/pesanan/multiitem/edit/{idtransactions}', 'PemesananMultiitemController@edit')->name('pesanan-multiitem-edit');
+
+    Route::post('/pesanan/multiitem/push', 'PemesananMultiitemController@push')->name('pesanan-multiitem-push');
+    Route::post('/pesanan/multiitem/remove', 'PemesananMultiitemController@remove')->name('pesanan-multiitem-remove');
+    Route::post('/pesanan/multiitem/create', 'PemesananMultiitemController@create')->name('pesanan-multiitem-create');
+
+    // crud
+    Route::get('/pesanan/multiitem/eoq', 'PemesananMultiitemController@generate_eoq')->name('pesanan-multiitem-eoq');
+    Route::post('/pesanan/multiitem/remove', 'PemesananMultiitemController@remove')->name('pesanan-multiitem-remove');
 
 });
