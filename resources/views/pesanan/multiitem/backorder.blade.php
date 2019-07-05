@@ -1,230 +1,319 @@
-<form 
-    name="form-generate-backorder" 
+<!-- <form 
+    name="form-generate-bo" 
     method="post" 
     action="{{ route('pesanan-multiitem-push') }}"
     autocomplete="off" 
-    id="form-generate-backorder">
+    id="form-generate-bo"> -->
 
-    @csrf
-
+    <!-- @csrf -->
+<div>
     <div>
         <h3 class="mb-0">Informasi Parameter</h3>
     </div>
 
-    <div class="row mb-2">
+    <div class="row mb-3">
 
         <div class="col-sm">
-
-            <div class="form-group{{ $errors->has('idbarang') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="idbarang">{{ __('Pilih barang') }}</label>
+            <div class="form-group{{ $errors->has('bo_idsupplier') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="bo_idsupplier">{{ __('Pilih supplier') }}</label>
                 <select 
-                    name="idbarang"
-                    id="bo_idbarang" 
-                    class="form-control form-control-alternative{{ $errors->has('idbarang') ? ' is-invalid' : '' }}" 
+                    name="bo_idsupplier"
+                    id="bo_idsupplier" 
+                    class="form-control form-control-alternative{{ $errors->has('bo_idsupplier') ? ' is-invalid' : '' }}" 
                     required>
                     <option value="0"></option>
-                    @foreach ($barang as $br)
-                        <option value="{{ $br->id }}">{{ $br->nama_barang }}</option>
+                    @foreach ($supplier as $br)
+                        <option value="{{ $br->id }}">{{ $br->nama }}</option>
                     @endforeach
                 </select>
-                @if ($errors->has('idbarang'))
+                @if ($errors->has('bo_idsupplier'))
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('idbarang') }}</strong>
+                        <strong>{{ $errors->first('bo_idsupplier') }}</strong>
                     </span>
                 @endif
             </div>
-
         </div>
         <div class="col-sm">
-
-            <div class="form-group{{ $errors->has('biaya_backorder') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="biaya_backorder">{{ __('Biaya Backorder') }}</label>
+            <div class="form-group{{ $errors->has('bo_biaya_pemesanan') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="bo_biaya_pemesanan">{{ __('Biaya Pemesanan') }}</label>
                 <input 
                     type="text" 
-                    name="biaya_backorder" 
-                    id="bo_biaya_backorder" 
-                    class="form-control form-control-alternative{{ $errors->has('biaya_backorder') ? ' is-invalid' : '' }}" 
+                    name="bo_biaya_pemesanan" 
+                    id="bo_multiitem_biaya_pemesanan" 
+                    class="form-control form-control-alternative{{ $errors->has('bo_biaya_pemesanan') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     required>
-                @if ($errors->has('biaya_backorder'))
+                @if ($errors->has('bo_biaya_pemesanan'))
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('biaya_backorder') }}</strong>
+                        <strong>{{ $errors->first('bo_biaya_pemesanan') }}</strong>
                     </span>
                 @endif
             </div>
-
+        </div>
+        <div class="col-sm">
+            <div class="form-group{{ $errors->has('bo_biaya_backorder') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="bo_biaya_backorder">{{ __('Biaya Backorder') }}</label>
+                <input 
+                    type="text" 
+                    name="bo_biaya_backorder" 
+                    id="bo_multiitem_biaya_backorder" 
+                    class="form-control form-control-alternative{{ $errors->has('bo_biaya_backorder') ? ' is-invalid' : '' }}" 
+                    placeholder="0" 
+                    required>
+                @if ($errors->has('bo_biaya_backorder'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('bo_biaya_backorder') }}</strong>
+                    </span>
+                @endif
+            </div>
         </div>
     </div>
 
-    <div class="row mb-2">
+    <div class="row mb-3">
+        <div class="col-sm"></div>
         <div class="col-sm"></div>
         <div class="col-sm">
             <div>
-                <label class="form-control-label" for="idbarang">{{ __('Mulai perhitungan?') }}</label>
-                <div>
+               <label class="form-control-label" for="idsupplier">{{ __('Munculkan barang?') }}</label>
+               <div>
                     <button 
                         type="button" 
                         class="btn btn-success" 
-                        onclick="generate_backorder()">
-                        Generate Metode
+                        onclick="bo_munculkan_barang()">
+                        Munculkan Barang
+                    </button>
+               </div>
+           </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal -->
+<div 
+    class="modal fade show" 
+    id="bo-modal-barang" 
+    tabindex="-1" 
+    role="dialog" 
+    aria-labelledby="eGenerateModal" 
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 1100px">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h3 class="modal-title" id="createModalLabel">
+                    Daftar Barang
+                </h3>
+                <button 
+                    onclick="op_bo_daftar_brang('close')" 
+                    type="button" class="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <form id="bo-form-barang">
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col" width="100">NO</th>
+                                    <th scope="col">Barang</th>
+                                    <th scope="col">Harga</th>
+                                    <th scope="col">Stok</th>
+                                    <th scope="col">Biaya Pemesanan</th>
+                                    <th scope="col">Biaya Penyimpanan</th>
+                                    <!-- <th scope="col">jumlah unit</th>
+                                    <th scope="col">Total Cost</th> -->
+                                    <th scope="col" width="50">#</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bo-daftar-barang"></tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div style="text-align: right;">
+                    <button 
+                        type="button" 
+                        class="btn btn-success" 
+                        onclick="generate_all_bo_multiitem()">
+                        Generate Backorder & Simpan Pesanan
                     </button>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div>
-        <h3 class="mb-0">Hasil Keputusan</h3>
-    </div>
-
-    <div class="row mb-2">
-
-        <div class="col-sm">
-
-            <div class="form-group{{ $errors->has('harga_barang') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="harga_barang">{{ __('Harga barang') }}</label>
-                <input 
-                    type="text" 
-                    name="harga_barang" 
-                    id="bo_harga_barang" 
-                    class="form-control form-control-alternative{{ $errors->has('harga_barang') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('harga_barang'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('harga_barang') }}</strong>
-                    </span>
-                @endif
-            </div>
-
-            <div class="form-group{{ $errors->has('jumlah_unit') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="jumlah_unit">{{ __('Jumlah unit') }}</label>
-                <input 
-                    type="text" 
-                    name="jumlah_unit" 
-                    id="bo_jumlah_unit" 
-                    class="form-control form-control-alternative{{ $errors->has('jumlah_unit') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('jumlah_unit'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('jumlah_unit') }}</strong>
-                    </span>
-                @endif
-            </div>
-
-            <div class="form-group{{ $errors->has('total_cost') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="total_cost">{{ __('Total cost persediaan') }}</label>
-                <input 
-                    type="text" 
-                    name="total_cost" 
-                    id="bo_total_cost" 
-                    class="form-control form-control-alternative{{ $errors->has('total_cost') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('total_cost'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('total_cost') }}</strong>
-                    </span>
-                @endif
-            </div>
 
         </div>
-        <div class="col-sm">
-                                
-            <div class="form-group{{ $errors->has('frekuensi_pembelian') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="frekuensi_pembelian">{{ __('Frekuensi pembelian per-tahun') }}</label>
-                <input 
-                    type="text" 
-                    name="frekuensi_pembelian" 
-                    id="bo_frekuensi_pembelian" 
-                    class="form-control form-control-alternative{{ $errors->has('frekuensi_pembelian') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('frekuensi_pembelian'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('frekuensi_pembelian') }}</strong>
-                    </span>
-                @endif
-            </div>
-
-            <div class="form-group{{ $errors->has('reorder_point') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="reorder_point">{{ __('Re-order point') }}</label>
-                <input 
-                    type="text" 
-                    name="reorder_point" 
-                    id="bo_reorder_point" 
-                    class="form-control form-control-alternative{{ $errors->has('reorder_point') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('reorder_point'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('reorder_point') }}</strong>
-                    </span>
-                @endif
-            </div>
-
-        </div>
-
     </div>
-
-    <div class="row align-items-center mb-2">
-        <div class="col-sm"></div>
-        <div class="col-4 text-right">
-            <button 
-                type="submit" 
-                class="btn btn-secondary" >
-                Simpan Pesanan
-            </button>
-        </div>
-    </div>
-
-</form>
+</div>
 
 <script type="text/javascript">
+    var dataBackOrder = [];
+    var clNow = "modal fade";
+    var clOpen = "modal fade show";
 
-        function generate_backorder()
+    function op_bo_daftar_brang(stt) 
+    {
+        if (stt == 'open')
         {
-            var idbarang = $('#bo_idbarang').val();
-            var biaya_backorder = $('#bo_biaya_backorder').val();
-            var route = '{{ url("/pesanan/backorder/") }}' + '/' + idbarang + '/' + biaya_backorder;
+            $('#bo-modal-barang').attr('class', clOpen).show();
+        } 
+        else 
+        {
+            $('#bo-modal-barang').attr('class', clNow).hide();
+        }
+    }
 
-            if (idbarang == 0) 
-            {
-                alert('pilih barang terlebih dahulu.');
-            } 
-            if (biaya_backorder == '') 
-            {
-                alert('biaya backorder harus diisi.');
-            } 
-            else 
-            {
+    function bo_event_barang(event) {
+        console.log($(this).is(':checked'));
+    }
+
+    function bo_munculkan_barang() {
+        // get barang
+        var idsupplier = $('#bo_idsupplier').val();
+        var route = '{{ url("/barang/bysupplier/") }}' + '/' + idsupplier;
+
+        if (idsupplier == 0) {
+            alert('pilih supplier terlebih dahulu.');
+        } else {
+            $.ajax({
+                url: route,
+                type: 'GET',
+                dataType: 'json'
+            })
+            .done(function(data) {
+                var dt = '';
+                
+                if (data.length > 0) {
+                    op_bo_daftar_brang('open');
+                    for (var i = 0; i < data.length; i++) {
+                        dt += '\
+                        <tr>\
+                            <td>'+(i + 1)+'</td>\
+                            <td>'+data[i].nama_barang+'</td>\
+                            <td>'+data[i].harga_barang+'</td>\
+                            <td>'+data[i].stok+'</td>\
+                            <td>'+data[i].biaya_pemesanan+'</td>\
+                            <td>'+data[i].biaya_penyimpanan+'</td>\
+                            <td>\
+                                <label class="custom-toggle">\
+                                    <input type="checkbox" value="'+data[i].id+'" class="checkbox" />\
+                                    <span class="custom-toggle-slider rounded-circle"></span>\
+                                </label>\
+                            </td>\
+                        </tr>'
+                    }
+                }
+                $('#bo-daftar-barang').html(dt);
+                // console.log(data);
+            })
+            .fail(function(e) {
+                console.log("error => " + e);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+            
+        }
+    }
+
+    function generate_all_bo_multiitem() {
+        var idsupplier = $('#bo_idsupplier').val();
+        var biaya_pemesanan = $('#bo_multiitem_biaya_pemesanan').val();
+        var biaya_backorder = $('#bo_multiitem_biaya_backorder').val();
+        var route = '{{ url("/pesanan/multiitem/bo/") }}';
+
+        if (dataBackOrder.length > 0) {
+            var a = confirm('apakah barang yang dipilih sudah tepat?');
+            if (a) {generate_all_bo_multiitem
                 $.ajax({
                     url: route,
                     type: 'GET',
-                    processData: false,
-                    contentType: false,
-                    dataType: 'JSON',
+                    dataType: 'json',
+                    data: {
+                        'idsupplier': idsupplier, 
+                        'data': dataBackOrder,
+                        'biaya_pemesanan': biaya_pemesanan,
+                        'biaya_backorder': biaya_backorder
+                    }
                 })
                 .done(function(data) {
-                    $('$bo_harga_barang').val(data.harga_barang);
-                    $('#bo_jumlah_unit').val(data.jumlah_unit);
-                    $('#bo_total_cost').val(data.total_cost);
-                    $('#bo_frekuensi_pembelian').val(data.frekuensi_pembelian);
-                    $('#bo_reorder_point').val(data.reorder_point);
+                    if (data.status === 'success') {
+                        window.location = '{{ route("pesanan-multiitem") }}';
+                    }
+                    // console.log(data);
                 })
                 .fail(function(e) {
-                    console.log("error " + e.responseJSON.message);
+                    console.log("error => " + e.responseJSON.message);
                 })
                 .always(function() {
                     console.log("complete");
                 });
             }
+        } else {
+            alert('pilih satu atau lebih barang barang.');
         }
-        
+    }
+
+    function generate_bo_multiitem(idbarang) 
+    {
+        var route = '{{ url("/pesanan/eoq/") }}' + '/' + idbarang;
+
+        $.ajax({
+            url: route,
+            type: 'GET',
+            processData: false,
+            contentType: false,
+            dataType: 'JSON',
+        })
+        .done(function(data) {
+            // $('#bo-jumlah-unit-'+idbarang).html(data.jumlah_unit);
+            // $('#bo-total-cost-'+idbarang).html(data.total_cost);
+            dataBackOrder.push({
+                'idbarang': idbarang, 
+                'biaya_penyimpanan': data.biaya_penyimpanan,
+                'jumlah_permintaan': data.jumlah_permintaan,
+                'harga_barang': data.harga_barang,
+                'jumlah_unit': data.jumlah_unit,
+                'total_cost': data.total_cost
+            });
+            // console.log(dataBackOrder);
+        })
+        .fail(function(e) {
+            // console.log("error " + e);
+            $('#bo-jumlah-unit-'+idbarang).html('0');
+            $('#bo-total-cost-'+idbarang).html('0');
+        })
+        .always(function() {
+            console.log("complete");
+        });
+            
+    }
+
+    $(document).ready(function () {
+        $('#bo-form-barang').on('change', ':checkbox', function () {
+            console.log(dataBackOrder);
+            if ($(this).is(':checked')) {
+                // console.log($(this).val() + ' is now checked');
+                generate_bo_multiitem($(this).val());
+
+                // add array
+                // dataBackOrder.push($(this).val());
+            } else {
+                // console.log($(this).val() + ' is now unchecked');
+                $('#bo-jumlah-unit-'+$(this).val()).html('0');
+                $('#bo-total-cost-'+$(this).val()).html('0');
+
+                // remove array
+                for (var i = 0; i < dataBackOrder.length; i++) {
+                    if (dataBackOrder[i].idbarang === $(this).val()) {
+                        dataBackOrder.splice(i, 1);
+                    }
+                }
+            }
+        });
+    });
+
 </script>

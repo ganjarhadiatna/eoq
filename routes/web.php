@@ -121,6 +121,7 @@ Route::middleware('auth')->group(function() {
 
     // multi item
     Route::get('/pesanan/multiitem', 'PemesananMultiitemController@index')->name('pesanan-multiitem');
+    Route::get('/pesanan/multiitem/{idsupplier}/daftar-barang/', 'PemesananMultiitemController@daftarBarang')->name('pesanan-multiitem-daftar');
     Route::get('/pesanan/multiitem/tambah', 'PemesananMultiitemController@tambah')->name('pesanan-multiitem-tambah');
     Route::get('/pesanan/multiitem/edit/{idtransactions}', 'PemesananMultiitemController@edit')->name('pesanan-multiitem-edit');
 
@@ -130,6 +131,6 @@ Route::middleware('auth')->group(function() {
 
     // crud
     Route::get('/pesanan/multiitem/eoq', 'PemesananMultiitemController@generate_eoq')->name('pesanan-multiitem-eoq');
-    Route::post('/pesanan/multiitem/remove', 'PemesananMultiitemController@remove')->name('pesanan-multiitem-remove');
+    Route::get('/pesanan/multiitem/bo', 'PemesananMultiitemController@generate_bo')->name('pesanan-multiitem-bo');
 
 });

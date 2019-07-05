@@ -35,6 +35,16 @@ class PemesananMultiitemController extends Controller
         // return json_encode(dump($pemesanan));
     }
 
+    public function daftarBarang($idsupplier)
+    {
+        $supplier = Supplier::where('id', $idsupplier)->get();
+        $pemesanan = Pemesanan::GetAllMultiItemByIdsupplier(5, $idsupplier);
+        return view('pesanan.multiitem.daftarBarang', [
+            'supplier' => $supplier,
+            'pemesanan' => $pemesanan
+        ]);
+    }
+
     public function tambah()
     {
         return view('pesanan.multiitem.create');
@@ -152,13 +162,81 @@ class PemesananMultiitemController extends Controller
             Pemesanan::where('idbarang', $dt->idbarang)->where('tipe', 'multiitem')->Update(['total_cost_multiitem' => $TC]);
         }
 
-        // return json_encode([
-        //     'idsupplier' => $idsupplier,
-        //     'biaya_pemesanan' => $biaya_pemesanan,
-        //     'jumlah_unit' => ceil($Q),
-        //     'total_cost' => ceil($TC),
-        //     'data' => $data
-        // ]);
+        return json_encode([
+            'status' => 'success',
+            'message' => ''
+        ]);
+    }
+
+    public function generate_bo()
+    {
+        $idusers = Auth::id();
+        $idsupplier = $_GET['idsupplier'];
+        $data = $_GET['data'];
+        $dataString = json_decode(json_encode($data), false);
+        $biaya_pemesanan = $_GET['biaya_pemesanan'];
+        $biaya_backorder = $_GET['biaya_backorder'];
+
+        $L = Supplier::GetLeadtime($idsupplier);
+        $N = Supplier::GetWaktuOperasional($idsupplier);
+
+        // frekuensi permintaan optimum
+        $M = 0;
+
+        foreach ($dataString as $key => $dm) {
+            $M += ($dm->biaya_penyimpanan * $dm->jumlah_permintaan) / (2 * $biaya_pemesanan);
+        }
+
+        $a = 0;
+        $b = 0;
+        $c = 0;
+        $d = 0;
+        $TC = 0;
+        $Q = 0;
+        $dataS = [];
+        foreach ($dataString as $key => $dt) {
+            // eoq
+            $Q = ($dt->jumlah_permintaan * $M) * sqrt(($dt->biaya_penyimpanan + $biaya_backorder) / $biaya_backorder);
+
+            // maxium
+            $J = ($dt->biaya_penyimpanan * $Q) / ($dt->biaya_penyimpanan + $biaya_backorder);
+            
+            $ex_a = ($dt->harga_barang * $dt->jumlah_permintaan);
+            $ex_b = ($dt->jumlah_permintaan / $Q);
+            $ex_c = ($dt->biaya_penyimpanan * pow($M, 2)) / (2 * $Q);
+            $ex_d = ($biaya_backorder * pow(($Q - $M), 2)) / (2 * $Q);
+            $ex_tc = ($dt->harga_barang * $dt->jumlah_permintaan) + (($biaya_pemesanan * $dt->harga_barang) / $Q) + (($dt->biaya_penyimpanan * pow(($Q - $J), 2)) / (2 * $Q)) + (($biaya_backorder * pow(($Q - $M),2)) / (2 * $Q));
+
+            // total biaya
+            $a += $ex_a;
+            $b += $ex_b;
+            $c += $ex_c;
+            $d += $ex_d;
+
+            $F = number_format(($dt->jumlah_permintaan / $Q), 2);
+            $B = ($dt->jumlah_permintaan * $L) / $N;
+
+            $dataSave = [
+                'idusers' => $idusers,
+                'idsupplier' => $idsupplier,
+                'idbarang' => $dt->idbarang,
+                'harga_barang' => $dt->harga_barang,
+                'jumlah_unit' => ceil($Q),
+                'total_cost' => ceil($ex_tc),
+                'frekuensi_pembelian' => $F,
+                'reorder_point' => $B,
+                'tipe' => 'multiitem'
+            ];
+            Pemesanan::Insert($dataSave);
+        }
+
+        $TC = $a + ($biaya_pemesanan * $b) + $c + $d;
+
+        // update total cost
+        foreach ($dataString as $key => $dtc) {
+            Pemesanan::where('idbarang', $dtc->idbarang)->where('tipe', 'multiitem')->Update(['total_cost_multiitem' => $TC]);
+        }
+
         return json_encode([
             'status' => 'success',
             'message' => ''

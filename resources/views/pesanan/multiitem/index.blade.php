@@ -22,16 +22,6 @@
                             Back Order
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">
-                            Special Order
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-4-tab" data-toggle="tab" href="#tabs-icons-text-4" role="tab" aria-controls="tabs-icons-text-4" aria-selected="false">
-                            Known Price Increases
-                        </a>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -52,7 +42,7 @@
 
                 <!-- EOQ -->
                 <div 
-                    class="tab-pane fade show active" 
+                    class="tab-pane fade show" 
                     id="tabs-icons-text-1" 
                     role="tabpanel" 
                     aria-labelledby="tabs-icons-text-1-tab">
@@ -69,22 +59,6 @@
                     role="tabpanel" 
                     aria-labelledby="tabs-icons-text-2-tab">
                     @include('pesanan.multiitem.backorder')
-                </div>
-
-                <div 
-                    class="tab-pane fade show" 
-                    id="tabs-icons-text-3" 
-                    role="tabpanel" 
-                    aria-labelledby="tabs-icons-text-3-tab">
-                    @include('pesanan.multiitem.hargaSpesial')
-                </div>
-
-                <div 
-                    class="tab-pane fade show" 
-                    id="tabs-icons-text-4" 
-                    role="tabpanel" 
-                    aria-labelledby="tabs-icons-text-4-tab">
-                    @include('pesanan.multiitem.kenaikanHarga')
                 </div>
 
 
@@ -147,9 +121,11 @@
                                 {{ $ps->total_cost_multiitem }}
                             </td>
                             <td>
-                                <button class="btn btn-white">
-                                    Daftar Barang
-                                </button>
+                                <a href="{{ route('pesanan-multiitem-daftar', $ps->idsupplier) }}">
+                                    <button class="btn btn-white">
+                                        Daftar Pesanan
+                                    </button>
+                                </a>
                             </td>
 	                		<td>
 	                			<a 
@@ -217,7 +193,8 @@
     </div>
 
     <script type="text/javascript">
-
+        var clNow = "modal fade";
+        var clOpen = "modal fade show";
         
         var clNow = "modal fade";
         var clOpen = "modal fade show";
