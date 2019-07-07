@@ -1,12 +1,12 @@
-<form 
-    name="form-generate-increase-price" 
+<!-- <form 
+    name="form-generate-ip" 
     method="post" 
     action="{{ route('pesanan-multiitem-push') }}"
     autocomplete="off" 
-    id="form-generate-increase-price">
+    id="form-generate-ip"> -->
 
-    @csrf
-
+    <!-- @csrf -->
+<div>
     <div>
         <h3 class="mb-0">Informasi Parameter</h3>
     </div>
@@ -14,253 +14,309 @@
     <div class="row mb-2">
 
         <div class="col-sm">
-
-            <div class="form-group{{ $errors->has('idbarang') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="idbarang">{{ __('Pilih barang') }}</label>
+            <div class="form-group{{ $errors->has('ip_idsupplier') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="ip_idsupplier">{{ __('Pilih supplier') }}</label>
                 <select 
-                    name="idbarang"
-                    id="ip_idbarang" 
-                    class="form-control form-control-alternative{{ $errors->has('idbarang') ? ' is-invalid' : '' }}" 
+                    name="ip_idsupplier"
+                    id="ip_idsupplier" 
+                    class="form-control form-control-alternative{{ $errors->has('ip_idsupplier') ? ' is-invalid' : '' }}" 
                     required>
-                    <option value="0"></option>
-                    @foreach ($barang as $br)
-                        <option value="{{ $br->id }}">{{ $br->nama_barang }}</option>
+                    <option value="0">Pilih Supplier</option>
+                    @foreach ($supplier as $br)
+                        <option value="{{ $br->id }}">{{ $br->nama }}</option>
                     @endforeach
                 </select>
-                @if ($errors->has('idbarang'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('idbarang') }}</strong>
-                    </span>
+                @if ($errors->has('ip_idsupplier'))
+                    <ipan class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('ip_idsupplier') }}</strong>
+                    </ipan>
                 @endif
             </div>
-
         </div>
         <div class="col-sm">
-
-            <div class="form-group{{ $errors->has('kenaikan_harga') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="kenaikan_harga">{{ __('Kenaikan Harga') }}</label>
-                <input 
-                    type="text" 
-                    name="kenaikan_harga" 
-                    id="ip_kenaikan_harga" 
-                    class="form-control form-control-alternative{{ $errors->has('kenaikan_harga') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    required>
-                @if ($errors->has('kenaikan_harga'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('kenaikan_harga') }}</strong>
-                    </span>
-                @endif
-            </div>
-
-        </div>
-    </div>
-
-    <div class="row mb-2">
-        <div class="col-sm"></div>
-        <div class="col-sm">
-            <div>
-                <label class="form-control-label" for="idbarang">{{ __('Mulai perhitungan?') }}</label>
-                <div>
-                    <button 
-                        type="button" 
-                        class="btn btn-success" 
-                        onclick="generate_increase_price()">
-                        Generate Metode
-                    </button>
+            <div class="col-sm">
+                <div class="form-group{{ $errors->has('ip_kenaikan_harga') ? ' has-danger' : '' }}">
+                    <label class="form-control-label" for="ip_kenaikan_harga">{{ __('Kenaikan Harga') }}</label>
+                    <input 
+                        type="text" 
+                        name="ip_kenaikan_harga" 
+                        id="ip_kenaikan_harga" 
+                        class="form-control form-control-alternative{{ $errors->has('ip_kenaikan_harga') ? ' is-invalid' : '' }}" 
+                        placeholder="0" 
+                        required>
+                    @if ($errors->has('ip_kenaikan_harga'))
+                        <ipan class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('ip_kenaikan_harga') }}</strong>
+                        </ipan>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
 
     <div>
-        <h3 class="mb-0">Hasil Keputusan</h3>
+        <h3 class="mb-0">Daftar Barang</h3>
     </div>
 
-    <div class="row mb-2">
-
-        <div class="col-sm">
-
-            <div class="form-group{{ $errors->has('jumlah_unit_kenaikan') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="jumlah_unit_kenaikan">{{ __('Jumlah unit setelah kenaikan') }}</label>
-                <input 
-                    type="text" 
-                    name="jumlah_unit_kenaikan" 
-                    id="ip_jumlah_unit_kenaikan" 
-                    class="form-control form-control-alternative{{ $errors->has('jumlah_unit_kenaikan') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('jumlah_unit_kenaikan'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('jumlah_unit_kenaikan') }}</strong>
-                    </span>
-                @endif
-            </div>
-
-            <div class="form-group{{ $errors->has('jumlah_unit_khusus') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="jumlah_unit_khusus">{{ __('Jumlah unit khusus') }}</label>
-                <input 
-                    type="text" 
-                    name="jumlah_unit" 
-                    id="ip_jumlah_unit_khusus" 
-                    class="form-control form-control-alternative{{ $errors->has('jumlah_unit_khusus') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('jumlah_unit_khusus'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('jumlah_unit_khusus') }}</strong>
-                    </span>
-                @endif
-            </div>
-
-            <div class="form-group{{ $errors->has('besar_penghematan') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="besar_penghematan">{{ __('Besar Penghematan') }}</label>
-                <input 
-                    type="text" 
-                    name="besar_penghematan" 
-                    id="ip_besar_penghematan" 
-                    class="form-control form-control-alternative{{ $errors->has('besar_penghematan') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('besar_penghematan'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('besar_penghematan') }}</strong>
-                    </span>
-                @endif
-            </div>
-
-            <!--<div class="form-group{{ $errors->has('total_cost_s') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="total_cost_s">{{ __('Total cost persediaan (s)') }}</label>
-                <input 
-                    type="text" 
-                    name="total_cost_s" 
-                    id="ip_total_cost_s" 
-                    class="form-control form-control-alternative{{ $errors->has('total_cost_s') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('total_cost_s'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('total_cost_s') }}</strong>
-                    </span>
-                @endif
-            </div>
-
-            <div class="form-group{{ $errors->has('total_cost_n') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="total_cost_n">{{ __('Total cost persediaan (n)') }}</label>
-                <input 
-                    type="text" 
-                    name="total_cost_n" 
-                    id="ip_total_cost_n" 
-                    class="form-control form-control-alternative{{ $errors->has('total_cost_n') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('total_cost_n'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('total_cost_n') }}</strong>
-                    </span>
-                @endif
-            </div>-->
-
-        </div>
-        <div class="col-sm">
-                                
-            <div class="form-group{{ $errors->has('frekuensi_pembelian') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="frekuensi_pembelian">{{ __('Frekuensi pembelian per-tahun') }}</label>
-                <input 
-                    type="text" 
-                    name="frekuensi_pembelian" 
-                    id="ip_frekuensi_pembelian" 
-                    class="form-control form-control-alternative{{ $errors->has('frekuensi_pembelian') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('frekuensi_pembelian'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('frekuensi_pembelian') }}</strong>
-                    </span>
-                @endif
-            </div>
-
-            <div class="form-group{{ $errors->has('reorder_point') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="reorder_point">{{ __('Re-order point') }}</label>
-                <input 
-                    type="text" 
-                    name="reorder_point" 
-                    id="ip_reorder_point" 
-                    class="form-control form-control-alternative{{ $errors->has('reorder_point') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('reorder_point'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('reorder_point') }}</strong>
-                    </span>
-                @endif
-            </div>
-
-        </div>
-
+    <div class="table-responsive">
+        <form id="ip-form-barang">
+            <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" width="100">NO</th>
+                        <th scope="col">Barang</th>
+                        <th scope="col">Harga</th>
+                        <th scope="col">Stok</th>
+                        <th scope="col">Status Pemesanan</th>
+                        <th scope="col">Status Pembelian</th>
+                        <th scope="col">EOQ</th>
+                        <th scope="col">Total Cost</th>
+                        <th scope="col" width="50">#</th>
+                    </tr>
+                </thead>
+                <tbody id="ip-daftar-barang"></tbody>
+                <tbody id="ip-daftar-barang">
+                    <tr>
+                        <th scope="col" colspan="6">Total Keseluruhan</th>
+                        <th scope="col" id="ip-jumlah-unit">0</th>
+                        <th scope="col" id="ip-total-cost">0</th>
+                        <td scope="col" width="50">
+                            <button 
+                                type="button" 
+                                class="btn btn-success" 
+                                onclick="generate_ip_multititem()">
+                                Simpan Pesanan
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
     </div>
 
-    <div class="row align-items-center mb-2">
-        <div class="col-sm"></div>
-        <div class="col-4 text-right">
-            <button 
-                type="submit" 
-                class="btn btn-secondary" >
-                Simpan Pesanan
-            </button>
-        </div>
-    </div>
-
-</form>
+</div>
 
 <script type="text/javascript">
+    var dataip = [];
+    var clNow = "modal fade";
+    var clOpen = "modal fade show";
 
-        function generate_increase_price()
+    function op_ip_daftar_brang(stt) 
+    {
+        if (stt == 'open')
         {
-            var idbarang = $('#ip_idbarang').val();
-            var kenaikan_harga = $('#ip_kenaikan_harga').val();
-            var route = '{{ url("/pesanan/increases_price/") }}' + '/' + idbarang + '/' + kenaikan_harga;
+            $('#ip-modal-barang').attr('class', clOpen).show();
+        } 
+        else 
+        {
+            $('#ip-modal-barang').attr('class', clNow).hide();
+        }
+    }
 
-            if (idbarang == 0) 
-            {
-                alert('pilih barang terlebih dahulu.');
-            } 
-            if (kenaikan_harga == '') 
-            {
-                alert('biaya increase-price harus diisi.');
-            } 
-            else 
-            {
+    function ip_event_barang(event) {
+        console.log($(this).is(':checked'));
+    }
+
+    function ip_munculkan_barang() {
+        // get barang
+        var idsupplier = $('#ip_idsupplier').val();
+        var route = '{{ url("/barang/bysupplier/") }}' + '/' + idsupplier;
+
+        if (idsupplier == 0) {
+            // alert('pilih supplier terlebih dahulu.');
+            $('#ip-daftar-barang').html('');
+        } else {
+            $.ajax({
+                url: route,
+                type: 'GET',
+                dataType: 'json'
+            })
+            .done(function(data) {
+                var dt = '';
+                
+                if (data.length > 0) {
+                    // op_ip_daftar_brang('open');
+                    for (var i = 0; i < data.length; i++) {
+
+                        // status pemesanan
+                        if (data[i].status_pemesanan !== null) {
+                            var status_pemesanan = '<td class="text-orange">Sudah Dipesan</td>';
+                        } else {
+                            var status_pemesanan = '<td class="text-green">Belum Dipesan</td>';
+                        }
+
+                        if (data[i].status_pembelian !== null) {
+                            var status_pembelian = '<td class="text-orange">Dalam Pembelian</td>';
+                        } else {
+                            var status_pembelian = '<td class="text-green">Belum Dibeli</td>';
+                        }
+
+                        dt += '\
+                        <tr>\
+                            <td>'+(i + 1)+'</td>\
+                            <td>'+data[i].nama_barang+'</td>\
+                            <td>'+data[i].harga_barang+'</td>\
+                            <td>'+data[i].stok+'</td>\
+                            '+status_pemesanan+'\
+                            '+status_pembelian+'\
+                            <th id="ip-jumlah-unit-'+data[i].id+'">0</th>\
+                            <th id="ip-total-cost-'+data[i].id+'">0</th>\
+                            <td>\
+                                <label class="custom-toggle">\
+                                    <input type="checkbox" value="'+data[i].id+'" class="checked" />\
+                                    <ipan class="custom-toggle-slider rounded-circle"></ipan>\
+                                </label>\
+                            </td>\
+                        </tr>'
+                    }
+                }
+
+                $('#ip-daftar-barang').html(dt);
+
+                // console.log(data);
+            })
+            .fail(function(e) {
+                console.log("error => " + e.reiponseJSON.message);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+            
+        }
+    }
+
+    function ip_update_total() {
+        var jumlah_unit = 0;
+        var total_cost = 0;
+
+        for (var i = 0; i < dataip.length; i++) {
+            var jumlah_unit = jumlah_unit + dataip[i].jumlah_unit;
+            var total_cost = total_cost + dataip[i].total_cost;
+        }
+
+        $('#ip-jumlah-unit').html(jumlah_unit);
+        $('#ip-total-cost').html(total_cost);
+    }
+
+    function generate_ip_multititem() {
+        var idsupplier = $('#ip_idsupplier').val();
+        var biaya_backorder = $('#ip_kenaikan_harga').val();
+        var route = '{{ url("/pesanan/multiitem/ip/") }}';
+
+        // console.log(route);
+        if (dataip.length > 0) {
+            var a = confirm('apakah barang yang dipilih sudah tepat?');
+            if (a) {
                 $.ajax({
                     url: route,
                     type: 'GET',
-                    processData: false,
-                    contentType: false,
-                    dataType: 'JSON',
+                    dataType: 'json',
+                    data: {
+                        'idsupplier': idsupplier, 
+                        'biaya_backorder': biaya_backorder,
+                        'data': dataip
+                    }
                 })
                 .done(function(data) {
-                    $('#ip_jumlah_unit_khusus').val(data.jumlah_unit_khusus);
-                    $('#ip_jumlah_unit_kenaikan').val(data.jumlah_unit_kenaikan);
-                    // $('#ip_total_cost_s').val(data.total_cost_s);
-                    // $('#ip_total_cost_n').val(data.total_cost_n);
-                    $('#ip_frekuensi_pembelian').val(data.frekuensi_pembelian);
-                    $('#ip_reorder_point').val(data.reorder_point);
-                    $('#ip_besar_penghematan').val(data.besar_penghematan);
+                    if (data.status === 'success') {
+                        window.location = '{{ route("pesanan-item") }}';
+                    }
+                    // console.log(data);
                 })
                 .fail(function(e) {
-                    console.log("error " + e);
+                    console.log("error => " + e.reiponseJSON.message);
                 })
                 .always(function() {
                     console.log("complete");
                 });
             }
+        } else {
+            alert('pilih satu atau lebih barang barang.');
         }
+    }
+
+    function generate_ip_singleitem(idbarang) 
+    {
         
+        var route = '{{ url("/pesanan/backorder") }}';
+        var idsupplier = $('#ip_idsupplier').val();
+        var ip_kenaikan_harga = $('#ip_kenaikan_harga').val();
+
+        if (ip_kenaikan_harga > 0) {
+            $.ajax({
+                url: route,
+                type: 'GET',
+                dataType: 'JSON',
+                data: {
+                    'idbarang': idbarang,
+                    'idsupplier': idsupplier,
+                    'biaya_backorder': ip_kenaikan_harga
+                }
+            })
+            .done(function(data) {
+                dataip.push({
+                    'idbarang': idbarang, 
+                    'biaya_penyimpanan': data.biaya_penyimpanan,
+                    'jumlah_permintaan': data.jumlah_permintaan,
+                    'harga_barang': data.harga_barang,
+                    'jumlah_unit': data.jumlah_unit,
+                    'total_cost': data.total_cost
+                });
+
+                $('#ip-jumlah-unit-'+idbarang).html(data.jumlah_unit);
+                $('#ip-total-cost-'+idbarang).html(data.total_cost);
+
+                ip_update_total();
+                // console.log(data);
+            })
+            .fail(function(e) {
+                console.log("error " + e.reiponseJSON.message);
+                $('#ip-jumlah-unit-'+idbarang).html('0');
+                $('#ip-total-cost-'+idbarang).html('0');
+
+                ip_update_total();
+            })
+            .always(function() {
+                console.log("complete");
+            });
+        } else {
+            alert('biaya backorder tidak boleh kosong.');
+        }
+            
+    }
+
+    $(document).ready(function () {
+        
+        $('#ip_idsupplier').change(function(event) {
+            // event.preventDefault();
+            ip_munculkan_barang();
+
+            dataip = [];
+            ip_update_total();
+        });
+
+        $('#ip-form-barang').on('change', ':checkbox', function () {
+            if ($(this).is(':checked')) {
+                
+                generate_ip_singleitem($(this).val());
+
+            } else {
+                // console.log($(this).val() + ' is now unchecked');
+                $('#ip-jumlah-unit-'+$(this).val()).html('0');
+                $('#ip-total-cost-'+$(this).val()).html('0');
+
+                // remove array
+                for (var i = 0; i < dataip.length; i++) {
+                    if (dataip[i].idbarang === $(this).val()) {
+                        dataip.iplice(i, 1);
+                    }
+                }
+
+                ip_update_total();
+            }
+            // console.log(dataip);
+        });
+
+    });
+
 </script>

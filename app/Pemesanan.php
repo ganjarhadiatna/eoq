@@ -23,12 +23,11 @@ class Pemesanan extends Model
             'barang.nama_barang',
             'barang.idsupplier',
             'barang.biaya_penyimpanan',
-            'barang.biaya_pemesanan',
+            'supplier.biaya_pemesanan',
             'supplier.nama as nama_supplier'
         )
         ->leftJoin('barang', 'barang.id', '=', 'pemesanan.idbarang')
         ->leftJoin('supplier', 'supplier.id', '=', 'pemesanan.idsupplier')
-        ->where('pemesanan.tipe', 'singleitem')
         ->orderBy('pemesanan.id', 'desc')
         ->paginate($limit);
     }
@@ -44,18 +43,18 @@ class Pemesanan extends Model
             'pemesanan.reorder_point',
             'pemesanan.frekuensi_pembelian',
             'pemesanan.total_cost_multiitem',
+            'pemesanan.tipe',
             'barang.id as id_barang',
             'barang.nama_barang',
             'barang.idsupplier',
             'barang.biaya_penyimpanan',
-            'barang.biaya_pemesanan',
+            'supplier.biaya_pemesanan',
             'supplier.id as id_supplier',
             'supplier.nama as nama_supplier'
         )
         ->leftJoin('barang', 'barang.id', '=', 'pemesanan.idbarang')
         ->leftJoin('supplier', 'supplier.id', '=', 'pemesanan.idsupplier')
         ->where('pemesanan.idsupplier', $idsupplier)
-        ->where('pemesanan.tipe', 'multiitem')
         ->orderBy('pemesanan.id', 'desc')
         ->paginate($limit);
     }
@@ -70,11 +69,9 @@ class Pemesanan extends Model
             'pemesanan.idsupplier',
             'pemesanan.tipe',
             'supplier.nama as nama_supplier',
-            DB::raw('(select sum(jumlah_unit) from pemesanan where idsupplier=pemesanan.idsupplier) as jumlah_unit')
+            DB::raw('(select count(id) from pemesanan where idsupplier=pemesanan.idsupplier) as total_barang')
         )
         ->leftJoin('supplier', 'supplier.id', '=', 'pemesanan.idsupplier')
-        ->where('pemesanan.tipe', 'multiitem')
-        // ->orderBy('pemesanan.id', 'desc')
         ->groupBy('pemesanan.idsupplier')
         ->paginate($limit);
     }
@@ -82,9 +79,15 @@ class Pemesanan extends Model
     public function scopeGetTotalUnitMultiItemByIdsupplier($query, $idsupplier)
     {
         return DB::table($this->table)
-        ->where('tipe', 'multiitem')
         ->where('idsupplier', $idsupplier)
         ->sum('jumlah_unit');
+    }
+
+    public function scopeGetCountUnitMultiItemByIdsupplier($query, $idsupplier)
+    {
+        return DB::table($this->table)
+        ->where('idsupplier', $idsupplier)
+        ->count('id');
     }
 
     public function scopeByID($query, $id)
@@ -97,12 +100,14 @@ class Pemesanan extends Model
     		'pemesanan.total_cost',
     		'pemesanan.reorder_point',
     		'pemesanan.frekuensi_pembelian',
+            'pemesanan.tipe',
     		'barang.id as id_barang',
     		'barang.idsupplier',
     		'barang.biaya_penyimpanan',
-    		'barang.biaya_pemesanan'
+    		'supplier.biaya_pemesanan'
     	)
     	->join('barang', 'barang.id', '=', 'pemesanan.idbarang')
+        ->join('supplier', 'supplier.id', '=', 'barang.idsupplier')
     	->where('pemesanan.id', $id)
     	->get();
     }
@@ -117,14 +122,15 @@ class Pemesanan extends Model
             'pemesanan.total_cost',
             'pemesanan.reorder_point',
             'pemesanan.frekuensi_pembelian',
+            'pemesanan.tipe',
             'barang.id as id_barang',
             'barang.idsupplier',
             'barang.biaya_penyimpanan',
-            'barang.biaya_pemesanan'
+            'supplier.biaya_pemesanan'
         )
         ->join('barang', 'barang.id', '=', 'pemesanan.idbarang')
+        ->join('supplier', 'supplier.id', '=', 'pemesanan.idsupplier')
         ->where('pemesanan.idsupplier', $idsupplier)
-        ->where('pemesanan.tipe', 'multiitem')
         ->get();
     }
 

@@ -48,6 +48,7 @@
                         <th scope="col">Email</th>
                         <th scope="col">Nomor Telpon</th>
                         <th scope="col">Alamat</th>
+                        <th scope="col">Biaya Pemesanan</th>
                         <th scope="col">Leadtime</th>
                         <th scope="col">Waktu Operasional</th>
                         <th scope="col" width="200">#</th>
@@ -71,6 +72,9 @@
                             </td>
                             <td>
                                 {{ $sp->alamat }}
+                            </td>
+                            <td>
+                                {{ $sp->biaya_pemesanan }}
                             </td>
                             <td>
                                 {{ $sp->leadtime }}
@@ -215,6 +219,22 @@
                                 @endif
                         </div>
 
+                        <div class="form-group{{ $errors->has('biaya_pemesanan') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="biaya_pemesanan">{{ __('Biaya Pemesanan') }}</label>
+                            <input 
+                                type="text" 
+                                name="biaya_pemesanan" 
+                                id="biaya_pemesanan" 
+                                class="form-control form-control-alternative{{ $errors->has('biaya_pemesanan') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('Masukan biaya_pemesanan') }}"  
+                                required>
+                                @if ($errors->has('biaya_pemesanan'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('biaya_pemesanan') }}</strong>
+                                    </span>
+                                @endif
+                        </div>
+
                         <div class="form-group{{ $errors->has('leadtime') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="leadtime">{{ __('Leadtime') }}</label>
                             <input 
@@ -349,6 +369,22 @@
                                 @if ($errors->has('alamat'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('alamat') }}</strong>
+                                    </span>
+                                @endif
+                        </div>
+
+                        <div class="form-group{{ $errors->has('biaya_pemesanan') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="biaya_pemesanan">{{ __('Biaya Pemesanan') }}</label>
+                            <input 
+                                type="text" 
+                                name="biaya_pemesanan" 
+                                id="ubah_biaya_pemesanan" 
+                                class="form-control form-control-alternative{{ $errors->has('biaya_pemesanan') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('Masukan biaya_pemesanan') }}"  
+                                required>
+                                @if ($errors->has('biaya_pemesanan'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('biaya_pemesanan') }}</strong>
                                     </span>
                                 @endif
                         </div>

@@ -46,13 +46,14 @@
                         <th scope="col">Barang</th>
                         <th scope="col">Stok</th>
                         <th scope="col">Harga</th>
-                        <th scope="col">Biaya Pesanan</th>
                         <th scope="col">Biaya Penyimpanan</th>
-                        <th scope="col">Diskon</th>
                         <th scope="col">Tanggal Kadaluarsa</th>
                         <th scope="col">Supplier</th>
-                        <th scope="col">Kategori</th>
-                        <th scope="col">Etalase</th>
+                        <th scope="col">Status Pemesanan</th>
+                        <th scope="col">Status Pembelian</th>
+                        <!-- <th scope="col">Kategori</th>
+                        <th scope="col">Etalase</th> -->
+                        <th scope="col">Diskon</th>
                         <th scope="col" width="200">#</th>
                     </tr>
                 </thead>
@@ -77,17 +78,7 @@
                                 Rp {{ number_format($etl->harga_barang) }}
                             </td>
                             <td>
-                                Rp {{ number_format($etl->biaya_pemesanan) }}
-                            </td>
-                            <td>
                                 Rp {{ number_format($etl->biaya_penyimpanan) }}
-                            </td>
-                            <td>
-                                <a href="{{ route('diskon', $etl->id) }}">
-                                    <button class="btn btn-white">
-                                        Kelola
-                                    </button>
-                                </a>
                             </td>
                             <td>
                                 {{ $etl->tanggal_kadaluarsa }}
@@ -95,11 +86,39 @@
                             <td>
                                 {{ $etl->nama_supplier }}
                             </td>
-                            <td>
+
+                            @if ($etl->status_pemesanan != null)
+                                <td class="text-orange">
+                                    Sudah Dipesan
+                                </td>
+                            @else
+                                <td class="text-green">
+                                    Belum Dipesan
+                                </td>
+                            @endif
+
+                            @if ($etl->status_pembelian != null)
+                                <td class="text-orange">
+                                    Dalam Pembelian
+                                </td>
+                            @else
+                                <td class="text-green">
+                                    Belum Dibeli
+                                </td>
+                            @endif
+
+                            <!-- <td>
                                 {{ $etl->kategori }}
                             </td>
                             <td>
                                 {{ $etl->etalase }}
+                            </td> -->
+                            <td>
+                                <a href="{{ route('diskon', $etl->id) }}">
+                                    <button class="btn btn-white">
+                                        {{ $etl->jumlah_diskon.' Diskon' }}
+                                    </button>
+                                </a>
                             </td>
                             <td>
                                 <a 

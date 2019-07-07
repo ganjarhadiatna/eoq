@@ -54,6 +54,7 @@ class SupplierController extends Controller
             'no_telpon' => ['required', 'string', 'max:15'],
             'alamat' => ['required', 'string', 'max:150'],
             'leadtime' => ['required', 'integer', 'max:1000'],
+            'biaya_pemesanan' => ['required', 'integer', 'min:0'],
             'waktu_operasional' => ['required', 'integer', 'max:1000']
         ]);
 
@@ -65,6 +66,7 @@ class SupplierController extends Controller
             'no_telpon' => $req['no_telpon'],
             'alamat' => $req['alamat'],
             'leadtime' => $req['leadtime'],
+            'biaya_pemesanan' => $req['biaya_pemesanan'],
             'waktu_operasional' => $req['waktu_operasional']
         ];
 
@@ -86,6 +88,7 @@ class SupplierController extends Controller
             'no_telpon' => ['required', 'string', 'max:15'],
             'alamat' => ['required', 'string', 'max:150'],
             'leadtime' => ['required', 'integer', 'max:1000'],
+            'biaya_pemesanan' => ['required', 'integer', 'min:0'],
             'waktu_operasional' => ['required', 'integer', 'max:1000']
         ]);
 
@@ -98,6 +101,7 @@ class SupplierController extends Controller
             'no_telpon' => $req['no_telpon'],
             'alamat' => $req['alamat'],
             'leadtime' => $req['leadtime'],
+            'biaya_pemesanan' => $req['biaya_pemesanan'],
             'waktu_operasional' => $req['waktu_operasional']
         ];
 

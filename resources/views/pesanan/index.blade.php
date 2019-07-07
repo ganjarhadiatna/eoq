@@ -1,11 +1,16 @@
+<?php
+ use App\Pemesanan;
+?>
+
 @extends('layouts.app')
 
 @section('content')
-	<div class="card shadow">
+
+    <div class="card shadow">
         <div class="card-header border-0">
             <div class="row align-items-center mb-2">
                 <div class="col-sm">
-                    <h3 class="mb-0">Daftar Pesanan Barang Supplier</h3>
+                    <h3 class="mb-0">Daftar Pemesanan</h3>
                 </div>
                 <div class="col-3 form-inline text-right">
                     <form action="#" class="form-group">
@@ -29,13 +34,9 @@
                     <tr>
                         <th scope="col" width="100">NO</th>
                         <th scope="col">Supplier</th>
-                        <th scope="col">Barang</th>
-                        <th scope="col">Harga</th>
-                        <th scope="col">Tipe EOQ</th>
-                        <th scope="col">EOQ</th>
-                        <th scope="col">Total Cost</th>
-                        <th scope="col">Frekuensi Pembelian</th>
-                        <th scope="col">Reorder Point</th>
+                        <th scope="col">Total EOQ</th>
+                        <th scope="col">Total Cost Keseluruhan</th>
+                        <th scope="col">Kelola</th>
                         <th scope="col" width="200">#</th>
                     </tr>
                 </thead>
@@ -50,49 +51,41 @@
                                 {{ $ps->nama_supplier }}
                             </td>
 	                		<td>
-	                			{{ $ps->nama_barang }}
-	                		</td>
-                            <td>
-                                {{ $ps->harga_barang }}
-                            </td>
-                            <td>
-                                {{ $ps->tipe }}
-                            </td>
-	                		<td>
 	                			<b class="text-green">
-                                    {{ $ps->jumlah_unit }}
+                                    {{ App\Pemesanan::GetTotalUnitMultiItemByIdsupplier($ps->idsupplier) }}
                                 </b>
 	                		</td>
-	                		<td>
-	                			{{ $ps->total_cost }}
-	                		</td>
-	                		<td>
-	                			{{ $ps->frekuensi_pembelian }}
-	                		</td>
-	                		<td>
-	                			{{ $ps->reorder_point }}
-	                		</td>
+                            <td>
+                                {{ $ps->total_cost_multiitem }}
+                            </td>
+                            <td>
+                                <a href="{{ route('pesanan-multiitem-daftar', $ps->idsupplier) }}">
+                                    <button class="btn btn-white">
+                                        {{ Pemesanan::GetCountUnitMultiItemByIdsupplier($ps->idsupplier).' Barang' }}
+                                    </button>
+                                </a>
+                            </td>
 	                		<td>
 	                			<a 
-                                    href="{{ route('pesanan-singleitem-remove') }}" 
+                                    href="{{ route('pesanan-multiitem-remove') }}" 
                                     onclick="
                                         event.preventDefault();
-                                        document.getElementById('hapus-pesanan-singleitem-{{ $ps->id }}').submit();">
+                                        document.getElementById('hapus-pesanan-multiitem-{{ $ps->idsupplier }}').submit();">
                                     <button class="btn btn-danger">
                                         Hapus
                                     </button>
                                 </a>
 
                                 <form 
-                                    id="hapus-pesanan-singleitem-{{ $ps->id }}" 
-                                    action="{{ route('pesanan-singleitem-remove') }}" 
+                                    id="hapus-pesanan-multiitem-{{ $ps->idsupplier }}" 
+                                    action="{{ route('pesanan-multiitem-remove') }}" 
                                     method="POST" 
                                     style="display: none;">
                                     @csrf
                                     <input 
                                         type="hidden" 
-                                        name="id" 
-                                        value="{{ $ps->id }}">
+                                        name="idsupplier" 
+                                        value="{{ $ps->idsupplier }}">
                                 </form>
 
                                 <!-- <button 
@@ -102,25 +95,25 @@
                                 </button> -->
 
                                 <a 
-                                    href="{{ route('pesanan-singleitem-create') }}" 
+                                    href="{{ route('pesanan-multiitem-create') }}" 
                                     onclick="
                                         event.preventDefault();
-                                        document.getElementById('buat-pesanan-{{ $ps->id }}').submit();">
+                                        document.getElementById('buat-pesanan-multiitem-{{ $ps->idsupplier }}').submit();">
                                     <button class="btn btn-primary">
-                                        Beli Barang
+                                        Beli Semua
                                     </button>
                                 </a>
 
                                 <form 
-                                    id="buat-pesanan-{{ $ps->id }}" 
-                                    action="{{ route('pesanan-singleitem-create') }}" 
+                                    id="buat-pesanan-multiitem-{{ $ps->idsupplier }}" 
+                                    action="{{ route('pesanan-multiitem-create') }}" 
                                     method="POST" 
                                     style="display: none;">
                                     @csrf
                                     <input 
                                         type="hidden" 
-                                        name="id" 
-                                        value="{{ $ps->id }}">
+                                        name="idsupplier" 
+                                        value="{{ $ps->idsupplier }}">
                                 </form>
 
 
@@ -136,4 +129,5 @@
         </div>
 
     </div>
+
 @endsection

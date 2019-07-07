@@ -104,13 +104,15 @@ Route::middleware('auth')->group(function() {
 
     // single item
     // orders
-    Route::get('/pesanan', 'PemesananSingleitemController@index')->name('pesanan-singleitem');
-    Route::get('/pesanan/tambah', 'PemesananSingleitemController@tambah')->name('pesanan-singleitem-tambah');
-    Route::get('/pesanan/edit/{idtransactions}', 'PemesananSingleitemController@edit')->name('pesanan-singleitem-edit');
+    Route::get('/pesanan', 'PemesananMultiitemController@index')->name('pesanan-item');
+    // Route::get('/pesanan/tambah', 'PemesananSingleitemController@tambah')->name('pesanan-singleitem-tambah');
+    // Route::get('/pesanan/edit/{idtransactions}', 'PemesananSingleitemController@edit')->name('pesanan-singleitem-edit');
 
-    // crud
-    Route::get('/pesanan/eoq/{idbarang}', 'PemesananSingleitemController@generate_eoq')->name('pesanan-singleitem-eoq');
-    Route::get('/pesanan/backorder/{idbarang}/{biaya_backorder}', 'PemesananSingleitemController@generate_backorder')->name('pesanan-singleitem-backorder');
+    // // crud
+    Route::get('/pesanan/eoq', 'PemesananSingleitemController@generate_eoq')->name('pesanan-singleitem-eoq');
+    Route::get('/pesanan/backorder', 'PemesananSingleitemController@generate_backorder')->name('pesanan-singleitem-backorder');
+
+    // need fixing
     Route::get('/pesanan/special_price/{idbarang}/{price}', 'PemesananSingleitemController@special_price')->name('pesanan-singleitemspecial-price');
     Route::get('/pesanan/increases_price/{idbarang}/{price}', 'PemesananSingleitemController@increases_price')->name('pesanan-singleitemincreases-price');
 
@@ -120,7 +122,7 @@ Route::middleware('auth')->group(function() {
 
 
     // multi item
-    Route::get('/pesanan/multiitem', 'PemesananMultiitemController@index')->name('pesanan-multiitem');
+    Route::get('/pesanan/multiitem', 'PemesananMultiitemController@multiitem')->name('pesanan-multiitem');
     Route::get('/pesanan/multiitem/{idsupplier}/daftar-barang/', 'PemesananMultiitemController@daftarBarang')->name('pesanan-multiitem-daftar');
     Route::get('/pesanan/multiitem/tambah', 'PemesananMultiitemController@tambah')->name('pesanan-multiitem-tambah');
     Route::get('/pesanan/multiitem/edit/{idtransactions}', 'PemesananMultiitemController@edit')->name('pesanan-multiitem-edit');

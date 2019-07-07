@@ -19,10 +19,11 @@ class PemesananSingleitemController extends Controller
         $this->middleware('auth');
     }
 
-    public function generate_eoq($idbarang)
+    public function generate_eoq()
     {
-        // $idbarang = $req['idbarang'];
-        // $idsupplier = $req['idsupplier'];
+        $idbarang = $_GET['idbarang'];
+        // $tipe_harga = $_GET['tipe_harga'];
+        $idsupplier = $_GET['idsupplier'];
 
         $month = date('m', strtotime('-1 month'));
         $monthCurrent = date('m', strtotime('0 month'));
@@ -30,7 +31,7 @@ class PemesananSingleitemController extends Controller
         $idsupplier = Barang::GetIdsupplier($idbarang);
 
         // total biaya pesanan
-        $C = Barang::GetBiayaPemesanan($idbarang);
+        $C = Supplier::GetBiayaPemesanan($idsupplier);
 
         // jumlah permintaan costumer
         if (Penjualan::GetTotalOrderByMonth($idbarang, $monthCurrent) > 0) 
@@ -58,8 +59,7 @@ class PemesananSingleitemController extends Controller
         $N = Supplier::GetWaktuOperasional($idsupplier);
 
         $Q = sqrt((2 * $C * $R) / $H);
-
-        $TC = ($P * $R) + ($H * $Q);
+        $TC = ($P * $R) + (($C * $R) / $Q) + (($H * $Q) / 2);
 
         $F = number_format(($R / $Q), 2);
 
@@ -68,74 +68,74 @@ class PemesananSingleitemController extends Controller
 
         // diskon unit
         // satu validasi
-        $diskonUnit = Diskon::GetAllByType($idbarang, 'unit');
-        $dataDiskonUnit = [];
-        foreach ($diskonUnit as $du) {
+        // $diskonUnit = Diskon::GetAllByType($idbarang, 'unit');
+        // $dataDiskonUnit = [];
+        // foreach ($diskonUnit as $du) {
             
-            $du_H = ($H - ($H * $du->diskon));
-            $du_Q = sqrt((2 * $C * $R) / ($du->diskon * $du_H));
+        //     $du_H = ($H - ($H * $du->diskon));
+        //     $du_Q = sqrt((2 * $C * $R) / ($du->diskon * $du_H));
 
-            $du_P = ($P - ($P * $du->diskon));
-            $du_TC = (($du_P * $R) + (($C * $R) / $du_Q) + (($du_P * $T * $du_Q) / 2));
+        //     $du_P = ($P - ($P * $du->diskon));
+        //     $du_TC = (($du_P * $R) + (($C * $R) / $du_Q) + (($du_P * $T * $du_Q) / 2));
 
-            $dataDiskonUnit = [
-                'diskon' => $du->diskon,
-                'harga_barang' => $du_P,
-                'jumlah_permintaan' => $R,
-                'biaya_penyimpanan' => $H,
-                'biaya_pemesanan' => $C,
-                'jumlah_unit' => ceil($du_Q),
-                'total_cost' => ceil($du_TC),
-                'min' => $du->min,
-                'max' => $du->max
-            ];
-        }
+        //     $dataDiskonUnit = [
+        //         'diskon' => $du->diskon,
+        //         'harga_barang' => $du_P,
+        //         'jumlah_permintaan' => $R,
+        //         'biaya_penyimpanan' => $H,
+        //         'biaya_pemesanan' => $C,
+        //         'jumlah_unit' => ceil($du_Q),
+        //         'total_cost' => ceil($du_TC),
+        //         'min' => $du->min,
+        //         'max' => $du->max
+        //     ];
+        // }
 
 
         // diskon incremental
-        $diskonIncremental = Diskon::GetAllByType($idbarang, 'incremental');
-        $dataDiskonIncremetal = [];
+        // $diskonIncremental = Diskon::GetAllByType($idbarang, 'incremental');
+        // $dataDiskonIncremetal = [];
 
-        $ds_before = 0;
+        // $ds_before = 0;
 
-        foreach ($diskonIncremental as $key => $di) {
-            $ui = ($di->min - 1);
+        // foreach ($diskonIncremental as $key => $di) {
+        //     $ui = ($di->min - 1);
 
-            if ($key != 0) 
-            {
-                $di_before_P = ($P - ($P * $diskonIncremental[$key - 1]->diskon));
-                $di_current_P = ($P - ($P * $di->diskon));
+        //     if ($key != 0) 
+        //     {
+        //         $di_before_P = ($P - ($P * $diskonIncremental[$key - 1]->diskon));
+        //         $di_current_P = ($P - ($P * $di->diskon));
 
-                $pi = $di_before_P - $di_current_P;
-                $ds = $ds_before + ($ui * $pi);
-                $ds_before = $ds;
-            } 
-            else 
-            {
-                $di_before_P = 0;
-                $di_current_P = ($P - ($P * $di->diskon));
+        //         $pi = $di_before_P - $di_current_P;
+        //         $ds = $ds_before + ($ui * $pi);
+        //         $ds_before = $ds;
+        //     } 
+        //     else 
+        //     {
+        //         $di_before_P = 0;
+        //         $di_current_P = ($P - ($P * $di->diskon));
 
-                $ds = 0;
-            }
+        //         $ds = 0;
+        //     }
 
-            $di_Q = sqrt(((2 * $R) * ($C + $ds)) / ($di_current_P * $T));
-            $di_TC = ($di_current_P * $R) + ((($C + $ds) * $R) / $di_Q) + (($di_current_P * $T * $di_Q) / 2) + (($T * $ds) / 2);
+        //     $di_Q = sqrt(((2 * $R) * ($C + $ds)) / ($di_current_P * $T));
+        //     $di_TC = ($di_current_P * $R) + ((($C + $ds) * $R) / $di_Q) + (($di_current_P * $T * $di_Q) / 2) + (($T * $ds) / 2);
 
-            $dt = [
-                'diskon' => $di->diskon,
-                'harga_barang' => $di_current_P,
-                'jumlah_permintaan' => $R,
-                'biaya_penyimpanan' => $H,
-                'biaya_pemesanan' => $C,
-                'jumlah_unit' => ceil($di_Q),
-                'total_cost' => ceil($di_TC),
-                'min' => $di->min,
-                'max' => $di->max
-            ];
+        //     $dt = [
+        //         'diskon' => $di->diskon,
+        //         'harga_barang' => $di_current_P,
+        //         'jumlah_permintaan' => $R,
+        //         'biaya_penyimpanan' => $H,
+        //         'biaya_pemesanan' => $C,
+        //         'jumlah_unit' => ceil($di_Q),
+        //         'total_cost' => ceil($di_TC),
+        //         'min' => $di->min,
+        //         'max' => $di->max
+        //     ];
 
-            array_push($dataDiskonIncremetal, $dt);
+        //     array_push($dataDiskonIncremetal, $dt);
 
-        }
+        // }
 
         $data = [
             'harga_barang' => $P,
@@ -146,23 +146,25 @@ class PemesananSingleitemController extends Controller
             'total_cost' => ceil($TC),
             'frekuensi_pembelian' => $F,
             'reorder_point' => $B,
-            'diskon_unit' => $dataDiskonUnit,
-            'diskon_incremental' => $dataDiskonIncremetal,
+            // 'diskon_unit' => $dataDiskonUnit,
+            // 'diskon_incremental' => $dataDiskonIncremetal,
         ];
         return json_encode($data);
     }
 
-    public function generate_backorder($idbarang, $biaya_backorder)
+    public function generate_backorder()
     {
-        // $idbarang = $req['idbarang'];
-        // $idsupplier = $req['idsupplier'];
+        $idbarang = $_GET['idbarang'];
+        $idsupplier = $_GET['idsupplier'];
+        $biaya_backorder = $_GET['biaya_backorder'];
+
         $month = date('m', strtotime('-1 month'));
         $monthCurrent = date('m', strtotime('0 month'));
 
         $idsupplier = Barang::GetIdsupplier($idbarang);
 
         // total biaya pesanan
-        $C = Barang::GetBiayaPemesanan($idbarang);
+        $C = Supplier::GetBiayaPemesanan($idsupplier);
 
         // jumlah permintaan costumer
         if (Penjualan::GetTotalOrderByMonth($idbarang, $monthCurrent) > 0) 
@@ -192,26 +194,28 @@ class PemesananSingleitemController extends Controller
         // biaya back order
         $K = $biaya_backorder;
 
-        $Q = ceil(sqrt(((2 * $C * $R) / $H)) * (sqrt(($H + $K) / $K)));
+        $Q = sqrt(((2 * $C * $R) / $H)) * (sqrt(($H + $K) / $K));
 
         // maximum persediaan
         $J = ($H * $Q) / ($H + $K);
         $M = $Q - $J;
 
 
-        $TC = ceil(($P * $R) + (($C * $R) / $Q) + (($H * pow(($Q - $J), 2)) / (2 * $Q)) + (($K * pow(($Q - $M),2)) / (2 * $Q)));
+        $TC = ($P * $R) + (($C * $R) / $Q) + (($H * pow(($Q - $J), 2)) / (2 * $Q)) + (($K * pow(($Q - $M),2)) / (2 * $Q));
 
         $F = number_format(($R / $Q), 2);
 
-        $B = ceil(($R * $L) / $N);
+        $B = ($R * $L) / $N;
 
         $data = [
             'harga_barang' => $P,
             'jumlah_permintaan' => $R,
-            'jumlah_unit' => $Q,
-            'total_cost' => $TC,
+            'biaya_penyimpanan' => $H,
+            'biaya_pemesanan' => $C,
+            'jumlah_unit' => ceil($Q),
+            'total_cost' => ceil($TC),
             'frekuensi_pembelian' => $F,
-            'reorder_point' => $B
+            'reorder_point' => ceil($B)
         ];
 
         return json_encode($data);
@@ -230,7 +234,7 @@ class PemesananSingleitemController extends Controller
         $idsupplier = Barang::GetIdsupplier($idbarang);
 
         // total biaya pesanan
-        $C = Barang::GetBiayaPemesanan($idbarang);
+        $C = Supplier::GetBiayaPemesanan($idsupplier);
 
         // jumlah permintaan costumer
         if (Penjualan::GetTotalOrderByMonth($idbarang, $monthCurrent) > 0) 
@@ -304,7 +308,7 @@ class PemesananSingleitemController extends Controller
         $idsupplier = Barang::GetIdsupplier($idbarang);
 
         // total biaya pesanan
-        $C = Barang::GetBiayaPemesanan($idbarang);
+        $C = Supplier::GetBiayaPemesanan($idsupplier);
 
         // jumlah permintaan costumer
         if (Penjualan::GetTotalOrderByMonth($idbarang, $monthCurrent) > 0) 

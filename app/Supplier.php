@@ -16,6 +16,13 @@ class Supplier extends Model
     	->value('leadtime');
     }
 
+    public function scopeGetBiayaPemesanan($query, $id)
+    {
+        return DB::table($this->table)
+        ->where('id', $id)
+        ->value('biaya_pemesanan');
+    }
+
     public function scopeGetWaktuOperasional($query, $id)
     {
     	return DB::table($this->table)
