@@ -451,11 +451,11 @@ class PemesananSingleitemController extends Controller
 
         if (Pemesanan::Insert($data)) 
         {
-             return redirect(route('pesanan-singleitem'));
+             return redirect(route('pesanan-item'));
         } 
         else 
         {
-             return redirect(route('pesanan-singleitem'));
+             return redirect(route('pesanan-item'));
         }
     }
 
@@ -467,11 +467,11 @@ class PemesananSingleitemController extends Controller
 
         if (Pemesanan::where('id', $id)->delete())
         {
-             return redirect(route('pesanan-singleitem'));
+             return redirect(route('pesanan-item'));
         } 
         else 
         {
-             return redirect(route('pesanan-singleitem'));
+             return redirect(route('pesanan-item'));
         }
     }
 
@@ -499,7 +499,7 @@ class PemesananSingleitemController extends Controller
         } 
         else 
         {
-            return redirect(route('pesanan-singleitem'));
+            return redirect(route('pesanan-item'));
         }
 
     }

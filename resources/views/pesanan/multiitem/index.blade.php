@@ -26,7 +26,7 @@
                             Back Order
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">
                             Special Order
                         </a>
@@ -50,7 +50,7 @@
                         <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-7-tab" data-toggle="tab" href="#tabs-icons-text-7" role="tab" aria-controls="tabs-icons-text-4" aria-selected="false">
                             Quantiti Diskon
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
@@ -85,46 +85,6 @@
                     role="tabpanel" 
                     aria-labelledby="tabs-icons-text-2-tab">
                     @include('pesanan.multiitem.backorder')
-                </div>
-
-                <div 
-                    class="tab-pane fade show" 
-                    id="tabs-icons-text-3" 
-                    role="tabpanel" 
-                    aria-labelledby="tabs-icons-text-3-tab">
-                    @include('pesanan.multiitem.hargaSpesial')
-                </div>
-
-                <div 
-                    class="tab-pane fade show" 
-                    id="tabs-icons-text-4" 
-                    role="tabpanel" 
-                    aria-labelledby="tabs-icons-text-4-tab">
-                    @include('pesanan.multiitem.kenaikanHarga')
-                </div>
-
-                <div 
-                    class="tab-pane fade show" 
-                    id="tabs-icons-text-5" 
-                    role="tabpanel" 
-                    aria-labelledby="tabs-icons-text-5-tab">
-                    @include('pesanan.multiitem.batasanModal')
-                </div>
-
-                <div 
-                    class="tab-pane fade show" 
-                    id="tabs-icons-text-6" 
-                    role="tabpanel" 
-                    aria-labelledby="tabs-icons-text-6-tab">
-                    @include('pesanan.multiitem.batasanGudang')
-                </div>
-
-                <div 
-                    class="tab-pane fade show" 
-                    id="tabs-icons-text-7" 
-                    role="tabpanel" 
-                    aria-labelledby="tabs-icons-text-7-tab">
-                    @include('pesanan.multiitem.quantityDiscount')
                 </div>
 
 
