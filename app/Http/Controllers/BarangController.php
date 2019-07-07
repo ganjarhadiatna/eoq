@@ -80,7 +80,6 @@ class BarangController extends Controller
             'nama_barang' => ['required', 'string', 'max:150'],
             'stok' => ['required', 'int', 'max:1000'],
             'harga_barang' => ['required', 'int', 'max:1000000'],
-            'biaya_pemesanan' => ['required', 'int', 'max:1000000'],
             'biaya_penyimpanan' => ['required', 'int', 'max:1000000'],
             'tanggal_kadaluarsa' => ['required', 'date'],
             'idkategori' => ['required', 'int', 'max:10'],
@@ -96,7 +95,6 @@ class BarangController extends Controller
             'nama_barang' => $req['nama_barang'],
             'stok' => $req['stok'],
             'harga_barang' => $req['harga_barang'],
-            'biaya_pemesanan' => $req['biaya_pemesanan'],
             'biaya_penyimpanan' => $req['biaya_penyimpanan'],
             'tanggal_kadaluarsa' => $req['tanggal_kadaluarsa']
         ];
@@ -119,7 +117,6 @@ class BarangController extends Controller
             'nama_barang' => ['required', 'string', 'max:150'],
             'stok' => ['required', 'int', 'max:1000'],
             'harga_barang' => ['required', 'int', 'max:1000000'],
-            'biaya_pemesanan' => ['required', 'int', 'max:1000000'],
             'biaya_penyimpanan' => ['required', 'int', 'max:1000000'],
             'tanggal_kadaluarsa' => ['required', 'date'],
             'idkategori' => ['required', 'int', 'max:10'],
@@ -135,7 +132,6 @@ class BarangController extends Controller
             'nama_barang' => $req['nama_barang'],
             'stok' => $req['stok'],
             'harga_barang' => $req['harga_barang'],
-            'biaya_pemesanan' => $req['biaya_pemesanan'],
             'biaya_penyimpanan' => $req['biaya_penyimpanan'],
             'tanggal_kadaluarsa' => $req['tanggal_kadaluarsa']
         ];

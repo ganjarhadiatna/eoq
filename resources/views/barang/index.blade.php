@@ -262,7 +262,7 @@
                             
                         </div> -->
 
-                        <div class="form-group{{ $errors->has('biaya_pemesanan') ? ' has-danger' : '' }}">
+                        <!-- <div class="form-group{{ $errors->has('biaya_pemesanan') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="biaya_pemesanan">{{ __('Biaya pemesanan barang *') }}</label>
                             <input 
                                 type="number" 
@@ -278,7 +278,7 @@
                                     </span>
                                 @endif
                             
-                        </div>
+                        </div> -->
 
                         <div class="form-group{{ $errors->has('biaya_penyimpanan') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="biaya_penyimpanan">{{ __('Biaya penyimpanan barang *') }}</label>
@@ -486,7 +486,7 @@
                             
                         </div> -->
 
-                        <div class="form-group{{ $errors->has('biaya_pemesanan') ? ' has-danger' : '' }}">
+                        <!-- <div class="form-group{{ $errors->has('biaya_pemesanan') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="biaya_pemesanan">{{ __('Biaya pemesanan barang *') }}</label>
                             <input 
                                 type="number" 
@@ -502,7 +502,7 @@
                                     </span>
                                 @endif
                             
-                        </div>
+                        </div> -->
 
                         <div class="form-group{{ $errors->has('biaya_penyimpanan') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="biaya_penyimpanan">{{ __('Biaya penyimpanan barang *') }}</label>
@@ -634,7 +634,7 @@
                     $('#ubah_nama_barang').val(data[0].nama_barang);
                     $('#ubah_stok').val(data[0].stok);
                     $('#ubah_harga_barang').val(data[0].harga_barang);
-                    $('#ubah_biaya_pemesanan').val(data[0].biaya_pemesanan);
+                    // $('#ubah_biaya_pemesanan').val(data[0].biaya_pemesanan);
                     $('#ubah_biaya_penyimpanan').val(data[0].biaya_penyimpanan);
                     $('#ubah_tanggal_kadaluarsa').val(data[0].tanggal_kadaluarsa);
                     $('#ubah_idkategori').val(data[0].idkategori);
