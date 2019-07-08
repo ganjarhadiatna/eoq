@@ -107,7 +107,7 @@
                                         event.preventDefault();
                                         document.getElementById('buat-pesanan-{{ $ps->id }}').submit();">
                                     <button class="btn btn-primary">
-                                        Beli Barang
+                                        Pesan Sekarang
                                     </button>
                                 </a>
 

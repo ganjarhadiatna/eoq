@@ -100,7 +100,7 @@
                                         event.preventDefault();
                                         document.getElementById('buat-pesanan-multiitem-{{ $ps->idsupplier }}').submit();">
                                     <button class="btn btn-primary">
-                                        Beli Semua
+                                        Pesan Semua
                                     </button>
                                 </a>
 

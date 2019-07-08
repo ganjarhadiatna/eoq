@@ -50,9 +50,7 @@ class Barang extends Model
     		'supplier.nama as nama_supplier',
     		'etalase.etalase',
     		'kategori.kategori',
-            DB::raw('(select count(id) from diskons where idbarang=barang.id) as jumlah_diskon'),
-            DB::raw('(select id from pembelian where idbarang=barang.id) as status_pembelian'),
-            DB::raw('(select id from pemesanan where idbarang=barang.id) as status_pemesanan')
+            DB::raw('(select count(id) from diskons where idbarang=barang.id) as jumlah_diskon')
     	)
     	->join('supplier', 'supplier.id', '=', 'barang.idsupplier')
     	->join('kategori', 'kategori.id', '=', 'barang.idkategori')
@@ -74,9 +72,7 @@ class Barang extends Model
             'supplier.nama as nama_supplier',
             'etalase.etalase',
             'kategori.kategori',
-            DB::raw('(select count(id) from diskons where idbarang=barang.id) as jumlah_diskon'),
-            DB::raw('(select id from pembelian where idbarang=barang.id) as status_pembelian'),
-            DB::raw('(select id from pemesanan where idbarang=barang.id) as status_pemesanan')
+            DB::raw('(select count(id) from diskons where idbarang=barang.id) as jumlah_diskon')
         )
         ->join('supplier', 'supplier.id', '=', 'barang.idsupplier')
         ->join('kategori', 'kategori.id', '=', 'barang.idkategori')
