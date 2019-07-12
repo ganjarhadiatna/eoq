@@ -28,7 +28,7 @@ class Diskon extends Model
     		'diskons.tipe',
     		'diskons.idbarang',
     		'diskons.created_at',
-    		'barang.harga_barang as harga',
+    		'barang.harga_barang as harga'
     	)
     	->join('barang', 'barang.id', '=', 'diskons.idbarang')
     	->where('diskons.idbarang', $idbarang)
@@ -47,7 +47,7 @@ class Diskon extends Model
             'diskons.tipe',
             'diskons.idbarang',
             'diskons.created_at',
-            'barang.harga_barang as harga',
+            'barang.harga_barang as harga'
         )
         ->join('barang', 'barang.id', '=', 'diskons.idbarang')
         ->where('diskons.idbarang', $idbarang)
@@ -66,7 +66,7 @@ class Diskon extends Model
             'diskons.tipe',
             'diskons.idbarang',
             'diskons.created_at',
-            'barang.harga_barang as harga',
+            'barang.harga_barang as harga'
         )
         ->join('barang', 'barang.id', '=', 'diskons.idbarang')
         ->where('diskons.idbarang', $idbarang)
