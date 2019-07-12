@@ -7,19 +7,20 @@
 
     @csrf
 
+    <input type="hidden" name="tipe" value="Special Order">
+
     <div>
         <h3 class="mb-0">Informasi Parameter</h3>
     </div>
 
-    <div class="row mb-2">
+    <div class="row mb-3">
 
         <div class="col-sm">
-
             <div class="form-group{{ $errors->has('idbarang') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="idbarang">{{ __('Pilih barang') }}</label>
+                <label class="form-control-label" for="sp_idbarang">{{ __('Pilih Barang') }}</label>
                 <select 
                     name="idbarang"
-                    id="hs_idbarang" 
+                    id="sp_idbarang" 
                     class="form-control form-control-alternative{{ $errors->has('idbarang') ? ' is-invalid' : '' }}" 
                     required>
                     <option value="0"></option>
@@ -33,16 +34,15 @@
                     </span>
                 @endif
             </div>
-
         </div>
-        <div class="col-sm">
 
+        <div class="col-sm">
             <div class="form-group{{ $errors->has('harga_spesial') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="harga_spesial">{{ __('Harga Spesial') }}</label>
+                <label class="form-control-label" for="sp_harga_spesial">{{ __('Harga Spesial') }}</label>
                 <input 
                     type="text" 
                     name="harga_spesial" 
-                    id="hs_harga_spesial" 
+                    id="sp_harga_spesial" 
                     class="form-control form-control-alternative{{ $errors->has('harga_spesial') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     required>
@@ -52,15 +52,34 @@
                     </span>
                 @endif
             </div>
-
         </div>
+
+        <div class="col-sm">
+            <div class="form-group{{ $errors->has('tipe_harga') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="sp_tipe_harga">{{ __('Tipe Harga') }}</label>
+                <select 
+                    name="tipe_harga"
+                    id="sp_tipe_harga" 
+                    class="form-control form-control-alternative{{ $errors->has('tipe_harga') ? ' is-invalid' : '' }}" 
+                    required>
+                    <option value="1">Harga Khusus</option>
+                    <option value="2">Harga Normal</option>
+                </select>
+                @if ($errors->has('tipe_harga'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('tipe_harga') }}</strong>
+                    </span>
+                @endif
+            </div>
+        </div>  
     </div>
 
-    <div class="row mb-2">
+    <div class="row mb-3">
+        <div class="col-sm"></div>
         <div class="col-sm"></div>
         <div class="col-sm">
             <div>
-                <label class="form-control-label" for="idbarang">{{ __('Mulai perhitungan?') }}</label>
+                <label class="form-control-label" for="sp_idbarang">{{ __('Mulai perhitungan?') }}</label>
                 <div>
                     <button 
                         type="button" 
@@ -80,80 +99,64 @@
     <div class="row mb-2">
 
         <div class="col-sm">
-            <div class="form-group{{ $errors->has('jumlah_unit_sebelumnya') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="jumlah_unit_sebelumnya">{{ __('Jumlah unit sebelumnya') }}</label>
+
+            <div class="form-group{{ $errors->has('harga_barang') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="sp_harga_barang">{{ __('Harga Barang') }}</label>
                 <input 
                     type="text" 
-                    name="jumlah_unit_sebelumnya" 
-                    id="hs_jumlah_unit_sebelumnya" 
-                    class="form-control form-control-alternative{{ $errors->has('jumlah_unit_sebelumnya') ? ' is-invalid' : '' }}" 
+                    name="harga_barang" 
+                    id="sp_harga_barang" 
+                    class="form-control form-control-alternative{{ $errors->has('harga_barang') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     readonly="true" 
                     required>
-                @if ($errors->has('jumlah_unit_sebelumnya'))
+                @if ($errors->has('harga_barang'))
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('jumlah_unit_sebelumnya') }}</strong>
+                        <strong>{{ $errors->first('harga_barang') }}</strong>
                     </span>
                 @endif
             </div>
 
-            <div class="form-group{{ $errors->has('jumlah_unit_khusus') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="jumlah_unit_khusus">{{ __('Jumlah unit harga sepesial') }}</label>
+            <div class="form-group{{ $errors->has('jumlah_unit') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="sp_jumlah_unit">{{ __('EOQ') }}</label>
                 <input 
                     type="text" 
                     name="jumlah_unit" 
-                    id="hs_jumlah_unit_khusus" 
-                    class="form-control form-control-alternative{{ $errors->has('jumlah_unit_khusus') ? ' is-invalid' : '' }}" 
+                    id="sp_jumlah_unit" 
+                    class="form-control form-control-alternative{{ $errors->has('jumlah_unit') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     readonly="true" 
                     required>
-                @if ($errors->has('jumlah_unit_khusus'))
+                @if ($errors->has('jumlah_unit'))
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('jumlah_unit_khusus') }}</strong>
+                        <strong>{{ $errors->first('jumlah_unit') }}</strong>
                     </span>
                 @endif
             </div>
 
-            <!-- <div class="form-group{{ $errors->has('total_cost_n') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="hs_total_cost_n">{{ __('Total cost persediaan (s)') }}</label>
+            <div class="form-group{{ $errors->has('total_cost') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="sp_total_cost">{{ __('Total Cost') }}</label>
                 <input 
                     type="text" 
-                    name="total_cost_n" 
-                    id="hs_total_cost_n" 
-                    class="form-control form-control-alternative{{ $errors->has('total_cost_n') ? ' is-invalid' : '' }}" 
+                    name="total_cost" 
+                    id="sp_total_cost" 
+                    class="form-control form-control-alternative{{ $errors->has('total_cost') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     readonly="true" 
                     required>
-                @if ($errors->has('total_cost_n'))
+                @if ($errors->has('total_cost'))
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('total_cost_n') }}</strong>
+                        <strong>{{ $errors->first('total_cost') }}</strong>
                     </span>
                 @endif
             </div>
-
-            <div class="form-group{{ $errors->has('total_cost_n') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="total_cost_n">{{ __('Total cost persediaan (n)') }}</label>
-                <input 
-                    type="text" 
-                    name="total_cost_n" 
-                    id="hs_total_cost_n" 
-                    class="form-control form-control-alternative{{ $errors->has('total_cost_n') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('total_cost_n'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('total_cost_n') }}</strong>
-                    </span>
-                @endif
-            </div> -->
 
             <div class="form-group{{ $errors->has('besar_penghematan') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="besar_penghematan">{{ __('Besar Penghematan') }}</label>
+                <label class="form-control-label" for="sp_besar_penghematan">{{ __('Besar Penghematan') }}</label>
                 <input 
                     type="text" 
                     name="besar_penghematan" 
-                    id="hs_besar_penghematan" 
+                    id="sp_besar_penghematan" 
                     class="form-control form-control-alternative{{ $errors->has('besar_penghematan') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     readonly="true" 
@@ -169,11 +172,11 @@
         <div class="col-sm">
                                 
             <div class="form-group{{ $errors->has('frekuensi_pembelian') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="frekuensi_pembelian">{{ __('Frekuensi pembelian per-tahun') }}</label>
+                <label class="form-control-label" for="sp_frekuensi_pembelian">{{ __('Frekuensi pembelian per-tahun') }}</label>
                 <input 
                     type="text" 
                     name="frekuensi_pembelian" 
-                    id="hs_frekuensi_pembelian" 
+                    id="sp_frekuensi_pembelian" 
                     class="form-control form-control-alternative{{ $errors->has('frekuensi_pembelian') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     readonly="true" 
@@ -186,11 +189,11 @@
             </div>
 
             <div class="form-group{{ $errors->has('reorder_point') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="reorder_point">{{ __('Re-order point') }}</label>
+                <label class="form-control-label" for="sp_reorder_point">{{ __('Re-order point') }}</label>
                 <input 
                     type="text" 
                     name="reorder_point" 
-                    id="hs_reorder_point" 
+                    id="sp_reorder_point" 
                     class="form-control form-control-alternative{{ $errors->has('reorder_point') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     readonly="true" 
@@ -223,15 +226,17 @@
 
         function generate_special_price()
         {
-            var idbarang = $('#hs_idbarang').val();
-            var harga_spesial = $('#hs_harga_spesial').val();
-            var route = '{{ url("/pesanan/special_price/") }}' + '/' + idbarang + '/' + harga_spesial;
+            var route = '{{ url("/pesanan/specialprice") }}';
+            var sp_idbarang = $('#sp_idbarang').val();
+            var sp_harga_spesial = $('#sp_harga_spesial').val();
+            var sp_tipe_harga = $('#sp_tipe_harga').val()
+            console.log(sp_idbarang);
 
-            if (idbarang == 0) 
+            if (sp_idbarang == 0) 
             {
                 alert('pilih barang terlebih dahulu.');
             } 
-            if (harga_spesial == '') 
+            if (sp_harga_spesial == '') 
             {
                 alert('harga spesial harus diisi.');
             } 
@@ -240,21 +245,24 @@
                 $.ajax({
                     url: route,
                     type: 'GET',
-                    processData: false,
-                    contentType: false,
                     dataType: 'JSON',
+                    data: {
+                        'idbarang': sp_idbarang,
+                        'special_price': sp_harga_spesial,
+                        'tipe_harga': sp_tipe_harga
+                    }
                 })
                 .done(function(data) {
-                    $('#hs_jumlah_unit_sebelumnya').val(data.jumlah_unit_sebelumnya);
-                    $('#hs_jumlah_unit_khusus').val(data.jumlah_unit_khusus);
-                    $('#hs_total_cost_s').val(data.total_cost_s);
-                    $('#hs_total_cost_n').val(data.total_cost_n);
-                    $('#hs_frekuensi_pembelian').val(data.frekuensi_pembelian);
-                    $('#hs_reorder_point').val(data.reorder_point);
-                    $('#hs_besar_penghematan').val(data.besar_penghematan);
+                    $('#sp_harga_barang').val(data.harga_barang);
+                    $('#sp_jumlah_unit').val(data.jumlah_unit);
+                    $('#sp_total_cost').val(data.total_cost);
+                    $('#sp_frekuensi_pembelian').val(data.frekuensi_pembelian);
+                    $('#sp_reorder_point').val(data.reorder_point);
+                    $('#sp_besar_penghematan').val(data.besar_penghematan);
+                    console.log(data);
                 })
                 .fail(function(e) {
-                    console.log("error " + e);
+                    console.log("error " + e.responseJSON.message);
                 })
                 .always(function() {
                     console.log("complete");

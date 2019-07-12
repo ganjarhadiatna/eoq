@@ -15,7 +15,7 @@
 
         <div class="col-sm">
             <div class="form-group{{ $errors->has('bo_idsupplier') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="bo_idsupplier">{{ __('Pilih supplier') }}</label>
+                <label class="form-control-label" for="bo_idsupplier">{{ __('Pilih Supplier') }}</label>
                 <select 
                     name="bo_idsupplier"
                     id="bo_idsupplier" 
@@ -270,7 +270,8 @@
                 // console.log(data);
             })
             .fail(function(e) {
-                console.log("error " + e.responseJSON.message);
+                alert(e.responseJSON.message);
+                // console.log("error " + e.responseJSON.message);
                 $('#bo-jumlah-unit-'+idbarang).html('0');
                 $('#bo-total-cost-'+idbarang).html('0');
 

@@ -15,7 +15,7 @@
 
         <div class="col-sm">
             <div class="form-group{{ $errors->has('eoq_idsupplier') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="eoq_idsupplier">{{ __('Pilih supplier') }}</label>
+                <label class="form-control-label" for="eoq_idsupplier">{{ __('Pilih Supplier') }}</label>
                 <select 
                     name="eoq_idsupplier"
                     id="eoq_idsupplier" 
@@ -33,69 +33,7 @@
                 @endif
             </div>
         </div>
-        <div class="col-sm">
-
-            <!-- <div class="form-group{{ $errors->has('eoq_tipe_harga') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="eoq_tipe_harga">{{ __('Pilih tipe harga') }}</label>
-                <select 
-                    name="tipe_harga"
-                    id="eoq_tipe_harga" 
-                    class="form-control form-control-alternative{{ $errors->has('eoq_tipe_harga') ? ' is-invalid' : '' }}" 
-                    required>
-                    <option value="khusus">Harga Khusus</option>
-                    <option value="normal">Harga Normal</option>
-                </select>
-                @if ($errors->has('eoq_tipe_harga'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('eoq_tipe_harga') }}</strong>
-                    </span>
-                @endif
-            </div> -->
-
-            <!-- <div class="form-group{{ $errors->has('eoq_biaya_pemesanan') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="eoq_biaya_pemesanan">{{ __('Pilih tipe harga') }}</label>
-                <div class="row">
-                    <div class="custom-control custom-radio mb-3" style="margin-left: 15px;">
-                        <input 
-                            type="radio" 
-                            name="eoq-tipe-harga"
-                            id="eoq-tipe-harga-1" 
-                            class="custom-control-input"
-                            checked="true">
-                        <label 
-                            class="custom-control-label" 
-                            for="eoq-tipe-harga-1">
-                            Harga Khusus
-                        </label>
-                    </div>
-                    <div class="custom-control custom-radio mb-3" style="margin-left: 15px;">
-                        <input 
-                            type="radio" 
-                            name="eoq-tipe-harga"
-                            id="eoq-tipe-harga-2" 
-                            class="custom-control-input"
-                            checked="false">
-                        <label 
-                            class="custom-control-label" 
-                            for="eoq-tipe-harga-2">
-                            Harga Normal
-                        </label>
-                    </div>
-                </div>
-            </div> -->
-
-            <!-- <div>
-	           <label class="form-control-label" for="idsupplier">{{ __('Munculkan barang?') }}</label>
-	           <div>
-                    <button 
-                        type="button" 
-                        class="btn btn-success" 
-                        onclick="eoq_munculkan_barang()">
-                        Munculkan Barang
-                    </button>
-	           </div>
-           </div> -->
-        </div>
+        <div class="col-sm"></div>
     </div>
 
     <div>
@@ -312,6 +250,7 @@
             // console.log(data);
         })
         .fail(function(e) {
+            alert(e.responseJSON.message);
             // console.log("error " + e);
             $('#eoq-jumlah-unit-'+idbarang).html('0');
             $('#eoq-total-cost-'+idbarang).html('0');

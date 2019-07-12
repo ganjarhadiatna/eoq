@@ -52,7 +52,79 @@ class PenjualanController extends Controller
         ]);
     }
 
+    public function byKodeTransaksi($kodetransaksi)
+    {
+        $penjualan = Penjualan::GetAllByKodeTransaksi($kodetransaksi);
+        return json_encode($penjualan);
+    }
+
     // CRUD
+    public function hapus($id)
+    {
+        $idusers = Auth::id();
+        $idbarang = Penjualan::where('id', $id)->value('idbarang');
+        $old_stok = Penjualan::where('id', $id)->value('jumlah_barang');
+
+        $set_stok = Barang::where('id', $idbarang)->value('stok');
+        $fresh_stok = $set_stok + $old_stok;
+        $stok = [
+            'stok' => $fresh_stok
+        ];
+
+        if (Barang::where('id', $idbarang)->update($stok))
+        {
+            if (Penjualan::where('id', $id)->delete()) 
+            {
+                return json_encode(['status' => 'success']);
+            }
+            else
+            {
+                return json_encode(['status' => 'failed']);
+            }
+        } 
+        else 
+        {
+            return json_encode(['status' => 'failed']);
+        }
+    }
+    public function add(Request $req)
+    {
+        $idusers = Auth::id();
+        $idbarang = $req['idbarang'];
+        $data = [
+            'idusers' => $idusers,
+            'idbarang' => $idbarang,
+            'kode_transaksi' => $req['kode_transaksi'],
+            'jumlah_barang' => $req['jumlah_barang'],
+            'harga_barang' => $req['harga_barang'],
+            'total_biaya' => ($req['harga_barang'] * $req['jumlah_barang']),
+            'satuan' => 'PCS',
+            'tanggal_penjualan' => date('Y:m:d')
+        ];
+
+        if (Penjualan::insert($data)) 
+        {
+            $old_stok = Barang::where('id', $idbarang)->value('stok');
+            $fresh_stok = $old_stok - $req['jumlah_barang'];
+            $stok = [
+                'stok' => $fresh_stok
+            ];
+
+            if (Barang::where('id', $idbarang)->update($stok)) 
+            {
+                return json_encode(['status' => 'success']);
+            }
+            else
+            {
+                return json_encode(['status' => 'failed']);
+            }
+        } 
+        else 
+        {
+             return json_encode(['status' => 'failed']);
+        }
+    }
+
     public function push(Request $req)
     {
         $this->validate($req, [
@@ -84,16 +156,16 @@ class PenjualanController extends Controller
 
             if (Barang::where('id', $idbarang)->update($stok)) 
             {
-                return redirect(route('penjualan'));
+                return json_encode(['status' => 'success']);
             }
             else
             {
-                return redirect(route('penjualan'));
+                return json_encode(['status' => 'failed']);
             }
         } 
         else 
         {
-             return redirect(route('penjualan'));
+             return json_encode(['status' => 'failed']);
         }
     }
 

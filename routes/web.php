@@ -82,6 +82,7 @@ Route::middleware('auth')->group(function() {
 
     // pembelian
     Route::get('/pembelian', 'PembelianController@index')->name('pembelian');
+    Route::get('/pembelian/{idsupplier}/daftar', 'PembelianController@daftar')->name('pembelian-daftar');
     Route::get('/pembelian/tambah', 'PembelianController@tambah')->name('pembelian-tambah');
     Route::get('/pembelian/edit/{idbuying}', 'PembelianController@edit')->name('pembelian-edit');
     
@@ -95,8 +96,11 @@ Route::middleware('auth')->group(function() {
     Route::get('/penjualan', 'PenjualanController@index')->name('penjualan');
     Route::get('/penjualan/tambah', 'PenjualanController@tambah')->name('penjualan-tambah');
     Route::get('/penjualan/edit/{idtransactions}', 'PenjualanController@edit')->name('penjualan-edit');
+    Route::get('/penjualan/byKodeTransaksi/{kodetransaksi}', 'PenjualanController@byKodeTransaksi')->name('penjualan-kodetransaksi');
     
     // crud
+    Route::get('/penjualan/add', 'PenjualanController@add')->name('penjualan-add');
+    Route::get('/penjualan/hapus/{id}', 'PenjualanController@hapus')->name('penjualan-hapus');
     Route::post('/penjualan/push', 'PenjualanController@push')->name('penjualan-push');
     Route::post('/penjualan/put', 'PenjualanController@put')->name('penjualan-put');
     Route::post('/penjualan/remove', 'PenjualanController@remove')->name('penjualan-remove');
@@ -110,7 +114,10 @@ Route::middleware('auth')->group(function() {
 
     // // crud
     Route::get('/pesanan/eoq', 'PemesananSingleitemController@generate_eoq')->name('pesanan-singleitem-eoq');
+    Route::get('/pesanan/discount', 'PemesananSingleitemController@generate_discount')->name('pesanan-singleitem-discount');
     Route::get('/pesanan/backorder', 'PemesananSingleitemController@generate_backorder')->name('pesanan-singleitem-backorder');
+    Route::get('/pesanan/specialprice', 'PemesananSingleitemController@generate_specialprice')->name('pesanan-singleitem-specialprice');
+    Route::get('/pesanan/increaseprice', 'PemesananSingleitemController@generate_increaseprice')->name('pesanan-singleitem-increaseprice');
 
     // need fixing
     Route::get('/pesanan/special_price/{idbarang}/{price}', 'PemesananSingleitemController@special_price')->name('pesanan-singleitemspecial-price');
@@ -134,5 +141,13 @@ Route::middleware('auth')->group(function() {
     // crud
     Route::get('/pesanan/multiitem/eoq', 'PemesananMultiitemController@generate_eoq')->name('pesanan-multiitem-eoq');
     Route::get('/pesanan/multiitem/bo', 'PemesananMultiitemController@generate_bo')->name('pesanan-multiitem-bo');
+    Route::get('/pesanan/multiitem/sp', 'PemesananMultiitemController@generate_sp')->name('pesanan-multiitem-sp');
+    Route::get('/pesanan/multiitem/ip', 'PemesananMultiitemController@generate_ip')->name('pesanan-multiitem-ip');
+    Route::get('/pesanan/multiitem/bm', 'PemesananMultiitemController@generate_bm')->name('pesanan-singleitem-bm');
+    Route::get('/pesanan/multiitem/bg', 'PemesananMultiitemController@generate_bg')->name('pesanan-singleitem-bg');
+
+    // batasan
+    Route::get('/batasan/modal', 'PemesananSingleitemController@batasan_modal')->name('batasan-modal');
+    Route::get('/batasan/gudang', 'PemesananSingleitemController@batasan_gudang')->name('batasan-gudang');
 
 });

@@ -32,6 +32,11 @@ class PembelianController extends Controller
         $pembelian = Pembelian::GetAll(5);
         return view('pembelian.index', ['pembelian' => $pembelian]);
     }
+    public function daftar($idsupplier)
+    {
+        $pembelian = Pembelian::GetBySupplier($idsupplier, 5);
+        return view('pembelian.daftar', ['pembelian' => $pembelian]);
+    }
     public function tambah()
     {
         $barang = Barang::orderBy('id', 'desc')->get();

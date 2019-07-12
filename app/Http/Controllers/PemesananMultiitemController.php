@@ -112,11 +112,11 @@ class PemesananMultiitemController extends Controller
 
         if (Pemesanan::where('idsupplier', $idsupplier)->delete())
         {
-             return redirect(route('pesanan-multiitem'));
+             return redirect(route('pesanan-item'));
         } 
         else 
         {
-             return redirect(route('pesanan-multiitem'));
+             return redirect(route('pesanan-item'));
         }
     }
 
@@ -181,7 +181,7 @@ class PemesananMultiitemController extends Controller
 
         return json_encode([
             'status' => 'success',
-            'message' => $dataString
+            'message' => $dataSave
         ]);
     }
 
@@ -259,6 +259,230 @@ class PemesananMultiitemController extends Controller
         foreach ($dataString as $key => $dtc) {
             Pemesanan::where('idbarang', $dtc->idbarang)
             ->where('tipe', 'Back Order')
+            ->Update(['total_cost_multiitem' => $TC]);
+        }
+
+        return json_encode([
+            'status' => 'success',
+            'message' => $dataSave
+        ]);
+    }
+
+    public function generate_sp()
+    {
+        $idusers = Auth::id();
+        $idsupplier = $_GET['idsupplier'];
+        $data = $_GET['data'];
+        $dataString = json_decode(json_encode($data), false);
+        
+        // $biaya_pemesanan = Supplier::GetBiayaPemesanan($idsupplier);
+
+        $special_order = $_GET['special_order'];
+        $tipe_harga = $_GET['tipe_harga'];
+
+        $L = Supplier::GetLeadtime($idsupplier);
+        $N = Supplier::GetWaktuOperasional($idsupplier);
+
+        // total biaya pesanan
+        $C = Supplier::GetBiayaPemesanan($idsupplier);
+
+        // persentase dari harga barang
+        $T = 0.2;
+
+        $TC = 0;
+
+        $dataSave = [];
+        foreach ($dataString as $key => $dt) {
+
+            // jumlah permintaan costumer
+            $R = $dt->jumlah_permintaan;
+
+            // Harga barang
+            $P = $dt->harga_barang;
+
+            // biaya penyimpanan
+            $H = $dt->biaya_penyimpanan;
+            
+            $d = ($P - $special_order);
+            
+            // EOQ sebelum potongan harga
+            $Qs = sqrt((2 * $C * $R) / ($P * $T));
+            
+            // EOQ pesanan khusus
+            $Q = (($d * $R) / (($P - $d) * $T)) + (($P * $Qs) / ($P - $d));
+
+            $jumlah_unit = 0;
+            $total_cost = 0;
+
+            if ($tipe_harga == 1) {
+                $TCs = (($P - $d) * $Q) + ((($P - $d) * $T * pow($Q, 2)) / (2 * $R)) + $C;
+
+                $jumlah_unit = $Q;
+                $total_cost = $TCs;
+            } else {
+                $TCn = (($P * $Q) - ($d * $Qs)) - (($d * $T * pow($Qs, 2)) / (2 * $R)) + (($P * $T * $Q * $Qs) / (2 * $R)) + (($C * $Q) / $Qs);
+
+                $jumlah_unit = $Qs;
+                $total_cost = $TCn;
+            }
+
+
+            $gs = ($C * ($P - $d) / $P) * pow((($Q / $Qs) - 1), 2);
+
+            $F = number_format(($R / $Q), 2);
+
+            $B = ceil(($R * $L) / $N);
+
+            $TC += $total_cost;
+
+            array_push($dataSave, [
+                'idusers' => $idusers,
+                'idsupplier' => $idsupplier,
+                'idbarang' => $dt->idbarang,
+                'harga_barang' => $dt->harga_barang,
+                'jumlah_unit' => ceil($jumlah_unit),
+                'total_cost' => ceil($total_cost),
+                'frekuensi_pembelian' => $F,
+                'reorder_point' => $B,
+                'tipe' => 'Special Order'
+            ]);
+        }
+
+        Pemesanan::Insert($dataSave);
+
+        foreach ($dataString as $key => $dtc) {
+            Pemesanan::where('idbarang', $dtc->idbarang)
+            ->where('tipe', 'Special Order')
+            ->Update(['total_cost_multiitem' => $TC]);
+        }
+
+        return json_encode([
+            'status' => 'success',
+            'message' => $dataSave
+        ]);
+    }
+
+    public function generate_bm()
+    {
+        $idsupplier = $_GET['idsupplier'];
+        $kendala_modal = $_GET['kendala_modal'];
+        $data = $_GET['data'];
+        $dataString = json_decode(json_encode($data), false);
+        $biaya_pemesanan = Supplier::GetBiayaPemesanan($idsupplier);
+
+        $idusers = Auth::id();
+        $a = 0;
+        $b = 0;
+        $d = 0;
+        $Q = 0;
+
+        $L = Supplier::GetLeadtime($idsupplier);
+        $N = Supplier::GetWaktuOperasional($idsupplier);
+
+        $dataSave = [];
+
+        foreach ($dataString as $key => $dt) {
+            $ex_q = sqrt((2 * $biaya_pemesanan * $dt->jumlah_permintaan) / $dt->biaya_penyimpanan);
+            $ex_a = ($dt->harga_barang * $dt->jumlah_permintaan);
+            $ex_b = sqrt(($dt->biaya_penyimpanan * $dt->jumlah_permintaan) / (2 * $biaya_pemesanan));
+            $ex_d = (($dt->biaya_penyimpanan * $ex_q) / 2);
+            $ex_tc = $ex_a + ($biaya_pemesanan * $ex_b) + $ex_d;
+
+            $a = $a + $ex_a;
+            $b = $b + $ex_b;
+            $d = $d + $ex_d;
+            $Q = $Q + $ex_q;
+
+            $F = number_format(($dt->jumlah_permintaan / $ex_q), 2);
+            $B = ($dt->jumlah_permintaan * $L) / $N;
+
+            // save data
+            array_push($dataSave, [
+                'idusers' => $idusers,
+                'idsupplier' => $idsupplier,
+                'idbarang' => $dt->idbarang,
+                'harga_barang' => $dt->harga_barang,
+                'jumlah_unit' => $ex_q,
+                'total_cost' => $ex_tc,
+                'frekuensi_pembelian' => $F,
+                'reorder_point' => $B,
+                'tipe' => 'Batasan Modal'
+            ]);
+        }
+
+        Pemesanan::Insert($dataSave);
+
+        $TC = $a + ($biaya_pemesanan * $b) + $d;
+
+        // update total cost
+        foreach ($dataString as $key => $dt) {
+            Pemesanan::where('idbarang', $dt->idbarang)
+            ->where('tipe', 'EOQ Sederhana')
+            ->Update(['total_cost_multiitem' => $TC]);
+        }
+
+        return json_encode([
+            'status' => 'success',
+            'message' => $dataSave
+        ]);
+    }
+
+    public function generate_bg()
+    {
+        $idsupplier = $_GET['idsupplier'];
+        $kendala_gudang = $_GET['kendala_gudang'];
+        $data = $_GET['data'];
+        $dataString = json_decode(json_encode($data), false);
+        $biaya_pemesanan = Supplier::GetBiayaPemesanan($idsupplier);
+
+        $idusers = Auth::id();
+        $a = 0;
+        $b = 0;
+        $d = 0;
+        $Q = 0;
+
+        $L = Supplier::GetLeadtime($idsupplier);
+        $N = Supplier::GetWaktuOperasional($idsupplier);
+
+        $dataSave = [];
+
+        foreach ($dataString as $key => $dt) {
+            $ex_q = sqrt((2 * $biaya_pemesanan * $dt->jumlah_permintaan) / $dt->biaya_penyimpanan);
+            $ex_a = ($dt->harga_barang * $dt->jumlah_permintaan);
+            $ex_b = sqrt(($dt->biaya_penyimpanan * $dt->jumlah_permintaan) / (2 * $biaya_pemesanan));
+            $ex_d = (($dt->biaya_penyimpanan * $ex_q) / 2);
+            $ex_tc = $ex_a + ($biaya_pemesanan * $ex_b) + $ex_d;
+            
+            $a = $a + $ex_a;
+            $b = $b + $ex_b;
+            $d = $d + $ex_d;
+            $Q = $Q + $ex_q;
+
+            $F = number_format(($dt->jumlah_permintaan / $ex_q), 2);
+            $B = ($dt->jumlah_permintaan * $L) / $N;
+
+            // save data
+            array_push($dataSave, [
+                'idusers' => $idusers,
+                'idsupplier' => $idsupplier,
+                'idbarang' => $dt->idbarang,
+                'harga_barang' => $dt->harga_barang,
+                'jumlah_unit' => $ex_q,
+                'total_cost' => $ex_tc,
+                'frekuensi_pembelian' => $F,
+                'reorder_point' => $B,
+                'tipe' => 'Batasan Modal'
+            ]);
+        }
+
+        Pemesanan::Insert($dataSave);
+
+        $TC = $a + ($biaya_pemesanan * $b) + $d;
+
+        // update total cost
+        foreach ($dataString as $key => $dt) {
+            Pemesanan::where('idbarang', $dt->idbarang)
+            ->where('tipe', 'EOQ Sederhana')
             ->Update(['total_cost_multiitem' => $TC]);
         }
 

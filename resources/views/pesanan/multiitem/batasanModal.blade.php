@@ -35,66 +35,23 @@
         </div>
         <div class="col-sm">
 
-            <!-- <div class="form-group{{ $errors->has('bm_tipe_harga') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="bm_tipe_harga">{{ __('Pilih tipe harga') }}</label>
-                <select 
-                    name="tipe_harga"
-                    id="bm_tipe_harga" 
-                    class="form-control form-control-alternative{{ $errors->has('bm_tipe_harga') ? ' is-invalid' : '' }}" 
-                    required>
-                    <option value="khusus">Harga Khusus</option>
-                    <option value="normal">Harga Normal</option>
-                </select>
-                @if ($errors->has('bm_tipe_harga'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('bm_tipe_harga') }}</strong>
-                    </span>
-                @endif
-            </div> -->
-
-            <!-- <div class="form-group{{ $errors->has('bm_biaya_pemesanan') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="bm_biaya_pemesanan">{{ __('Pilih tipe harga') }}</label>
-                <div class="row">
-                    <div class="custom-control custom-radio mb-3" style="margin-left: 15px;">
-                        <input 
-                            type="radio" 
-                            name="bm-tipe-harga"
-                            id="bm-tipe-harga-1" 
-                            class="custom-control-input"
-                            checked="true">
-                        <label 
-                            class="custom-control-label" 
-                            for="bm-tipe-harga-1">
-                            Harga Khusus
-                        </label>
-                    </div>
-                    <div class="custom-control custom-radio mb-3" style="margin-left: 15px;">
-                        <input 
-                            type="radio" 
-                            name="bm-tipe-harga"
-                            id="bm-tipe-harga-2" 
-                            class="custom-control-input"
-                            checked="false">
-                        <label 
-                            class="custom-control-label" 
-                            for="bm-tipe-harga-2">
-                            Harga Normal
-                        </label>
-                    </div>
+            <div class="col-sm">
+                <div class="form-group{{ $errors->has('bm_kendala_modal') ? ' has-danger' : '' }}">
+                    <label class="form-control-label" for="bm_kendala_modal">{{ __('Kendala Modal') }}</label>
+                    <input 
+                        type="text" 
+                        name="bm_kendala_modal" 
+                        id="bm_kendala_modal" 
+                        class="form-control form-control-alternative{{ $errors->has('bm_kendala_modal') ? ' is-invalid' : '' }}" 
+                        placeholder="0" 
+                        required>
+                    @if ($errors->has('bm_kendala_modal'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('bm_kendala_modal') }}</strong>
+                        </span>
+                    @endif
                 </div>
-            </div> -->
-
-            <!-- <div>
-               <label class="form-control-label" for="idsupplier">{{ __('Munculkan barang?') }}</label>
-               <div>
-                    <button 
-                        type="button" 
-                        class="btn btn-success" 
-                        onclick="bm_munculkan_barang()">
-                        Munculkan Barang
-                    </button>
-               </div>
-           </div> -->
+            </div>
         </div>
     </div>
 
@@ -244,6 +201,7 @@
 
     function generate_bm_multititem() {
         var idsupplier = $('#bm_idsupplier').val();
+        var kendala_modal = $('#bm_kendala_modal').val();
         var route = '{{ url("/pesanan/multiitem/bm/") }}';
 
         // console.log(route);
@@ -256,14 +214,15 @@
                     dataType: 'json',
                     data: {
                         'idsupplier': idsupplier, 
+                        'kendala_modal': kendala_modal,
                         'data': databm
                     }
                 })
                 .done(function(data) {
-                    if (data.status === 'success') {
-                        window.location = '{{ route("pesanan-item") }}';
-                    }
-                    // console.log(data);
+                    // if (data.status === 'success') {
+                    //     window.location = '{{ route("pesanan-item") }}';
+                    // }
+                    console.log(data);
                 })
                 .fail(function(e) {
                     console.log("error => " + e.responseJSON.message);
@@ -273,55 +232,57 @@
                 });
             }
         } else {
-            alert('pilih satu atau lebih barang barang.');
+            alert('pilih satu atau lebih barang.');
         }
     }
 
     function generate_bm_singleitem(idbarang) 
     {
         
-        var route = '{{ url("/pesanan/bm") }}';
+        var route = '{{ url("/pesanan/eoq") }}';
         var idsupplier = $('#bm_idsupplier').val();
-        // var bm_tipe_harga = $('#bm_tipe_harga').val();
+        var kendala_modal = $('#bm_kendala_modal').val();
 
-        // console.log(idbarang);
+        if (kendala_modal > 0) {
+            $.ajax({
+                url: route,
+                type: 'GET',
+                dataType: 'JSON',
+                data: {
+                    'idbarang': idbarang,
+                    'idsupplier': idsupplier,
+                    'kendala_modal': kendala_modal
+                    // 'tipe_harga': bm_tipe_harga
+                }
+            })
+            .done(function(data) {
+                databm.push({
+                    'idbarang': idbarang, 
+                    'biaya_penyimpanan': data.biaya_penyimpanan,
+                    'jumlah_permintaan': data.jumlah_permintaan,
+                    'harga_barang': data.harga_barang,
+                    'jumlah_unit': data.jumlah_unit,
+                    'total_cost': data.total_cost
+                });
+                $('#bm-jumlah-unit-'+idbarang).html(data.jumlah_unit);
+                $('#bm-total-cost-'+idbarang).html(data.total_cost);
 
-        $.ajax({
-            url: route,
-            type: 'GET',
-            dataType: 'JSON',
-            data: {
-                'idbarang': idbarang,
-                'idsupplier': idsupplier,
-                // 'tipe_harga': bm_tipe_harga
-            }
-        })
-        .done(function(data) {
-            databm.push({
-                'idbarang': idbarang, 
-                'biaya_penyimpanan': data.biaya_penyimpanan,
-                'jumlah_permintaan': data.jumlah_permintaan,
-                'harga_barang': data.harga_barang,
-                'jumlah_unit': data.jumlah_unit,
-                'total_cost': data.total_cost
+                bm_update_total();
+                // console.log(data);
+            })
+            .fail(function(e) {
+                // console.log("error " + e);
+                $('#bm-jumlah-unit-'+idbarang).html('0');
+                $('#bm-total-cost-'+idbarang).html('0');
+
+                bm_update_total();
+            })
+            .always(function() {
+                console.log("complete");
             });
-            $('#bm-jumlah-unit-'+idbarang).html(data.jumlah_unit);
-            $('#bm-total-cost-'+idbarang).html(data.total_cost);
-
-            bm_update_total();
-            // console.log(data);
-        })
-        .fail(function(e) {
-            // console.log("error " + e);
-            $('#bm-jumlah-unit-'+idbarang).html('0');
-            $('#bm-total-cost-'+idbarang).html('0');
-
-            bm_update_total();
-        })
-        .always(function() {
-            console.log("complete");
-        });
-            
+        } else {
+            alert('kendala modal tidak boleh kosong.');
+        }
     }
 
     $(document).ready(function () {

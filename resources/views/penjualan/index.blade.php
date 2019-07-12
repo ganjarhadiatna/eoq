@@ -20,21 +20,21 @@
                     </form>
                 </div>
                 <div class="col-2 text-right">
-                    <button 
+                    <!-- <button 
                         type="button" 
                         class="btn btn-primary"
                         onclick="openCreateForm()" >
                         <i class="fa fa-lg fa-plus"></i>
                         Tambah
-                    </button>
-                    <!-- <a href="{{ route('penjualan-tambah') }}">
+                    </button> -->
+                    <a href="{{ route('penjualan-tambah') }}">
                         <button 
                             type="button" 
                             class="btn btn-primary" >
                             <i class="fa fa-lg fa-plus"></i>
                             Tambah
                         </button>
-                    </a> -->
+                    </a>
                 </div>
             </div>
             
@@ -125,7 +125,7 @@
     </div>
 
     <!-- Modal -->
-    <div 
+    <!-- <div 
         class="modal fade" 
         id="createModal" 
         tabindex="-1" 
@@ -382,7 +382,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <script type="text/javascript">
 

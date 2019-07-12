@@ -37,6 +37,33 @@ class Barang extends Model
         ->value('biaya_penyimpanan');
     }
 
+    public function scopeGetAllWithoutLimit($query)
+    {
+        return DB::table($this->table)
+        ->select(
+            'barang.id as idbarang',
+            'barang.nama_barang',
+            'barang.stok',
+            'barang.harga_barang',
+            'barang.biaya_penyimpanan',
+            'barang.tanggal_kadaluarsa',
+            'barang.idusers',
+            'barang.idsupplier',
+            'supplier.nama as nama_supplier',
+            'supplier.leadtime',
+            'supplier.waktu_operasional',
+            'supplier.biaya_pemesanan',
+            'etalase.etalase',
+            'kategori.kategori',
+            DB::raw('(select count(id) from diskons where idbarang=barang.id) as jumlah_diskon')
+        )
+        ->join('supplier', 'supplier.id', '=', 'barang.idsupplier')
+        ->join('kategori', 'kategori.id', '=', 'barang.idkategori')
+        ->join('etalase', 'etalase.id', '=', 'barang.idetalase')
+        ->orderBy('barang.id', 'desc')
+        ->get();
+    }
+
     public function scopeGetAll($query, $limit)
     {
     	return DB::table($this->table)

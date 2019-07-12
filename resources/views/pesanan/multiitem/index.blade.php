@@ -11,11 +11,6 @@
             <h3 class="mb-0">Manajemen Stok</h3>
             <div class="nav-wrapper">
                 <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
-                    <!-- <li class="nav-item">
-                        <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-0-tab" data-toggle="tab" href="#tabs-icons-text-0" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false">
-                            Sembunyikan
-                        </a>
-                    </li> -->
                     <li class="nav-item">
                         <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab" data-toggle="tab" href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true">
                             EOQ Sederhana
@@ -26,31 +21,21 @@
                             Back Order
                         </a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">
+                    <li class="nav-item">
+                        <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-5-tab" data-toggle="tab" href="#tabs-icons-text-5" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">
                             Special Order
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-4-tab" data-toggle="tab" href="#tabs-icons-text-4" role="tab" aria-controls="tabs-icons-text-4" aria-selected="false">
-                            Price Increases
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-5-tab" data-toggle="tab" href="#tabs-icons-text-5" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">
-                            Batasan Modal
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-6-tab" data-toggle="tab" href="#tabs-icons-text-6" role="tab" aria-controls="tabs-icons-text-4" aria-selected="false">
-                            Batasan Gudang
+                            Price Increases
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-7-tab" data-toggle="tab" href="#tabs-icons-text-7" role="tab" aria-controls="tabs-icons-text-4" aria-selected="false">
                             Quantiti Diskon
                         </a>
-                    </li> -->
+                    </li>
                 </ul>
             </div>
         </div>
@@ -77,14 +62,33 @@
                     aria-labelledby="tabs-icons-text-1-tab">
                     @include('pesanan.multiitem.eoq')
                 </div>
-
-                <!-- Back Order -->
                 <div 
                     class="tab-pane fade show" 
                     id="tabs-icons-text-2" 
                     role="tabpanel" 
                     aria-labelledby="tabs-icons-text-2-tab">
                     @include('pesanan.multiitem.backorder')
+                </div>
+                <div 
+                    class="tab-pane fade show" 
+                    id="tabs-icons-text-5" 
+                    role="tabpanel" 
+                    aria-labelledby="tabs-icons-text-5-tab">
+                    @include('pesanan.singleitem.specialPrice')
+                </div>
+                <div 
+                    class="tab-pane fade show" 
+                    id="tabs-icons-text-6" 
+                    role="tabpanel" 
+                    aria-labelledby="tabs-icons-text-6-tab">
+                    @include('pesanan.singleitem.increasePrice')
+                </div>
+                <div 
+                    class="tab-pane fade show" 
+                    id="tabs-icons-text-7" 
+                    role="tabpanel" 
+                    aria-labelledby="tabs-icons-text-7-tab">
+                    @include('pesanan.singleitem.quantityDiscount')
                 </div>
 
 

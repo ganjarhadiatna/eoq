@@ -34,4 +34,23 @@ class Penjualan extends Model
     	->orderBy('penjualan.id', 'desc')
     	->paginate($limit);
     }
+
+    public function scopeGetAllByKodeTransaksi($query, $kode_transaksi)
+    {
+        return DB::table($this->table)
+        ->select(
+            'penjualan.id',
+            'penjualan.kode_transaksi',
+            'penjualan.jumlah_barang',
+            'penjualan.harga_barang',
+            'penjualan.total_biaya',
+            'penjualan.satuan',
+            'penjualan.tanggal_penjualan',
+            'barang.nama_barang'
+        )
+        ->join('barang', 'barang.id', '=', 'penjualan.idbarang')
+        ->where('penjualan.kode_transaksi', $kode_transaksi)
+        ->orderBy('penjualan.id', 'desc')
+        ->get();
+    }
 }

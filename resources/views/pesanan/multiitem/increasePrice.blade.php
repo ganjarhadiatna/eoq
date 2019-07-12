@@ -11,45 +11,61 @@
         <h3 class="mb-0">Informasi Parameter</h3>
     </div>
 
-    <div class="row mb-2">
+    <div class="row mb-3">
 
         <div class="col-sm">
-            <div class="form-group{{ $errors->has('sp_idsupplier') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="sp_idsupplier">{{ __('Pilih supplier') }}</label>
+            <div class="form-group{{ $errors->has('ip_idsupplier') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="ip_idsupplier">{{ __('Pilih supplier') }}</label>
                 <select 
-                    name="sp_idsupplier"
-                    id="sp_idsupplier" 
-                    class="form-control form-control-alternative{{ $errors->has('sp_idsupplier') ? ' is-invalid' : '' }}" 
+                    name="ip_idsupplier"
+                    id="ip_idsupplier" 
+                    class="form-control form-control-alternative{{ $errors->has('ip_idsupplier') ? ' is-invalid' : '' }}" 
                     required>
                     <option value="0">Pilih Supplier</option>
                     @foreach ($supplier as $br)
                         <option value="{{ $br->id }}">{{ $br->nama }}</option>
                     @endforeach
                 </select>
-                @if ($errors->has('sp_idsupplier'))
+                @if ($errors->has('ip_idsupplier'))
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('sp_idsupplier') }}</strong>
+                        <strong>{{ $errors->first('ip_idsupplier') }}</strong>
                     </span>
                 @endif
             </div>
         </div>
         <div class="col-sm">
-            <div class="col-sm">
-                <div class="form-group{{ $errors->has('sp_harga_spesial') ? ' has-danger' : '' }}">
-                    <label class="form-control-label" for="sp_harga_spesial">{{ __('Harga Spesial') }}</label>
-                    <input 
-                        type="text" 
-                        name="sp_harga_spesial" 
-                        id="sp_harga_spesial" 
-                        class="form-control form-control-alternative{{ $errors->has('sp_harga_spesial') ? ' is-invalid' : '' }}" 
-                        placeholder="0" 
-                        required>
-                    @if ($errors->has('sp_harga_spesial'))
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $errors->first('sp_harga_spesial') }}</strong>
-                        </span>
-                    @endif
-                </div>
+            <div class="form-group{{ $errors->has('ip_increase_price') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="ip_increase_price">{{ __('Kenaikan Harga') }}</label>
+                <input 
+                    type="text" 
+                    name="ip_increase_price" 
+                    id="ip_increase_price" 
+                    class="form-control form-control-alternative{{ $errors->has('ip_increase_price') ? ' is-invalid' : '' }}" 
+                    placeholder="0" 
+                    required>
+                @if ($errors->has('ip_increase_price'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('ip_increase_price') }}</strong>
+                    </span>
+                @endif
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="form-group{{ $errors->has('ip_tipe_harga') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="ip_tipe_harga">{{ __('Tipe Harga') }}</label>
+                <select 
+                    name="ip_tipe_harga"
+                    id="ip_tipe_harga" 
+                    class="form-control form-control-alternative{{ $errors->has('ip_tipe_harga') ? ' is-invalid' : '' }}" 
+                    required>
+                    <option value="1">Harga Khusus</option>
+                    <option value="2">Harga Normal</option>
+                </select>
+                @if ($errors->has('ip_tipe_harga'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('ip_tipe_harga') }}</strong>
+                    </span>
+                @endif
             </div>
         </div>
     </div>
@@ -59,7 +75,7 @@
     </div>
 
     <div class="table-responsive">
-        <form id="sp-form-barang">
+        <form id="ip-form-barang">
             <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                     <tr>
@@ -74,12 +90,12 @@
                         <th scope="col" width="50">#</th>
                     </tr>
                 </thead>
-                <tbody id="sp-daftar-barang"></tbody>
-                <tbody id="sp-daftar-barang">
+                <tbody id="ip-daftar-barang"></tbody>
+                <tbody id="ip-daftar-barang">
                     <tr>
                         <th scope="col" colspan="6">Total Keseluruhan</th>
-                        <th scope="col" id="sp-jumlah-unit">0</th>
-                        <th scope="col" id="sp-total-cost">0</th>
+                        <th scope="col" id="ip-jumlah-unit">0</th>
+                        <th scope="col" id="ip-total-cost">0</th>
                         <td scope="col" width="50">
                             <button 
                                 type="button" 
@@ -101,15 +117,15 @@
     var clNow = "modal fade";
     var clOpen = "modal fade show";
 
-    function op_sp_daftar_brang(stt) 
+    function ip_sp_daftar_brang(stt) 
     {
         if (stt == 'open')
         {
-            $('#sp-modal-barang').attr('class', clOpen).show();
+            $('#ip-modal-barang').attr('class', clOpen).show();
         } 
         else 
         {
-            $('#sp-modal-barang').attr('class', clNow).hide();
+            $('#ip-modal-barang').attr('class', clNow).hide();
         }
     }
 
@@ -117,14 +133,14 @@
         console.log($(this).is(':checked'));
     }
 
-    function sp_munculkan_barang() {
+    function ip_munculkan_barang() {
         // get barang
-        var idsupplier = $('#sp_idsupplier').val();
+        var idsupplier = $('#ip_idsupplier').val();
         var route = '{{ url("/barang/bysupplier/") }}' + '/' + idsupplier;
 
         if (idsupplier == 0) {
             // alert('pilih supplier terlebih dahulu.');
-            $('#sp-daftar-barang').html('');
+            $('#ip-daftar-barang').html('');
         } else {
             $.ajax({
                 url: route,
@@ -135,7 +151,7 @@
                 var dt = '';
                 
                 if (data.length > 0) {
-                    // op_sp_daftar_brang('open');
+                    // ip_sp_daftar_brang('open');
                     for (var i = 0; i < data.length; i++) {
 
                         // status pemesanan
@@ -159,8 +175,8 @@
                             <td>'+data[i].stok+'</td>\
                             '+status_pemesanan+'\
                             '+status_pembelian+'\
-                            <th id="sp-jumlah-unit-'+data[i].id+'">0</th>\
-                            <th id="sp-total-cost-'+data[i].id+'">0</th>\
+                            <th id="ip-jumlah-unit-'+data[i].id+'">0</th>\
+                            <th id="ip-total-cost-'+data[i].id+'">0</th>\
                             <td>\
                                 <label class="custom-toggle">\
                                     <input type="checkbox" value="'+data[i].id+'" class="checked" />\
@@ -171,7 +187,7 @@
                     }
                 }
 
-                $('#sp-daftar-barang').html(dt);
+                $('#ip-daftar-barang').html(dt);
 
                 // console.log(data);
             })
@@ -185,7 +201,7 @@
         }
     }
 
-    function sp_update_total() {
+    function ip_update_total() {
         var jumlah_unit = 0;
         var total_cost = 0;
 
@@ -194,13 +210,14 @@
             var total_cost = total_cost + datasp[i].total_cost;
         }
 
-        $('#sp-jumlah-unit').html(jumlah_unit);
-        $('#sp-total-cost').html(total_cost);
+        $('#ip-jumlah-unit').html(jumlah_unit);
+        $('#ip-total-cost').html(total_cost);
     }
 
     function generate_sp_multititem() {
-        var idsupplier = $('#sp_idsupplier').val();
-        var biaya_backorder = $('#sp_harga_spesial').val();
+        var idsupplier = $('#ip_idsupplier').val();
+        var special_order = $('#ip_increase_price').val();
+        var tipe_harga = $('#ip_tipe_harga').val()
         var route = '{{ url("/pesanan/multiitem/sp/") }}';
 
         // console.log(route);
@@ -213,7 +230,8 @@
                     dataType: 'json',
                     data: {
                         'idsupplier': idsupplier, 
-                        'biaya_backorder': biaya_backorder,
+                        'special_order': special_order,
+                        'tipe_harga': tipe_harga,
                         'data': datasp
                     }
                 })
@@ -238,19 +256,21 @@
     function generate_sp_singleitem(idbarang) 
     {
         
-        var route = '{{ url("/pesanan/backorder") }}';
-        var idsupplier = $('#sp_idsupplier').val();
-        var sp_harga_spesial = $('#sp_harga_spesial').val();
+        var route = '{{ url("/pesanan/specialprice") }}';
+        var ip_idsupplier = $('#ip_idsupplier').val();
+        var ip_increase_price = $('#ip_increase_price').val();
+        var ip_tipe_harga = $('#ip_tipe_harga').val()
 
-        if (sp_harga_spesial > 0) {
+        if (ip_increase_price > 0) {
             $.ajax({
                 url: route,
                 type: 'GET',
                 dataType: 'JSON',
                 data: {
                     'idbarang': idbarang,
-                    'idsupplier': idsupplier,
-                    'biaya_backorder': sp_harga_spesial
+                    'idsupplier': ip_idsupplier,
+                    'special_price': ip_increase_price,
+                    'tipe_harga': ip_tipe_harga
                 }
             })
             .done(function(data) {
@@ -263,47 +283,48 @@
                     'total_cost': data.total_cost
                 });
 
-                $('#sp-jumlah-unit-'+idbarang).html(data.jumlah_unit);
-                $('#sp-total-cost-'+idbarang).html(data.total_cost);
+                $('#ip-jumlah-unit-'+idbarang).html(data.jumlah_unit);
+                $('#ip-total-cost-'+idbarang).html(data.total_cost);
 
-                sp_update_total();
-                // console.log(data);
+                ip_update_total();
+                console.log(data);
             })
             .fail(function(e) {
-                console.log("error " + e.responseJSON.message);
-                $('#sp-jumlah-unit-'+idbarang).html('0');
-                $('#sp-total-cost-'+idbarang).html('0');
+                alert(e.responseJSON.message);
+                // console.log("error " + e);
+                $('#ip-jumlah-unit-'+idbarang).html('0');
+                $('#ip-total-cost-'+idbarang).html('0');
 
-                sp_update_total();
+                ip_update_total();
             })
             .always(function() {
                 console.log("complete");
             });
         } else {
-            alert('biaya backorder tidak boleh kosong.');
+            alert('harga spesial tidak boleh kosong.');
         }
             
     }
 
     $(document).ready(function () {
         
-        $('#sp_idsupplier').change(function(event) {
+        $('#ip_idsupplier').change(function(event) {
             // event.preventDefault();
-            sp_munculkan_barang();
+            ip_munculkan_barang();
 
             datasp = [];
-            sp_update_total();
+            ip_update_total();
         });
 
-        $('#sp-form-barang').on('change', ':checkbox', function () {
+        $('#ip-form-barang').on('change', ':checkbox', function () {
             if ($(this).is(':checked')) {
                 
                 generate_sp_singleitem($(this).val());
 
             } else {
                 // console.log($(this).val() + ' is now unchecked');
-                $('#sp-jumlah-unit-'+$(this).val()).html('0');
-                $('#sp-total-cost-'+$(this).val()).html('0');
+                $('#ip-jumlah-unit-'+$(this).val()).html('0');
+                $('#ip-total-cost-'+$(this).val()).html('0');
 
                 // remove array
                 for (var i = 0; i < datasp.length; i++) {
@@ -312,7 +333,7 @@
                     }
                 }
 
-                sp_update_total();
+                ip_update_total();
             }
             // console.log(datasp);
         });

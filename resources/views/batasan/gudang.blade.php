@@ -1,3 +1,7 @@
+@extends('layouts.app')
+
+@section('content')
+
 <!-- <form 
     name="form-generate-bm" 
     method="post" 
@@ -6,93 +10,101 @@
     id="form-generate-bm"> -->
 
     <!-- @csrf -->
-<div>
-    <div>
-        <h3 class="mb-0">Informasi Parameter</h3>
+<div class="card bg-secondary shadow">
+
+    <div class="card-header border-0">
+        <h3 class="mb-0">Batasan Gudang</h3>
     </div>
 
-    <div class="row mb-2">
+    <div class="card-body">
 
-        <div class="col-sm">
-            <div class="form-group{{ $errors->has('bg_idsupplier') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="bg_idsupplier">{{ __('Pilih supplier') }}</label>
-                <select 
-                    name="bg_idsupplier"
-                    id="bg_idsupplier" 
-                    class="form-control form-control-alternative{{ $errors->has('bg_idsupplier') ? ' is-invalid' : '' }}" 
-                    required>
-                    <option value="0">Pilih Supplier</option>
-                    @foreach ($supplier as $br)
-                        <option value="{{ $br->id }}">{{ $br->nama }}</option>
-                    @endforeach
-                </select>
-                @if ($errors->has('bg_idsupplier'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('bg_idsupplier') }}</strong>
-                    </span>
-                @endif
-            </div>
+        <div>
+            <h3 class="mb-0">Informasi Parameter</h3>
         </div>
-        <div class="col-sm">
+
+        <div class="row mb-2">
 
             <div class="col-sm">
-                <div class="form-group{{ $errors->has('bg_kendala_gudang') ? ' has-danger' : '' }}">
-                    <label class="form-control-label" for="bg_kendala_gudang">{{ __('Kendala Luas Gudang') }}</label>
-                    <input 
-                        type="text" 
-                        name="bg_kendala_gudang" 
-                        id="bg_kendala_gudang" 
-                        class="form-control form-control-alternative{{ $errors->has('bg_kendala_gudang') ? ' is-invalid' : '' }}" 
-                        placeholder="0" 
+                <div class="form-group{{ $errors->has('bg_idsupplier') ? ' has-danger' : '' }}">
+                    <label class="form-control-label" for="bg_idsupplier">{{ __('Pilih supplier') }}</label>
+                    <select 
+                        name="bg_idsupplier"
+                        id="bg_idsupplier" 
+                        class="form-control form-control-alternative{{ $errors->has('bg_idsupplier') ? ' is-invalid' : '' }}" 
                         required>
-                    @if ($errors->has('bg_kendala_gudang'))
+                        <option value="0">Pilih Supplier</option>
+                        @foreach ($supplier as $br)
+                            <option value="{{ $br->id }}">{{ $br->nama }}</option>
+                        @endforeach
+                    </select>
+                    @if ($errors->has('bg_idsupplier'))
                         <span class="invalid-feedback" role="alert">
-                            <strong>{{ $errors->first('bg_kendala_gudang') }}</strong>
+                            <strong>{{ $errors->first('bg_idsupplier') }}</strong>
                         </span>
                     @endif
                 </div>
             </div>
+            <div class="col-sm">
+
+                <div class="col-sm">
+                    <div class="form-group{{ $errors->has('bg_kendala_gudang') ? ' has-danger' : '' }}">
+                        <label class="form-control-label" for="bg_kendala_gudang">{{ __('Kendala Luas Gudang') }}</label>
+                        <input 
+                            type="text" 
+                            name="bg_kendala_gudang" 
+                            id="bg_kendala_gudang" 
+                            class="form-control form-control-alternative{{ $errors->has('bg_kendala_gudang') ? ' is-invalid' : '' }}" 
+                            placeholder="0" 
+                            required>
+                        @if ($errors->has('bg_kendala_gudang'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('bg_kendala_gudang') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div>
-        <h3 class="mb-0">Daftar Barang</h3>
-    </div>
+        <div>
+            <h3 class="mb-0">Daftar Barang</h3>
+        </div>
 
-    <div class="table-responsive">
-        <form id="bg-form-barang">
-            <table class="table align-items-center table-flush">
-                <thead class="thead-light">
-                    <tr>
-                        <th scope="col" width="100">NO</th>
-                        <th scope="col">Barang</th>
-                        <th scope="col">Harga</th>
-                        <th scope="col">Stok</th>
-                        <th scope="col">Status Pemesanan</th>
-                        <th scope="col">Status Pembelian</th>
-                        <th scope="col">bm</th>
-                        <th scope="col">Total Cost</th>
-                        <th scope="col" width="50">#</th>
-                    </tr>
-                </thead>
-                <tbody id="bg-daftar-barang"></tbody>
-                <tbody id="bg-daftar-barang">
-                    <tr>
-                        <th scope="col" colspan="6">Total Keseluruhan</th>
-                        <th scope="col" id="bg-jumlah-unit">0</th>
-                        <th scope="col" id="bg-total-cost">0</th>
-                        <td scope="col" width="50">
-                            <button 
-                                type="button" 
-                                class="btn btn-success" 
-                                onclick="generate_bg_multititem()">
-                                Simpan Pesanan
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
+        <div class="table-responsive">
+            <form id="bg-form-barang">
+                <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col" width="100">NO</th>
+                            <th scope="col">Barang</th>
+                            <th scope="col">Harga</th>
+                            <th scope="col">Stok</th>
+                            <th scope="col">Status Pemesanan</th>
+                            <th scope="col">Status Pembelian</th>
+                            <th scope="col">bm</th>
+                            <th scope="col">Total Cost</th>
+                            <th scope="col" width="50">#</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bg-daftar-barang"></tbody>
+                    <tbody id="bg-daftar-barang">
+                        <tr>
+                            <th scope="col" colspan="6">Total Keseluruhan</th>
+                            <th scope="col" id="bg-jumlah-unit">0</th>
+                            <th scope="col" id="bg-total-cost">0</th>
+                            <td scope="col" width="50">
+                                <button 
+                                    type="button" 
+                                    class="btn btn-success" 
+                                    onclick="generate_bg_multititem()">
+                                    Simpan Pesanan
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
     </div>
 
 </div>
@@ -322,3 +334,5 @@
     });
 
 </script>
+
+@endsection
