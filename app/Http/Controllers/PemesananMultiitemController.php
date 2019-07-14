@@ -329,7 +329,7 @@ class PemesananMultiitemController extends Controller
 
             $gs = ($C * ($P - $d) / $P) * pow((($Q / $Qs) - 1), 2);
 
-            $F = number_format(($R / $Q), 2);
+            $F = ceil(($R / $Q));
 
             $B = ceil(($R * $L) / $N);
 

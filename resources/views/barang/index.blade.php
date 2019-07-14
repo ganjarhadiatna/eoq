@@ -642,6 +642,15 @@
                 $('#createModal').attr('class', clNow).hide();
             }
         }
+
+        $(document).ready(function () {
+            $('#harga_barang').keyup(function (event) {
+                var harga = $('#harga_barang').val();
+                var temp = harga * 0.02;
+                $('#biaya_penyimpanan').val(temp);
+                // console.log(harga);
+            });
+        });
     </script>
 
 @endsection

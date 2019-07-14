@@ -61,7 +61,7 @@ class PemesananSingleitemController extends Controller
         $Q = sqrt((2 * $C * $R) / $H);
         $TC = ($P * $R) + (($C * $R) / $Q) + (($H * $Q) / 2);
 
-        $F = number_format(($R / $Q), 2);
+        $F = ceil(($R / $Q));
 
         $B = ($R * $L) / $N;
 

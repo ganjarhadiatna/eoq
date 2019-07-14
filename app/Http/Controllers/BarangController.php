@@ -87,6 +87,8 @@ class BarangController extends Controller
             'idsupplier' => ['required', 'int', 'max:10']
         ]);
 
+        // $temp = $req['harga_barang'] * 0.02;
+
         $data = [
             'idusers' => Auth::id(),
             'idkategori' => $req['idkategori'],

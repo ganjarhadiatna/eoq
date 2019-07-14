@@ -69,6 +69,7 @@
                         <th scope="col">Stok</th>
                         <th scope="col">Status Pemesanan</th>
                         <th scope="col">Status Pembelian</th>
+                        <th scope="col">Status Pemesanan</th>
                         <th scope="col">EOQ</th>
                         <th scope="col">Total Cost</th>
                         <th scope="col" width="50">#</th>
@@ -77,7 +78,7 @@
                 <tbody id="bo-daftar-barang"></tbody>
                 <tbody id="bo-daftar-barang">
                     <tr>
-                        <th scope="col" colspan="6">Total Keseluruhan</th>
+                        <th scope="col" colspan="7">Total Keseluruhan</th>
                         <th scope="col" id="bo-jumlah-unit">0</th>
                         <th scope="col" id="bo-total-cost">0</th>
                         <td scope="col" width="50">
@@ -159,6 +160,7 @@
                             <td>'+data[i].stok+'</td>\
                             '+status_pemesanan+'\
                             '+status_pembelian+'\
+                            <th id="bo-jumlah-permintaan-'+data[i].id+'">0</th>\
                             <th id="bo-jumlah-unit-'+data[i].id+'">0</th>\
                             <th id="bo-total-cost-'+data[i].id+'">0</th>\
                             <td>\
@@ -263,6 +265,7 @@
                     'total_cost': data.total_cost
                 });
 
+                $('#bo-jumlah-permintaan-'+idbarang).html(data.jumlah_permintaan);
                 $('#bo-jumlah-unit-'+idbarang).html(data.jumlah_unit);
                 $('#bo-total-cost-'+idbarang).html(data.total_cost);
 
@@ -272,6 +275,7 @@
             .fail(function(e) {
                 alert(e.responseJSON.message);
                 // console.log("error " + e.responseJSON.message);
+                $('#bo-jumlah-permintaan-'+idbarang).html('0');
                 $('#bo-jumlah-unit-'+idbarang).html('0');
                 $('#bo-total-cost-'+idbarang).html('0');
 
@@ -303,6 +307,7 @@
 
             } else {
                 // console.log($(this).val() + ' is now unchecked');
+                $('#bo-jumlah-permintaan-'+$(this).val()).html('0');
                 $('#bo-jumlah-unit-'+$(this).val()).html('0');
                 $('#bo-total-cost-'+$(this).val()).html('0');
 
