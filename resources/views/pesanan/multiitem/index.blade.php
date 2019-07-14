@@ -33,7 +33,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-7-tab" data-toggle="tab" href="#tabs-icons-text-7" role="tab" aria-controls="tabs-icons-text-4" aria-selected="false">
-                            Quantiti Diskon
+                            Quantity Discount
                         </a>
                     </li>
                 </ul>

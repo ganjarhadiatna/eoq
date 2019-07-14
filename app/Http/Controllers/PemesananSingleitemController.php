@@ -202,90 +202,90 @@ class PemesananSingleitemController extends Controller
         // diskon incremental
         $diskon = Diskon::GetAllNoLimit($idbarang);
         $dataDiskonUnit = [];
-        
-        if (count($diskon) == 1) {
-            $counter = count($diskon);
+        $counter = 0;
 
-            foreach ($diskon as $du) {
-                $du_H = ($H - ($H * $du->diskon));
-                $du_Q = sqrt((2 * $C * $R) / ($du->diskon * $du_H));
+        if (count($diskon) > 0) {
+            if (count($diskon) == 1) {
+                $counter = count($diskon);
 
-                $du_P = ($P - ($P * $du->diskon));
-                $du_TC = (($du_P * $R) + (($C * $R) / $du_Q) + (($du_P * $T * $du_Q) / 2));
+                foreach ($diskon as $du) {
+                    $du_H = ($H - ($H * $du->diskon));
+                    $du_Q = sqrt((2 * $C * $R) / ($du->diskon * $du_H));
 
-                $dataDiskonUnit = [
-                    'diskon' => $du->diskon,
-                    'harga_barang' => $du_P,
-                    'jumlah_permintaan' => $R,
-                    'biaya_penyimpanan' => $H,
-                    'biaya_pemesanan' => $C,
-                    'jumlah_unit' => ceil($du_Q),
-                    'total_cost' => ceil($du_TC),
-                    'min' => $du->min,
-                    'max' => $du->max
-                ];
-            }
+                    $du_P = ($P - ($P * $du->diskon));
+                    $du_TC = (($du_P * $R) + (($C * $R) / $du_Q) + (($du_P * $T * $du_Q) / 2));
 
-        }
-
-        if (count($diskon) > 1) {
-
-            $counter = count($diskon);
-            $ds_before = 0;
-            foreach ($diskon as $key => $di) {
-                $ui = ($di->min - 1);
-
-                if ($key != 0) 
-                {
-                    $di_before_P = ($P - ($P * $diskon[$key - 1]->diskon));
-                    $di_current_P = ($P - ($P * $di->diskon));
-
-                    $pi = $di_before_P - $di_current_P;
-                    $ds = $ds_before + ($ui * $pi);
-                    $ds_before = $ds;
-                } 
-                else 
-                {
-                    $di_before_P = 0;
-                    $di_current_P = ($P - ($P * $di->diskon));
-
-                    $ds = 0;
+                    $dataDiskonUnit = [
+                        'diskon' => $du->diskon,
+                        'harga_barang' => $du_P,
+                        'jumlah_permintaan' => $R,
+                        'biaya_penyimpanan' => $H,
+                        'biaya_pemesanan' => $C,
+                        'jumlah_unit' => ceil($du_Q),
+                        'total_cost' => ceil($du_TC),
+                        'min' => $du->min,
+                        'max' => $du->max
+                    ];
                 }
 
-                // $di_Q = sqrt(((2 * $R) * ($C + $ds)) / ($di_current_P * $T));
-                $di_Q = ((2 * $R) * ($C + $ds)) / ($di_current_P * $T);
-                $di_TC = ($di_current_P * $R) + ((($C + $ds) * $R) / $di_Q) + (($di_current_P * $T * $di_Q) / 2) + (($T * $ds) / 2);
+            } else {
+                $counter = count($diskon);
+                $ds_before = 0;
+                foreach ($diskon as $key => $di) {
+                    $ui = ($di->min - 1);
 
-                $dt = [
-                    'diskon' => $di->diskon,
-                    'harga_barang' => $di_current_P,
-                    'jumlah_permintaan' => $R,
-                    'biaya_penyimpanan' => $H,
-                    'biaya_pemesanan' => $C,
-                    'jumlah_unit' => ceil($di_Q),
-                    'total_cost' => ceil($di_TC),
-                    'min' => $di->min,
-                    'max' => $di->max
-                ];
+                    if ($key != 0) 
+                    {
+                        $di_before_P = ($P - ($P * $diskon[$key - 1]->diskon));
+                        $di_current_P = ($P - ($P * $di->diskon));
 
-                array_push($dataDiskonUnit, $dt);
+                        $pi = $di_before_P - $di_current_P;
+                        $ds = $ds_before + ($ui * $pi);
+                        $ds_before = $ds;
+                    } 
+                    else 
+                    {
+                        $di_before_P = 0;
+                        $di_current_P = ($P - ($P * $di->diskon));
 
+                        $ds = 0;
+                    }
+
+                    // $di_Q = sqrt(((2 * $R) * ($C + $ds)) / ($di_current_P * $T));
+                    $di_Q = ((2 * $R) * ($C + $ds)) / ($di_current_P * $T);
+                    $di_TC = ($di_current_P * $R) + ((($C + $ds) * $R) / $di_Q) + (($di_current_P * $T * $di_Q) / 2) + (($T * $ds) / 2);
+
+                    $dt = [
+                        'diskon' => $di->diskon,
+                        'harga_barang' => $di_current_P,
+                        'jumlah_permintaan' => $R,
+                        'biaya_penyimpanan' => $H,
+                        'biaya_pemesanan' => $C,
+                        'jumlah_unit' => ceil($di_Q),
+                        'total_cost' => ceil($di_TC),
+                        'min' => $di->min,
+                        'max' => $di->max
+                    ];
+
+                    array_push($dataDiskonUnit, $dt);
+
+                }
             }
         }
 
         else 
         {
-            $counter = '0';
+            $counter = 0;
             $dataDiskonUnit = [];
         }
 
-        // $data = [
-        //     'status' => 'success',
-        //     'counter' => $counter,
-        //     'message' => $dataDiskonUnit
-        // ];
+        $data = [
+            'status' => 'success',
+            'counter' => $counter,
+            'data' => $dataDiskonUnit
+        ];
 
-        return json_encode($dataDiskonUnit);
+        return json_encode($data);
     }
 
     public function generate_backorder()
@@ -387,7 +387,7 @@ class PemesananSingleitemController extends Controller
         $P = Barang::GetHargaBarang($idbarang);
 
         // persentase dari harga barang
-        $T = 0.3;
+        $T = 0.02;
 
         // biaya penyimpanan
         $H = Barang::GetBiayaPenyimpanan($idbarang);
@@ -473,7 +473,7 @@ class PemesananSingleitemController extends Controller
         $P = Barang::GetHargaBarang($idbarang);
 
         // persentase dari harga barang
-        $T = 0.3;
+        $T = 0.02;
 
         // biaya penyimpanan
         $H = Barang::GetBiayaPenyimpanan($idbarang);
@@ -631,8 +631,6 @@ class PemesananSingleitemController extends Controller
             'tipe' => $req['tipe']
         ];
 
-        // echo json_encode($data);
-
         if (Pemesanan::Insert($data)) 
         {
              return redirect(route('pesanan-item'));
@@ -641,6 +639,66 @@ class PemesananSingleitemController extends Controller
         {
              return redirect(route('pesanan-item'));
         }
+    }
+
+    public function pushAjax(Request $req)
+    {
+        // $this->validate($req, [
+        //     'idbarang' => ['required', 'integer'],
+        //     'jumlah_unit' => ['required', 'integer'],
+        //     'harga_barang' => ['required', 'integer'],
+        //     'frekuensi_pembelian' => ['required'],
+        //     'reorder_point' => ['required']
+        // ]);
+
+        if ($req['total_cost']) 
+        {
+            $tc = $req['total_cost'];
+        } 
+        else 
+        {
+            $tc = $req['besar_penghematan'];
+        }
+
+        if ($tc <= 0) 
+        {
+            $tcn = 0;
+        }
+        else
+        {
+            $tcn = $tc;
+        }
+
+        $idusers = Auth::id();
+        $data = [
+            'idusers' => $idusers,
+            'idsupplier' => Barang::where('id', $req['idbarang'])->value('idsupplier'),
+            'idbarang' => $req['idbarang'],
+            'harga_barang' => $req['harga_barang'],
+            'jumlah_unit' => $req['jumlah_unit'],
+            'total_cost' => $tcn,
+            'total_cost_multiitem' => 0,
+            'frekuensi_pembelian' => $req['frekuensi_pembelian'],
+            'reorder_point' => $req['reorder_point'],
+            'tipe' => $req['tipe']
+        ];
+
+        if (Pemesanan::Insert($data)) 
+        {
+            $result = [
+                'status' => 'success',
+                'message' => 'data saved'
+            ];
+        } 
+        else 
+        {
+            $result = [
+                'status' => 'error',
+                'message' => 'failed to save'
+            ];
+        }
+
+        return json_encode($result);
     }
 
     public function remove(Request $req)

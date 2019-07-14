@@ -70,23 +70,6 @@
             </ul>
 
             <hr class="my-3">
-            <h6 class="navbar-heading text-muted">Batasan</h6>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('batasan-modal') }}">
-                        <i class="fa fa-lg fa-circle text-green"></i>
-                        Batasan Modal
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('batasan-gudang') }}">
-                        <i class="fa fa-lg fa-circle text-info"></i>
-                        Batasan Gudang
-                    </a>
-                </li>
-            </ul>
-
-            <hr class="my-3">
             <h6 class="navbar-heading text-muted">Transaksi</h6>
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -111,6 +94,23 @@
                     <a class="nav-link" href="{{ route('penjualan') }}">
                         <i class="fa fa-lg fa-edit text-default"></i>
                         Penjualan
+                    </a>
+                </li>
+            </ul>
+
+            <hr class="my-3">
+            <h6 class="navbar-heading text-muted">Lainnya</h6>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('batasan-modal') }}">
+                        <i class="fa fa-lg fa-circle text-green"></i>
+                        Batasan Modal
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('batasan-gudang') }}">
+                        <i class="fa fa-lg fa-circle text-info"></i>
+                        Batasan Gudang
                     </a>
                 </li>
             </ul>

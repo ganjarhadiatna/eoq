@@ -123,6 +123,8 @@ Route::middleware('auth')->group(function() {
     Route::get('/pesanan/special_price/{idbarang}/{price}', 'PemesananSingleitemController@special_price')->name('pesanan-singleitemspecial-price');
     Route::get('/pesanan/increases_price/{idbarang}/{price}', 'PemesananSingleitemController@increases_price')->name('pesanan-singleitemincreases-price');
 
+    Route::get('/pesanan/pushAjax', 'PemesananSingleitemController@pushAjax')->name('pesanan-singleitem-push-ajax');
+
     Route::post('/pesanan/push', 'PemesananSingleitemController@push')->name('pesanan-singleitem-push');
     Route::post('/pesanan/remove', 'PemesananSingleitemController@remove')->name('pesanan-singleitem-remove');
     Route::post('/pesanan/create', 'PemesananSingleitemController@create')->name('pesanan-singleitem-create');

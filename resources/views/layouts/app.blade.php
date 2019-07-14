@@ -37,8 +37,6 @@
     <link href="/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link type="text/css" href="/css/argon.css?v=1.0.0" rel="stylesheet"> -->
 
-        
-
     <style type="text/css">
         
         /*@import url('https://fonts.googleapis.com/css?family=Nunito+Sans');*/
@@ -56,6 +54,20 @@
         }
 
     </style>
+
+
+    <script type="text/javascript">
+        window.Laravel = {!! json_encode([
+            'csrfToken' => csrf_token(),
+        ]) !!};
+        
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
+        
 
 </head>
 <body>
@@ -79,18 +91,6 @@
     <script src="/js/argon.js?v=1.0.0"></script>
     <script src="/vendor/chart.js/dist/Chart.min.js"></script>
     <script src="/vendor/chart.js/dist/Chart.extension.js"></script> -->
-
-    <script type="text/javascript">
-        window.Laravel = {!! json_encode([
-            'csrfToken' => csrf_token(),
-        ]) !!};
-        
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
-    </script>
 
 </body>
 </html>

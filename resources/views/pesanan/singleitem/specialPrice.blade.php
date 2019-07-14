@@ -23,7 +23,7 @@
                     id="sp_idbarang" 
                     class="form-control form-control-alternative{{ $errors->has('idbarang') ? ' is-invalid' : '' }}" 
                     required>
-                    <option value="0"></option>
+                    <option value="0">Pilih barang</option>
                     @foreach ($barang as $br)
                         <option value="{{ $br->id }}">{{ $br->nama_barang }}</option>
                     @endforeach
@@ -56,14 +56,14 @@
 
         <div class="col-sm">
             <div class="form-group{{ $errors->has('tipe_harga') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="sp_tipe_harga">{{ __('Tipe Harga') }}</label>
+                <label class="form-control-label" for="sp_tipe_harga">{{ __('Tipe Pemesanan') }}</label>
                 <select 
                     name="tipe_harga"
                     id="sp_tipe_harga" 
                     class="form-control form-control-alternative{{ $errors->has('tipe_harga') ? ' is-invalid' : '' }}" 
                     required>
-                    <option value="1">Harga Khusus</option>
-                    <option value="2">Harga Normal</option>
+                    <option value="1">Pemesanan Khusus</option>
+                    <option value="2">Pemesanan Normal</option>
                 </select>
                 @if ($errors->has('tipe_harga'))
                     <span class="invalid-feedback" role="alert">
@@ -113,6 +113,23 @@
                 @if ($errors->has('harga_barang'))
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->first('harga_barang') }}</strong>
+                    </span>
+                @endif
+            </div>
+
+            <div class="form-group{{ $errors->has('jumlah_permintaan') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="sp_jumlah_permintaan">{{ __('Jumlah Permintaan') }}</label>
+                <input 
+                    type="text" 
+                    name="jumlah_permintaan" 
+                    id="sp_jumlah_permintaan" 
+                    class="form-control form-control-alternative{{ $errors->has('jumlah_permintaan') ? ' is-invalid' : '' }}" 
+                    placeholder="0" 
+                    readonly="true" 
+                    required>
+                @if ($errors->has('jumlah_permintaan'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('jumlah_permintaan') }}</strong>
                     </span>
                 @endif
             </div>
@@ -259,6 +276,7 @@
                     $('#sp_frekuensi_pembelian').val(data.frekuensi_pembelian);
                     $('#sp_reorder_point').val(data.reorder_point);
                     $('#sp_besar_penghematan').val(data.besar_penghematan);
+                    $('#sp_jumlah_permintaan').val(data.jumlah_permintaan);
                     console.log(data);
                 })
                 .fail(function(e) {

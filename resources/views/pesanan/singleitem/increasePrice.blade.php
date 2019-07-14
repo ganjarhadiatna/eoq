@@ -23,7 +23,7 @@
                     id="ip_idbarang" 
                     class="form-control form-control-alternative{{ $errors->has('idbarang') ? ' is-invalid' : '' }}" 
                     required>
-                    <option value="0"></option>
+                    <option value="0">Pilih barang</option>
                     @foreach ($barang as $br)
                         <option value="{{ $br->id }}">{{ $br->nama_barang }}</option>
                     @endforeach
@@ -56,14 +56,14 @@
 
         <div class="col-sm">
             <div class="form-group{{ $errors->has('tipe_harga') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="ip_tipe_harga">{{ __('Tipe Harga') }}</label>
+                <label class="form-control-label" for="ip_tipe_harga">{{ __('Tipe Pemesanan') }}</label>
                 <select 
                     name="tipe_harga"
                     id="ip_tipe_harga" 
                     class="form-control form-control-alternative{{ $errors->has('tipe_harga') ? ' is-invalid' : '' }}" 
                     required>
-                    <option value="1">Setalah Kenaikan</option>
-                    <option value="2">Harga Normal</option>
+                    <option value="1">Pemesanan Setelah Kenaikan</option>
+                    <option value="2">Pemesanan Normal</option>
                 </select>
                 @if ($errors->has('tipe_harga'))
                     <span class="invalid-feedback" role="alert">
@@ -84,7 +84,7 @@
                     <button 
                         type="button" 
                         class="btn btn-success" 
-                        onclick="generate_special_price()">
+                        onclick="generate_increase_price()">
                         Generate Metode
                     </button>
                 </div>
@@ -113,6 +113,23 @@
                 @if ($errors->has('harga_barang'))
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->first('harga_barang') }}</strong>
+                    </span>
+                @endif
+            </div>
+
+            <div class="form-group{{ $errors->has('jumlah_permintaan') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="ip_jumlah_permintaan">{{ __('Jumlah Permintaan') }}</label>
+                <input 
+                    type="text" 
+                    name="jumlah_permintaan" 
+                    id="ip_jumlah_permintaan" 
+                    class="form-control form-control-alternative{{ $errors->has('jumlah_permintaan') ? ' is-invalid' : '' }}" 
+                    placeholder="0" 
+                    readonly="true" 
+                    required>
+                @if ($errors->has('jumlah_permintaan'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('jumlah_permintaan') }}</strong>
                     </span>
                 @endif
             </div>
@@ -150,23 +167,6 @@
                     </span>
                 @endif
             </div>
-
-            <!-- <div class="form-group{{ $errors->has('besar_penghematan') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="ip_besar_penghematan">{{ __('Besar Penghematan') }}</label>
-                <input 
-                    type="text" 
-                    name="besar_penghematan" 
-                    id="ip_besar_penghematan" 
-                    class="form-control form-control-alternative{{ $errors->has('besar_penghematan') ? ' is-invalid' : '' }}" 
-                    placeholder="0" 
-                    readonly="true" 
-                    required>
-                @if ($errors->has('besar_penghematan'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('besar_penghematan') }}</strong>
-                    </span>
-                @endif
-            </div> -->
 
         </div>
         <div class="col-sm">
@@ -224,7 +224,7 @@
 
 <script type="text/javascript">
 
-        function generate_special_price()
+        function generate_increase_price()
         {
             var route = '{{ url("/pesanan/increaseprice") }}';
             var ip_idbarang = $('#ip_idbarang').val();
@@ -258,7 +258,7 @@
                     $('#ip_total_cost').val(data.total_cost);
                     $('#ip_frekuensi_pembelian').val(data.frekuensi_pembelian);
                     $('#ip_reorder_point').val(data.reorder_point);
-                    $('#ip_besar_penghematan').val(data.besar_penghematan);
+                    $('#ip_jumlah_permintaan').val(data.jumlah_permintaan);
                     console.log(data);
                 })
                 .fail(function(e) {

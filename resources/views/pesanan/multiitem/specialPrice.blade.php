@@ -52,14 +52,14 @@
         </div>
         <div class="col-sm">
             <div class="form-group{{ $errors->has('sp_tipe_harga') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="sp_tipe_harga">{{ __('Tipe Harga') }}</label>
+                <label class="form-control-label" for="sp_tipe_harga">{{ __('Tipe Pemesanan') }}</label>
                 <select 
                     name="sp_tipe_harga"
                     id="sp_tipe_harga" 
                     class="form-control form-control-alternative{{ $errors->has('sp_tipe_harga') ? ' is-invalid' : '' }}" 
                     required>
-                    <option value="1">Harga Khusus</option>
-                    <option value="2">Harga Normal</option>
+                    <option value="1">Pemesanan Khusus</option>
+                    <option value="2">Pemesanan Normal</option>
                 </select>
                 @if ($errors->has('sp_tipe_harga'))
                     <span class="invalid-feedback" role="alert">
