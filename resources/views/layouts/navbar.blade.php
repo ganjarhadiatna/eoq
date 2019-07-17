@@ -2,7 +2,7 @@
     <div class="container-fluid">
         
         <div class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" >
-            Sistem Informasi Manajamen Stok
+            Sistem Informasi Manajamen Persediaan
         </div>
 
         {{-- <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">

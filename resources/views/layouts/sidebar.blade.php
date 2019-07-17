@@ -103,14 +103,37 @@
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('batasan-modal') }}">
-                        <i class="fa fa-lg fa-circle text-green"></i>
+                        <i class="fa fa-lg fa-building text-green"></i>
                         Batasan Modal
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('batasan-gudang') }}">
-                        <i class="fa fa-lg fa-circle text-info"></i>
+                        <i class="fa fa-lg fa-building text-info"></i>
                         Batasan Gudang
+                    </a>
+                </li>
+            </ul>
+
+            <hr class="my-3">
+            <h6 class="navbar-heading text-muted">Laporan</h6>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('laporan-pemesanan') }}">
+                        <i class="fa fa-lg fa-print text-info"></i>
+                        Laporan Pemesanan
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('laporan-pembelian') }}">
+                        <i class="fa fa-lg fa-print text-green"></i>
+                        Laporan Pembelian
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('laporan-penjualan') }}">
+                        <i class="fa fa-lg fa-print text-info"></i>
+                        Laporan Penjualan
                     </a>
                 </li>
             </ul>

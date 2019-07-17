@@ -152,4 +152,9 @@ Route::middleware('auth')->group(function() {
     Route::get('/batasan/modal', 'PemesananSingleitemController@batasan_modal')->name('batasan-modal');
     Route::get('/batasan/gudang', 'PemesananSingleitemController@batasan_gudang')->name('batasan-gudang');
 
+    // laporan
+    Route::get('/laporan/pemesanan', 'LaporanController@laporanPemesanan')->name('laporan-pemesanan');
+    Route::get('/laporan/penjualan', 'LaporanController@laporanPenjualan')->name('laporan-penjualan');
+    Route::get('/laporan/pembelian', 'LaporanController@laporanPembelian')->name('laporan-pembelian');
+
 });
