@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Pemesanan;
+use App\Supplier;
 use PDF;
 
 class LaporanPemesananController extends Controller
@@ -11,7 +12,10 @@ class LaporanPemesananController extends Controller
     //
     public function index()
     {
-        return view('laporan.pemesananindex');
+        $supplier = Supplier::Get();
+        return view('laporan.pemesananindex', [
+            'supplier' => $supplier
+        ]);
     }
 
     public function laporanPemesananSingleItem()
@@ -21,10 +25,12 @@ class LaporanPemesananController extends Controller
     	return $pdf->download('pemesanan-single-item.pdf');
     }
 
-    public function laporanPemesananMultiItem()
+    public function laporanPemesananMultiItem(Request $request)
     {
-        $pemesanan = Pemesanan::GetAllMultiItemByIdsupplier(50);
-    	$pdf = PDF::loadView('laporan.pemesanansingleitem', compact('pemesanan'));
-    	return $pdf->download('pemesanan-single-item.pdf');
+        $idSupplier = $request['id-supplier'];
+        $supplier = Supplier::GetById($idSupplier);
+        $pemesanan = Pemesanan::GetAllMultiItemByIdsupplier(50, $supplier);
+    	$pdf = PDF::loadView('laporan.pemesananmultiitem', compact('pemesanan'));
+    	return $pdf->download('pemesanan-multi-item.pdf');
     }
 }

@@ -9,6 +9,18 @@ class Supplier extends Model
 {
     protected $table = 'supplier';
 
+    public function scopeGet($query)
+    {
+        return $this->get();
+    }
+
+    public function scopeGetById($query, $idSupplier)
+    {
+        return $this
+                ->where('id', $idSupplier)
+                ->get();
+    }
+
     public function scopeGetLeadtime($query, $id)
     {
     	return DB::table($this->table)
