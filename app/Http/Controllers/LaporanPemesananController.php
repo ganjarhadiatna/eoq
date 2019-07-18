@@ -21,7 +21,7 @@ class LaporanPemesananController extends Controller
     public function laporanPemesananSingleItem()
     {
         $pemesanan = Pemesanan::GetAllSingleItem(50);
-    	$pdf = PDF::loadView('laporan.pemesanansingleitem', compact('pemesanan'));
+    	$pdf = PDF::loadView('laporan.pemesanansingleitem', compact('pemesanan'))->setPaper('a4', 'landscape');;
     	return $pdf->download('pemesanan-single-item.pdf');
     }
 
@@ -30,7 +30,7 @@ class LaporanPemesananController extends Controller
         $idSupplier = $request['id-supplier'];
         $supplier = Supplier::GetById($idSupplier);
         $pemesanan = Pemesanan::GetAllMultiItemByIdsupplier(50, $supplier);
-    	$pdf = PDF::loadView('laporan.pemesananmultiitem', compact('pemesanan'));
+    	$pdf = PDF::loadView('laporan.pemesananmultiitem', compact('pemesanan'))->setPaper('a4', 'landscape');;
     	return $pdf->download('pemesanan-multi-item.pdf');
     }
 }
