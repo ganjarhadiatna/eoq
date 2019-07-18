@@ -153,8 +153,17 @@ Route::middleware('auth')->group(function() {
     Route::get('/batasan/gudang', 'PemesananSingleitemController@batasan_gudang')->name('batasan-gudang');
 
     // laporan
-    Route::get('/laporan/pemesanan', 'LaporanController@laporanPemesanan')->name('laporan-pemesanan');
-    Route::get('/laporan/penjualan', 'LaporanController@laporanPenjualan')->name('laporan-penjualan');
-    Route::get('/laporan/pembelian', 'LaporanController@laporanPembelian')->name('laporan-pembelian');
+    // Route::get('/laporan/pemesanan', 'LaporanController@laporanPemesanan')->name('laporan-pemesanan');
+    // Route::get('/laporan/penjualan', 'LaporanController@laporanPenjualan')->name('laporan-penjualan');
+    // Route::get('/laporan/pembelian', 'LaporanController@laporanPembelian')->name('laporan-pembelian');
+    Route::get('/laporan/penjualan', 'LaporanPenjualanController@index')->name('laporan-penjualan');
+    Route::get('/laporan/penjualan/create', 'LaporanPenjualanController@laporanPenjualan')->name('laporan-penjualan-create');
+
+    Route::get('/laporan/pembelian', 'LaporanPembelianController@index')->name('laporan-pembelian');
+    Route::get('/laporan/pembelian/create', 'LaporanPembelianController@laporanPembelian')->name('laporan-pembelian-create');
+
+    Route::get('/laporan/pemesanan', 'LaporanPemesananController@index')->name('laporan-pemesanan');
+    Route::get('/laporan/pemesanan/create/singleitem', 'LaporanPemesananController@laporanPemesananSingleItem')->name('laporan-pemesanan-single-item');
+    Route::get('/laporan/pemesanan/create/multiitem', 'LaporanPemesananController@laporanPemesananMultiItem')->name('laporan-pemesanan-multi-item');
 
 });

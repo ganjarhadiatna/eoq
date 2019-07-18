@@ -144,31 +144,51 @@
 </head>
 <body class="container">
         <div class="card-body next-page">
-            <h2 align="center">Laporan Pembelian</h2>
+            <h2 align="center">Laporan Pemesanan Single Item</h2>
             <table class="table table-bordered">
                 <thead>
                 <tr>
                   <th>No</th>
-                  <th>Nama Supplier</th>
                   <th>Nama Barang</th>
-                  <th>Total Barang</th>
+                  <th>Harga Barang</th>
+                  <th>Nama Supplier</th>
+                  <th>Jumlah Unit</th>
+                  <th>Total Cost</th>
+                  <th>Biaya Penyimpanan</th>
+                  <th>Biaya Pemesanan</th>
+                  <th>Reorder Point</th>
                 </tr>
                 </thead>
                 <tbody>
                     <?php $i = 1; ?>
-                @foreach($pembelian as $pj)
+                @foreach($pemesanan as $pj)
                   <tr>
                     <td>
                       {{ $i }}
                     </td>
                     <td>
-                      {{ $pj->nama_supplier }}
-                    </td>
-                    <td>
                       {{ $pj->nama_barang }}
                     </td>
                     <td>
-                      {{ $pj->total_barang }}
+                      {{ $pj->harga_barang }}
+                    </td>
+                    <td>
+                      {{ $pj->nama_supplier }}
+                    </td>
+                    <td>
+                      {{ $pj->jumlah_unit }}
+                    </td>
+                    <td>
+                      {{ $pj->total_cost }}
+                    </td>
+                    <td>
+                      {{ $pj->biaya_penyimpanan }}
+                    </td>
+                    <td>
+                      {{ $pj->biaya_pemesanan }}
+                    </td>
+                    <td>
+                      {{ $pj->reorder_point }}
                     </td>
                   </tr>
                   <?php $i++ ?>

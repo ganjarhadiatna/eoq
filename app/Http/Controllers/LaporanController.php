@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use PDF;
 use App\Pembelian;
 use App\Penjualan;
+use App\Pemesanan;
 
 class LaporanController extends Controller
 {
 	public function laporanPemesanan()
     {
-    	$pemesanan = [];
+		$pemesanan = Pemesanan::GetAllMultiItem(50);
     	$pdf = PDF::loadView('laporan.pemesanan', compact('pemesanan'));
     	return $pdf->download('pemesanan.pdf');
     }
@@ -25,7 +26,7 @@ class LaporanController extends Controller
 
     public function laporanPembelian()
     {
-    	$pembelian = Pembelian::GetAll(50);
+		$pembelian = Pembelian::GetAll(50);
     	$pdf = PDF::loadView('laporan.pembelian', compact('pembelian'));
     	return $pdf->download('pembelian.pdf');
     }
