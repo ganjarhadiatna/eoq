@@ -56,7 +56,9 @@
                                 </b>
 	                		</td>
                             <td>
-                                Rp. {{ number_format($ps->total_cost_multiitem) }}
+                                <b class="text-red">
+                                    Rp. {{ number_format(App\Pemesanan::GetTotalCostMultiItemByIdsupplier($ps->idsupplier)) }}
+                                </b>
                             </td>
                             <td>
                                 <a href="{{ route('pesanan-multiitem-daftar', $ps->idsupplier) }}">

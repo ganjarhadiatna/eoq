@@ -123,8 +123,8 @@
                                         '+diskon.frekuensi_pembelian+',\
                                         '+diskon.reorder_point+'\
                                     )" \
-                                    class="btn btn-primary">\
-                                        Pilih Ini\
+                                    class="btn btn-danger">\
+                                        Pilih Diskon Ini?\
                                     </button>\
                                 </td>\
                             </tr>';
@@ -147,8 +147,8 @@
                                         '+diskon[i].frekuensi_pembelian+',\
                                         '+diskon[i].reorder_point+'\
                                     )" \
-                                    class="btn btn-primary">\
-                                        Pilih Ini\
+                                    class="btn btn-danger">\
+                                        Pilih Diskon Ini?\
                                     </button>\
                                 </td>\
                             </tr>';

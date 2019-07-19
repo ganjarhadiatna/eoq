@@ -25,7 +25,7 @@
                     required>
                     <option value="0">Pilih barang</option>
                     @foreach ($barang as $br)
-                        <option value="{{ $br->id }}">{{ $br->nama_barang }}</option>
+                        <option value="{{ $br->id }}">{{ $br->nama_barang.' : Rp. '.number_format($br->harga_barang) }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('idbarang'))
@@ -214,7 +214,7 @@
         <div class="col-4 text-right">
             <button 
                 type="submit" 
-                class="btn btn-secondary" >
+                class="btn btn-danger" >
                 Simpan Pesanan
             </button>
         </div>
