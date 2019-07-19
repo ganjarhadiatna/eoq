@@ -151,7 +151,7 @@
                   <th>No</th>
                   <th>Nama Supplier</th>
                   <th>Nama Barang</th>
-                  <th>Total Barang</th>
+                  <th>Total Barang\</th>
                 </tr>
                 </thead>
                 <tbody>

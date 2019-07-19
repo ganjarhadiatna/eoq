@@ -144,7 +144,7 @@
 </head>
 <body class="container">
         <div class="card-body next-page">
-            <h2 align="center">Laporan Pemesanan Single Item</h2>
+            <h2 align="center">Laporan Pemesanan Multi Item</h2>
             <table class="table table-bordered">
                 <thead>
                 <tr>
