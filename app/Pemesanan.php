@@ -9,6 +9,10 @@ class Pemesanan extends Model
 {
     protected $table = 'pemesanan';
 
+    public function getNamaBarang() {
+        return $this->hasOne('App\Barang','id','idbarang');
+    }
+
     public function scopeGetAllSingleItem($query, $limit)
     {
         return DB::table($this->table)

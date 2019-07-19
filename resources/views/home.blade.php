@@ -17,11 +17,7 @@
                                     <i class="fas fa-chart-bar"></i>
                                 </div>
                             </div>
-                        </div>
-                        <p class="mt-3 mb-0 text-muted text-sm">
-                            <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                            <span class="text-nowrap">Since last month</span>
-                        </p>
+                        </div>         
                     </div>
                 </div>
         	</div>
@@ -39,10 +35,6 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="mt-3 mb-0 text-muted text-sm">
-                            <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 3.48%</span>
-                            <span class="text-nowrap">Since last week</span>
-                        </p>
                     </div>
                 </div>
             </div>
@@ -60,10 +52,6 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="mt-3 mb-0 text-muted text-sm">
-                            <span class="text-warning mr-2"><i class="fas fa-arrow-down"></i> 1.10%</span>
-                            <span class="text-nowrap">Since yesterday</span>
-                        </p>
                     </div>
                 </div>
             </div>
@@ -142,76 +130,22 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach($barangKedaluarsa as $index => $data)
                                 <tr>
                                     <th scope="row">
-                                        Samples
+                                        {{ $data->nama_barang }}
                                     </th>
                                     <td>
-                                        4,569
+                                        {{ $data->harga_barang }}
                                     </td>
                                     <td>
-                                        340
+                                        {{ $data->getBarangTerjual() }}
                                     </td>
                                     <td>
-                                        <i class="fas fa-arrow-up text-success mr-3"></i> 00-00-0000
+                                        {{ $data->tanggal_kadaluarsa }}
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Samples
-                                    </th>
-                                    <td>
-                                        3,985
-                                    </td>
-                                    <td>
-                                        319
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-warning mr-3"></i> 00-00-0000
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Samples
-                                    </th>
-                                    <td>
-                                        3,513
-                                    </td>
-                                    <td>
-                                        294
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-warning mr-3"></i> 00-00-0000
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Samples
-                                    </th>
-                                    <td>
-                                        2,050
-                                    </td>
-                                    <td>
-                                        147
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-up text-success mr-3"></i> 00-00-0000
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Samples
-                                    </th>
-                                    <td>
-                                        1,795
-                                    </td>
-                                    <td>
-                                        190
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-danger mr-3"></i> 00-00-0000
-                                    </td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -222,7 +156,7 @@
                     <div class="card-header border-0">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h3 class="mb-0">Sedang Dalam Pemesanan</h3>
+                                <h3 class="mb-0">Daftar Rekomendasi Pemesanan Barang</h3>
                             </div>
                         </div>
                     </div>
@@ -233,77 +167,42 @@
                                 <tr>
                                     <th scope="col">Barang</th>
                                     <th scope="col">EOQ</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col"></th>
+                                    <th scope="col">Total Cost</th>
+                                    <th scope="col">Reorder Point</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach($pemesanan as $index => $data)
                                 <tr>
                                     <th scope="row">
-                                        Samples
+                                        {{ $data->getNamaBarang()->first()->nama_barang }}
                                     </th>
                                     <td>
-                                        1,480
+                                        {{ $data->jumlah_unit }}
                                     </td>
                                     <td>
-                                        <i class="fas fa-arrow-down text-danger mr-3"></i>
+                                        {{ $data->total_cost }}
+                                    </td>
+                                    <td>
+                                        {{ $data->reorder_point }}
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Samples
-                                    </th>
-                                    <td>
-                                        5,480
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-danger mr-3"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Samples
-                                    </th>
-                                    <td>
-                                        4,807
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-down text-danger mr-3"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Samples
-                                    </th>
-                                    <td>
-                                        3,678
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-up text-success mr-3"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Samples
-                                    </th>
-                                    <td>
-                                        2,645
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-up text-success mr-3"></i>
-                                    </td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-
+        <input type="hidden" name="chartPenjualan" value="{{ json_encode($chartPenjualan) }}" />
+        <input type="hidden" name="chartPembelian" value="{{ json_encode($chartPembelian) }}" />
     </div>
 
     <script>
     var ctx = document.getElementById('myChart');
+    let data = $('input[name="chartPenjualan"]').val();
+    data = JSON.parse(data);
+
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -311,7 +210,7 @@
             datasets: [{
                 showLines: true,
                 label: '# of Votes',
-                data: [30, 45, 55, 12, 80, 20],
+                data,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
@@ -332,6 +231,7 @@
             }]
         },
         options: {
+            maintainAspectRatio: false,
             scales: {
                 yAxes: [{
                     stacked: true,
@@ -346,6 +246,9 @@
 
     <script>
     var ctx = document.getElementById('myChart2');
+    data = $('input[name="chartPembelian"]').val();
+    data = JSON.parse(data);
+
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -353,7 +256,7 @@
             datasets: [{
                 showLines: true,
                 label: '# of Votes',
-                data: [30, 45, 55, 12, 80, 20],
+                data,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
@@ -374,6 +277,7 @@
             }]
         },
         options: {
+            maintainAspectRatio: false,
             scales: {
                 yAxes: [{
                     stacked: true,

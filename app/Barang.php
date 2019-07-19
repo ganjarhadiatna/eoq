@@ -9,6 +9,19 @@ class Barang extends Model
 {
     protected $table = 'barang';
 
+    public function getBarangTerjual() {
+        $data = $this->transaksiBarang;
+        $jumlahBarang = 0;
+        foreach($data as $index => $item) {
+            $jumlahBarang = $jumlahBarang + (int) $item->jumlah_barang;
+        }
+        return $jumlahBarang;
+    }
+
+    public function transaksiBarang() {
+        return $this->hasMany('App\Penjualan','idbarang');
+    }
+
     public function scopeGetIdsupplier($query, $id)
     {
         return DB::table($this->table)
