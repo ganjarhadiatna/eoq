@@ -53,7 +53,9 @@
 	                			{{ $ps->nama_barang }}
 	                		</td>
                             <td>
-                                Rp. {{ number_format($ps->harga_barang) }}
+                                <b class="text-green">
+                                    Rp. {{ number_format($ps->harga_barang) }}
+                                </b>
                             </td>
                             <td>
                                 {{ $ps->tipe }}
@@ -64,7 +66,9 @@
                                 </b>
 	                		</td>
 	                		<td>
-	                			Rp. {{ number_format($ps->total_cost) }}
+	                			<b class="text-red">
+                                    Rp. {{ number_format($ps->total_cost) }}
+                                </b>
 	                		</td>
 	                		<td>
 	                			{{ $ps->frekuensi_pembelian }}

@@ -92,6 +92,13 @@ class Pemesanan extends Model
         ->paginate($limit);
     }
 
+    public function scopeGetTotalCostMultiItemByIdsupplier($query, $idsupplier)
+    {
+        return DB::table($this->table)
+        ->where('idsupplier', $idsupplier)
+        ->sum('total_cost');
+    }
+
     public function scopeGetTotalUnitMultiItemByIdsupplier($query, $idsupplier)
     {
         return DB::table($this->table)

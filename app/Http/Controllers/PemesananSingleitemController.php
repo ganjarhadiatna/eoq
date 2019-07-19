@@ -669,13 +669,19 @@ class PemesananSingleitemController extends Controller
             $tcn = $tc;
         }
 
+        if ($req['jumlah_unit'] < 0) {
+            $jumlah_unit = 0;
+        } else {
+            $jumlah_unit = $req['jumlah_unit'];
+        }
+
         $idusers = Auth::id();
         $data = [
             'idusers' => $idusers,
             'idsupplier' => Barang::where('id', $req['idbarang'])->value('idsupplier'),
             'idbarang' => $req['idbarang'],
             'harga_barang' => $req['harga_barang'],
-            'jumlah_unit' => $req['jumlah_unit'],
+            'jumlah_unit' => $jumlah_unit,
             'total_cost' => $tcn,
             'total_cost_multiitem' => 0,
             'frekuensi_pembelian' => $req['frekuensi_pembelian'],
