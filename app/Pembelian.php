@@ -17,6 +17,7 @@ class Pembelian extends Model
             $this->table.'.idsupplier',
     		'barang.id as id_barang',
     		'barang.nama_barang',
+            'barang.satuan_barang',
     		'supplier.nama as nama_supplier',
             DB::raw('(select count(id) from pembelian where idsupplier=pembelian.idsupplier) as total_barang')
     	)
@@ -41,6 +42,7 @@ class Pembelian extends Model
             $this->table.'.status',
             'barang.id as id_barang',
             'barang.nama_barang',
+            'barang.satuan_barang',
             'supplier.nama as nama_supplier'
         )
         ->leftJoin('barang', 'barang.id', '=', $this->table.'.idbarang')

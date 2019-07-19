@@ -393,9 +393,9 @@
                         dataType: 'json',
                     })
                     .done(function(data) {
-                        var total = data.harga_barang * jumlah_barang;
+                        var total = data.harga_jual * jumlah_barang;
 
-                        console.log(data.harga_barang);
+                        console.log(data.harga_jual);
                         $('#harga_barang').val(data.harga_barang);
                         $('#stok_barang').val(data.stok_barang);
                         $('#total_biaya').val(total);
@@ -407,9 +407,12 @@
                         console.log("complete");
                     });
                 } else {
-                    $('#harga_barang').val('0');
-                    $('#stok_barang').val('0');
-                    $('#total_biaya').val('0');
+                    $('#harga_barang').val('');
+                    $('#stok_barang').val('');
+                    $('#sisa_barang').val('');
+                    $('#total_biaya').val('');
+                    $('#jumlah_uang').val('');
+                    $('#jumlah_kembalian').val('');
                 }
 
                 // console.log(url);

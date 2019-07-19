@@ -23,7 +23,7 @@ class LaporanPemesananController extends Controller
 
     public function laporanPemesananMultiItem()
     {
-        $pemesanan = Pemesanan::GetAllMultiItemByIdsupplier(50);
+        $pemesanan = Pemesanan::GetAllMultiItem(50);
     	$pdf = PDF::loadView('laporan.pemesanansingleitem', compact('pemesanan'));
     	return $pdf->download('pemesanan-single-item.pdf');
     }

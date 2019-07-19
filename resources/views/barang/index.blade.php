@@ -45,7 +45,10 @@
                         <th scope="col" width="100">NO</th>
                         <th scope="col">Barang</th>
                         <th scope="col">Stok</th>
+                        <th scope="col">Safetly Stock</th>
                         <th scope="col">Harga</th>
+                        <th scope="col">Harga Jual</th>
+                        <th scope="col">Satuan</th>
                         <th scope="col">Biaya Penyimpanan</th>
                         <th scope="col">Tanggal Kadaluarsa</th>
                         <th scope="col">Supplier</th>
@@ -71,10 +74,19 @@
                                 @endif
                             </td>
                             <td>
-                                Rp {{ number_format($etl->harga_barang) }}
+                                <b class="text-green">{{ $etl->stok_pengaman }}</b>
                             </td>
                             <td>
-                                Rp {{ number_format($etl->biaya_penyimpanan) }}
+                                <b class="text-red">Rp {{ number_format($etl->harga_barang) }}</b>
+                            </td>
+                            <td>
+                                <b class="text-green">Rp {{ number_format($etl->harga_jual) }}</b>
+                            </td>
+                            <td>
+                                {{ $etl->satuan_barang }}
+                            </td>
+                            <td>
+                                <b>Rp {{ number_format($etl->biaya_penyimpanan) }}</b>
                             </td>
                             <td>
                                 {{ $etl->tanggal_kadaluarsa }}
@@ -182,6 +194,23 @@
                             
                         </div>
 
+                        <div class="form-group{{ $errors->has('satuan_barang') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="satuan_barang">{{ __('Satuan Barang') }}</label>
+                            <input 
+                                type="text" 
+                                name="satuan_barang" 
+                                id="satuan_barang" 
+                                class="form-control form-control-alternative{{ $errors->has('satuan_barang') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('Satuan barang') }}"  
+                                autofocus>
+                                @if ($errors->has('satuan_barang'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('satuan_barang') }}</strong>
+                                    </span>
+                                @endif
+                            
+                        </div>
+
                         <div class="form-group{{ $errors->has('stok') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="stok">{{ __('Stok *') }}</label>
                             <input 
@@ -201,6 +230,25 @@
                             
                         </div>
 
+                        <div class="form-group{{ $errors->has('stok_pengaman') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="stok_pengaman">{{ __('Stok pengaman *') }}</label>
+                            <input 
+                                type="number" 
+                                name="stok_pengaman" 
+                                id="stok_pengaman" 
+                                class="form-control form-control-alternative{{ $errors->has('stok_pengaman') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('1 .. 1000') }}"  
+                                min="0"
+                                max="1000"
+                                required >
+                                @if ($errors->has('stok_pengaman'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('stok_pengaman') }}</strong>
+                                    </span>
+                                @endif
+                            
+                        </div>
+
                         <div class="form-group{{ $errors->has('harga_barang') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="harga_barang">{{ __('Harga *') }}</label>
                             <input 
@@ -214,6 +262,24 @@
                                 @if ($errors->has('harga_barang'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('harga_barang') }}</strong>
+                                    </span>
+                                @endif
+                            
+                        </div>
+
+                        <div class="form-group{{ $errors->has('harga_jual') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="harga_jual">{{ __('Harga jual *') }}</label>
+                            <input 
+                                type="number" 
+                                name="harga_jual" 
+                                id="harga_jual" 
+                                class="form-control form-control-alternative{{ $errors->has('harga_jual') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('500000') }}"  
+                                min="0"
+                                required >
+                                @if ($errors->has('harga_jual'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('harga_jual') }}</strong>
                                     </span>
                                 @endif
                             
@@ -406,6 +472,23 @@
                             
                         </div>
 
+                        <div class="form-group{{ $errors->has('satuan_barang') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="satuan_barang">{{ __('Satuan Barang') }}</label>
+                            <input 
+                                type="text" 
+                                name="satuan_barang" 
+                                id="ubah_satuan_barang" 
+                                class="form-control form-control-alternative{{ $errors->has('satuan_barang') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('Satuan barang') }}"  
+                                autofocus>
+                                @if ($errors->has('satuan_barang'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('satuan_barang') }}</strong>
+                                    </span>
+                                @endif
+                            
+                        </div>
+
                         <div class="form-group{{ $errors->has('stok') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="stok">{{ __('Stok *') }}</label>
                             <input 
@@ -425,6 +508,25 @@
                             
                         </div>
 
+                        <div class="form-group{{ $errors->has('stok_pengaman') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="stok_pengaman">{{ __('Stok pengaman *') }}</label>
+                            <input 
+                                type="number" 
+                                name="stok_pengaman" 
+                                id="ubah_stok_pengaman" 
+                                class="form-control form-control-alternative{{ $errors->has('stok_pengaman') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('1 .. 1000') }}"  
+                                min="0"
+                                max="1000"
+                                required >
+                                @if ($errors->has('stok_pengaman'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('stok_pengaman') }}</strong>
+                                    </span>
+                                @endif
+                            
+                        </div>
+
                         <div class="form-group{{ $errors->has('harga_barang') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="harga_barang">{{ __('Harga *') }}</label>
                             <input 
@@ -438,6 +540,24 @@
                                 @if ($errors->has('harga_barang'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('harga_barang') }}</strong>
+                                    </span>
+                                @endif
+                            
+                        </div>
+
+                        <div class="form-group{{ $errors->has('harga_jual') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="harga_jual">{{ __('Harga *') }}</label>
+                            <input 
+                                type="number" 
+                                name="harga_jual" 
+                                id="ubah_harga_jual" 
+                                class="form-control form-control-alternative{{ $errors->has('harga_jual') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('500000') }}"  
+                                min="0"
+                                required >
+                                @if ($errors->has('harga_jual'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('harga_jual') }}</strong>
                                     </span>
                                 @endif
                             
@@ -608,8 +728,11 @@
                     $('#editModal').attr('class', clOpen).show();
                     $('#ubah_id').val(data[0].id);
                     $('#ubah_nama_barang').val(data[0].nama_barang);
+                    $('#ubah_satuan_barang').val(data[0].satuan_barang);
                     $('#ubah_stok').val(data[0].stok);
+                    $('#ubah_stok_pengaman').val(data[0].stok_pengaman);
                     $('#ubah_harga_barang').val(data[0].harga_barang);
+                    $('#ubah_harga_jual').val(data[0].harga_jual);
                     // $('#ubah_biaya_pemesanan').val(data[0].biaya_pemesanan);
                     $('#ubah_biaya_penyimpanan').val(data[0].biaya_penyimpanan);
                     $('#ubah_tanggal_kadaluarsa').val(data[0].tanggal_kadaluarsa);

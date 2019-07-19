@@ -48,17 +48,18 @@
                     		<td>{{ $i++ }}</td>
                             <td>{{ $pb->nama_supplier }}</td>
                             <td>{{ $pb->nama_barang }}</td>
-                            <td>{{ $pb->harga_barang }}</td>
-                            <td>{{ $pb->biaya_penyimpanan }}</td>
+                            <td><b>Rp. {{ number_format($pb->harga_barang) }}</b></td>
+                            <td><b>Rp. {{ number_format($pb->biaya_penyimpanan) }}</b></td>
                             <td>{{ ($pb->diskon * 100).'%' }}</td>
-                            <td>{{ $pb->jumlah_pembelian }}</td>
+                            <td>{{ $pb->jumlah_pembelian.' '.$pb->satuan_barang }}</td>
                             <td>
-                                <b>
+                                <b class="text-green">
+                                    Rp.
                                     <?php
                                         $total_biaya = (($pb->jumlah_pembelian * $pb->harga_barang) + $pb->biaya_penyimpanan);
                                         $diskon = $total_biaya * $pb->diskon;
                                         $jumlah = $total_biaya - $diskon;
-                                        echo $jumlah;
+                                        echo number_format($jumlah);
                                     ?>
                                 </b>
                             </td>

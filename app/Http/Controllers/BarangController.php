@@ -66,7 +66,7 @@ class BarangController extends Controller
     }
     public function price_item($id)
     {
-        $harga_barang = Barang::where('id', $id)->value('harga_barang');
+        $harga_barang = Barang::where('id', $id)->value('harga_jual');
         $stok_barang = Barang::where('id', $id)->value('stok');
         return json_encode([
             'id' => $id, 
@@ -78,8 +78,11 @@ class BarangController extends Controller
     {
         $this->validate($req, [
             'nama_barang' => ['required', 'string', 'max:150'],
+            'satuan_barang' => ['required', 'string', 'max:150'],
             'stok' => ['required', 'int', 'max:1000'],
+            'stok_pengaman' => ['required', 'int', 'max:1000'],
             'harga_barang' => ['required', 'int', 'max:1000000'],
+            'harga_jual' => ['required', 'int', 'max:1000000'],
             'biaya_penyimpanan' => ['required', 'int', 'max:1000000'],
             'tanggal_kadaluarsa' => ['required', 'date'],
             'idkategori' => ['required', 'int', 'max:10'],
@@ -95,8 +98,11 @@ class BarangController extends Controller
             'idetalase' => $req['idetalase'],
             'idsupplier' => $req['idsupplier'],
             'nama_barang' => $req['nama_barang'],
+            'satuan_barang' => $req['satuan_barang'],
             'stok' => $req['stok'],
+            'stok_pengaman' => $req['stok_pengaman'],
             'harga_barang' => $req['harga_barang'],
+            'harga_jual' => $req['harga_jual'],
             'biaya_penyimpanan' => $req['biaya_penyimpanan'],
             'tanggal_kadaluarsa' => $req['tanggal_kadaluarsa']
         ];
@@ -117,8 +123,11 @@ class BarangController extends Controller
     {
         $this->validate($req, [
             'nama_barang' => ['required', 'string', 'max:150'],
+            'satuan_barang' => ['required', 'string', 'max:150'],
             'stok' => ['required', 'int', 'max:1000'],
+            'stok_pengaman' => ['required', 'int', 'max:1000'],
             'harga_barang' => ['required', 'int', 'max:1000000'],
+            'harga_jual' => ['required', 'int', 'max:1000000'],
             'biaya_penyimpanan' => ['required', 'int', 'max:1000000'],
             'tanggal_kadaluarsa' => ['required', 'date'],
             'idkategori' => ['required', 'int', 'max:10'],
@@ -132,8 +141,11 @@ class BarangController extends Controller
             'idetalase' => $req['idetalase'],
             'idsupplier' => $req['idsupplier'],
             'nama_barang' => $req['nama_barang'],
+            'satuan_barang' => $req['satuan_barang'],
             'stok' => $req['stok'],
+            'stok_pengaman' => $req['stok_pengaman'],
             'harga_barang' => $req['harga_barang'],
+            'harga_jual' => $req['harga_jual'],
             'biaya_penyimpanan' => $req['biaya_penyimpanan'],
             'tanggal_kadaluarsa' => $req['tanggal_kadaluarsa']
         ];

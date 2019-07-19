@@ -48,7 +48,6 @@
                         <th scope="col">Kode Transaksi</th>
                         <th scope="col">Tanggal Transaksi</th>
                         <th scope="col">Nama Barang</th>
-                        <th scope="col">Satuan</th>
                         <th scope="col">Jumlah Barang</th>
                         <th scope="col">Harga Barang</th>
                         <th scope="col">Total Biaya</th>
@@ -72,16 +71,14 @@
                                 {{ $tr->nama_barang }}
                             </td>
                             <td>
-                                {{ $tr->satuan }}
+                                <b class="text-red">{{ $tr->jumlah_barang }}</b>
+                                {{ $tr->satuan_barang }}
                             </td>
                             <td>
-                                {{ $tr->jumlah_barang }}
+                                <b class="text-red">Rp. {{ number_format($tr->harga_barang) }}</b>
                             </td>
                             <td>
-                                {{ $tr->harga_barang }}
-                            </td>
-                            <td>
-                                {{ $tr->total_biaya }}
+                                <b class="text-green">Rp. {{ number_format($tr->total_biaya) }}</b>
                             </td>
                             <td>
                                 <a 

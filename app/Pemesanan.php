@@ -21,6 +21,7 @@ class Pemesanan extends Model
             'pemesanan.frekuensi_pembelian',
             'barang.id as id_barang',
             'barang.nama_barang',
+            'barang.satuan_barang',
             'barang.idsupplier',
             'barang.biaya_penyimpanan',
             'supplier.biaya_pemesanan',
@@ -46,6 +47,7 @@ class Pemesanan extends Model
             'pemesanan.tipe',
             'barang.id as id_barang',
             'barang.nama_barang',
+            'barang.satuan_barang',
             'barang.idsupplier',
             'barang.biaya_penyimpanan',
             'supplier.biaya_pemesanan',
@@ -65,12 +67,22 @@ class Pemesanan extends Model
         ->select(
             'pemesanan.id',
             'pemesanan.harga_barang',
+            'pemesanan.jumlah_unit',
+            'pemesanan.total_cost',
+            'pemesanan.reorder_point',
+            'pemesanan.frekuensi_pembelian',
             'pemesanan.total_cost_multiitem',
-            'pemesanan.idsupplier',
-            'pemesanan.tipe',
+            'barang.id as id_barang',
+            'barang.nama_barang',
+            'barang.satuan_barang',
+            'barang.idsupplier',
+            'barang.biaya_penyimpanan',
+            'supplier.biaya_pemesanan',
+            'supplier.id as id_supplier',
             'supplier.nama as nama_supplier',
             DB::raw('(select count(id) from pemesanan where idsupplier=pemesanan.idsupplier) as total_barang')
         )
+        ->leftJoin('barang', 'barang.id', '=', 'pemesanan.idbarang')
         ->leftJoin('supplier', 'supplier.id', '=', 'pemesanan.idsupplier')
         ->groupBy('pemesanan.idsupplier')
         ->paginate($limit);

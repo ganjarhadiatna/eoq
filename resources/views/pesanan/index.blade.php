@@ -56,7 +56,7 @@
                                 </b>
 	                		</td>
                             <td>
-                                {{ $ps->total_cost_multiitem }}
+                                Rp. {{ number_format($ps->total_cost_multiitem) }}
                             </td>
                             <td>
                                 <a href="{{ route('pesanan-multiitem-daftar', $ps->idsupplier) }}">

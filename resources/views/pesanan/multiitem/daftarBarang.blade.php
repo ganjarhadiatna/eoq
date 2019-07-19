@@ -53,7 +53,7 @@
 	                			{{ $ps->nama_barang }}
 	                		</td>
                             <td>
-                                {{ $ps->harga_barang }}
+                                Rp. {{ number_format($ps->harga_barang) }}
                             </td>
                             <td>
                                 {{ $ps->tipe }}
@@ -64,13 +64,17 @@
                                 </b>
 	                		</td>
 	                		<td>
-	                			{{ $ps->total_cost }}
+	                			Rp. {{ number_format($ps->total_cost) }}
 	                		</td>
 	                		<td>
 	                			{{ $ps->frekuensi_pembelian }}
 	                		</td>
 	                		<td>
-	                			{{ $ps->reorder_point }}
+                                @if($ps->reorder_point == 0)
+                                    {{ '1' }}
+                                @else
+	                			    {{ $ps->reorder_point }}
+                                @endif
 	                		</td>
 	                		<td>
 	                			<a 
