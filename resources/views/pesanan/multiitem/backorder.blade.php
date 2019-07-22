@@ -67,9 +67,9 @@
                         <th scope="col">Barang</th>
                         <th scope="col">Harga</th>
                         <th scope="col">Stok</th>
+                        <th scope="col">Status Perhitungan</th>
                         <th scope="col">Status Pemesanan</th>
-                        <th scope="col">Status Pembelian</th>
-                        <th scope="col">Status Pemesanan</th>
+                        <th scope="col">Jumlah Permintaan</th>
                         <th scope="col">EOQ</th>
                         <th scope="col">Total Cost</th>
                         <th scope="col" width="50">#</th>
@@ -141,15 +141,15 @@
 
                         // status pemesanan
                         if (data[i].status_pemesanan !== null) {
-                            var status_pemesanan = '<td class="text-orange">Sudah Dipesan</td>';
+                            var status_pemesanan = '<td class="text-orange">Sudah Dihitung</td>';
                         } else {
-                            var status_pemesanan = '<td class="text-green">Belum Dipesan</td>';
+                            var status_pemesanan = '<td class="text-green">Belum Dihitung</td>';
                         }
 
                         if (data[i].status_pembelian !== null) {
-                            var status_pembelian = '<td class="text-orange">Dalam Pembelian</td>';
+                            var status_pembelian = '<td class="text-orange">Dalam Pemesanan</td>';
                         } else {
-                            var status_pembelian = '<td class="text-green">Belum Dibeli</td>';
+                            var status_pembelian = '<td class="text-green">Belum Dipesan</td>';
                         }
 
                         dt += '\

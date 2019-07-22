@@ -62,8 +62,8 @@
                     id="ip_tipe_harga" 
                     class="form-control form-control-alternative{{ $errors->has('tipe_harga') ? ' is-invalid' : '' }}" 
                     required>
-                    <option value="1">Pemesanan Setelah Kenaikan</option>
-                    <option value="2">Pemesanan Normal</option>
+                    <option value="1">Pemesanan Sebelum Kenaikan</option>
+                    <option value="2">Pemesanan Khusus</option>
                 </select>
                 @if ($errors->has('tipe_harga'))
                     <span class="invalid-feedback" role="alert">

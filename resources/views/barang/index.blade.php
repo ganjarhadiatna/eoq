@@ -50,6 +50,7 @@
                         <th scope="col">Harga Jual</th>
                         <th scope="col">Satuan</th>
                         <th scope="col">Biaya Penyimpanan</th>
+                        <th scope="col">Biaya Pemesanan</th>
                         <th scope="col">Tanggal Kadaluarsa</th>
                         <th scope="col">Supplier</th>
                         <th scope="col">Diskon</th>
@@ -87,6 +88,9 @@
                             </td>
                             <td>
                                 <b>Rp {{ number_format($etl->biaya_penyimpanan) }}</b>
+                            </td>
+                            <td>
+                                <b>Rp {{ number_format($etl->biaya_pemesanan) }}</b>
                             </td>
                             <td>
                                 {{ $etl->tanggal_kadaluarsa }}

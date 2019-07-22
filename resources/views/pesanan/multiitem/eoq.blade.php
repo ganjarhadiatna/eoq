@@ -250,7 +250,7 @@
             $('#eoq-total-cost-'+idbarang).html(data.total_cost);
 
             eoq_update_total();
-            // console.log(data);
+            console.log(data);
         })
         .fail(function(e) {
             alert(e.responseJSON.message);

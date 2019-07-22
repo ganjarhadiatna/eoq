@@ -29,7 +29,8 @@
                     <tr>
                         <th scope="col" width="100">NO</th>
                         <th scope="col">Nama Supplier</th>
-                        <th scope="col">Jumlah Pembelian</th>
+                        <th scope="col">Jumlah Unit</th>
+                        <th scope="col">Total Biaya</th>
                         <th scope="col" width="200">#</th>
                     </tr>
                 </thead>
@@ -40,6 +41,7 @@
                     		<td>{{ $i++ }}</td>
                             <td>{{ $pb->nama_supplier }}</td>
                             <td>{{ $pb->total_barang.' barang' }}</td>
+                            <td></td>
                             <td>
                                 <a href="{{ route('pembelian-daftar', ['idsupplier' => $pb->idsupplier]) }}">
                                     <button class="btn btn-success">

@@ -64,6 +64,7 @@
                     <th scope="col">Total Cost</th>
                     <th scope="col">Diskon</th>
                     <th scope="col">Min - Max</th>
+                    <th scope="col">Status</th>
                     <th scope="col" width="200">#</th>
                 </tr>
             </thead>
@@ -111,7 +112,7 @@
                                 <td>1</td>\
                                 <td>'+diskon.harga_barang+'</td>\
                                 <td>'+diskon.jumlah_unit+'</td>\
-                                <td>'+diskon.total_cost+'</td>\
+                                <td><b>'+diskon.total_cost+'</b></td>\
                                 <td>'+(diskon.diskon * 100)+'%</td>\
                                 <td>'+diskon.min+'-'+diskon.max+'</td>\
                                 <td>\
@@ -130,15 +131,12 @@
                             </tr>';
                     } else {
                         for (var i = 0; i < diskon.length; i++) {
-                            dt += '\
-                            <tr>\
-                                <td>'+(i + 1)+'</td>\
-                                <td>'+diskon[i].harga_barang+'</td>\
-                                <td>'+diskon[i].jumlah_unit+'</td>\
-                                <td>'+diskon[i].total_cost+'</td>\
-                                <td>'+(diskon[i].diskon * 100)+'%</td>\
-                                <td>'+diskon[i].min+'-'+diskon[i].max+'</td>\
-                                <td>\
+                            // check validation
+                            if (diskon[i].jumlah_unit > diskon[i].max) {
+                                var btn = ''
+                                var stt = '<b class="text-red">Tidak Valid</b>'
+                            } else {
+                                var btn = '\
                                     <button type="button" onclick="op_e_generate(\
                                         '+idbarang+',\
                                         '+diskon[i].harga_barang+',\
@@ -149,12 +147,27 @@
                                     )" \
                                     class="btn btn-danger">\
                                         Pilih Diskon Ini?\
-                                    </button>\
+                                    </button>'
+                                var stt = '<b class="text-green">Valid</b>'
+                            }
+
+                            dt += '\
+                            <tr>\
+                                <td>'+(i + 1)+'</td>\
+                                <td>'+diskon[i].harga_barang+'</td>\
+                                <td>'+diskon[i].jumlah_unit+'</td>\
+                                <td><b>'+diskon[i].total_cost+'</b></td>\
+                                <td>'+(diskon[i].diskon * 100)+'%</td>\
+                                <td>'+diskon[i].min+'-'+diskon[i].max+'</td>\
+                                <td>'+stt+'</td>\
+                                <td>\
+                                    '+btn+'\
                                 </td>\
                             </tr>';
                         }
                     }
                     $('#eoq-diskon').html(dt);
+                    console.log(data);
                 } else {
                     // alert('barang tidak punya diskon');
                     var dt = '<tr><td colspan="7">barang tidak punya diskon</td></tr>';

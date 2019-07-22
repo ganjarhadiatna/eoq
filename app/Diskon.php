@@ -51,7 +51,7 @@ class Diskon extends Model
         )
         ->join('barang', 'barang.id', '=', 'diskons.idbarang')
         ->where('diskons.idbarang', $idbarang)
-        ->orderBy('id', 'desc')
+        ->orderBy('id', 'asc')
         ->get();
     }
 

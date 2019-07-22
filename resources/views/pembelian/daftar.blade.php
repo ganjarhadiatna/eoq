@@ -53,7 +53,7 @@
                             <td>{{ ($pb->diskon * 100).'%' }}</td>
                             <td>{{ $pb->jumlah_pembelian.' '.$pb->satuan_barang }}</td>
                             <td>
-                                <b class="text-green">
+                                <b class="text-red">
                                     Rp.
                                     <?php
                                         $total_biaya = (($pb->jumlah_pembelian * $pb->harga_barang) + $pb->biaya_penyimpanan);

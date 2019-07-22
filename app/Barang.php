@@ -94,6 +94,9 @@ class Barang extends Model
     		'barang.biaya_penyimpanan',
     		'barang.tanggal_kadaluarsa',
     		'supplier.nama as nama_supplier',
+            'supplier.leadtime',
+            'supplier.waktu_operasional',
+            'supplier.biaya_pemesanan',
     		'etalase.etalase',
     		'kategori.kategori',
             DB::raw('(select count(id) from diskons where idbarang=barang.id) as jumlah_diskon')
@@ -119,6 +122,9 @@ class Barang extends Model
             'barang.biaya_penyimpanan',
             'barang.tanggal_kadaluarsa',
             'supplier.nama as nama_supplier',
+            'supplier.leadtime',
+            'supplier.waktu_operasional',
+            'supplier.biaya_pemesanan',
             'etalase.etalase',
             'kategori.kategori',
             DB::raw('(select count(id) from diskons where idbarang=barang.id) as jumlah_diskon')

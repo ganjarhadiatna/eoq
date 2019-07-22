@@ -51,4 +51,11 @@ class Pembelian extends Model
         ->orderBy($this->table.'.status', 'asc')
         ->paginate($limit);
     }
+
+    public function scopeGetTotalCostMultiItemByIdsupplier($query, $idsupplier)
+    {
+        return DB::table($this->table)
+        ->where('idsupplier', $idsupplier)
+        ->sum('total_cost');
+    }
 }
