@@ -89,7 +89,7 @@ class BatasanController extends Controller
             $total_investasi = $total_investasi + $kebutuhan_investasi;
 
             // feaseble
-            $ex_beta = ($dt->biaya_pemesanan * pow(sqrt($dt->harga_barang * $jumlah_permintaan), 2)) / pow((2 * $kendala_modal), 2);
+            $ex_beta = (($dt->biaya_pemesanan * pow(sqrt($dt->harga_barang * $jumlah_permintaan), 2)) / pow((2 * $kendala_modal), 2)) - $F;
 
             $Q_feaseble = sqrt((2 * $dt->biaya_pemesanan * $jumlah_permintaan) / (($F + $ex_beta) * $dt->harga_barang));
 
@@ -120,17 +120,6 @@ class BatasanController extends Controller
             ]);
         }
 
-        // Pemesanan::Insert($dataSave);
-
-        // $TC = $a + ($dt->biaya_pemesanan * $b) + $d;
-
-        // // update total cost
-        // foreach ($dataString as $key => $dt) {
-        //     Pemesanan::where('idbarang', $dt->idbarang)
-        //     ->where('tipe', 'EOQ Sederhana')
-        //     ->Update(['total_cost_multiitem' => $TC]);
-        // }
-
         // status investasi
         if ($kendala_modal >= $total_investasi)
         {
@@ -152,10 +141,78 @@ class BatasanController extends Controller
 
     public function batasan_gudang_generate(Request $req)
     {
-        $kendala_modal = $req['kendala_modal'];
+
+        $dataString = Barang::GetAllWithoutLimit();
+        $month = date('m', strtotime('-1 month'));
+        $monthCurrent = date('m', strtotime('0 month'));
+
+        $idusers = Auth::id();
+        $a = 0;
+        $b = 0;
+        $d = 0;
+        $Q = 0;
+
+        $dataSave = [];
+        $total_luas_gudang = 0;
+
+        // $beta = 0;
+
+        foreach ($dataString as $key => $dt) {
+            if (Penjualan::GetTotalOrderByMonth($dt->idbarang, $monthCurrent) > 0) 
+            {
+                $jumlah_permintaan = Penjualan::GetTotalOrderByMonth($dt->idbarang, $monthCurrent);
+            }
+            else
+            {
+                $jumlah_permintaan = Penjualan::GetTotalOrderByMonth($dt->idbarang, $month);
+            }
+
+            $L = Supplier::GetLeadtime($dt->idsupplier);
+            $N = Supplier::GetWaktuOperasional($dt->idsupplier);
+
+            $ex_q = sqrt((2 * $dt->biaya_pemesanan * $jumlah_permintaan) / $dt->biaya_penyimpanan);
+            $ex_a = ($dt->harga_barang * $jumlah_permintaan);
+            $ex_b = sqrt(($dt->biaya_penyimpanan * $jumlah_permintaan) / (2 * $dt->biaya_pemesanan));
+            $ex_d = (($dt->biaya_penyimpanan * $ex_q) / 2);
+            $ex_tc = $ex_a + ($dt->biaya_pemesanan * $ex_b) + $ex_d;
+            $a = $a + $ex_a;
+            $b = $b + $ex_b;
+            $d = $d + $ex_d;
+            $Q = $Q + $ex_q;
+
+            $F = number_format(($jumlah_permintaan / $ex_q), 2);
+            $B = number_format((($jumlah_permintaan * $L) / $N), 2);
+
+            // kendala gudang
+            $ex_beta = (($dt->biaya_pemesanan * pow(sqrt($dt->harga_barang * $jumlah_permintaan), 2)) / pow((2 * $dt->ukuran_etalase), 2)) - $F;
+
+            $Q_luas_gudang = sqrt((2 * $dt->biaya_pemesanan * $jumlah_permintaan) / (($F * $dt->harga_barang) + (2 * $ex_beta * $dt->ukuran_barang)));
+
+            $total_luas_gudang += $Q_luas_gudang;
+
+            // save data
+            array_push($dataSave, [
+                'idusers' => $idusers,
+                'idsupplier' => $dt->idsupplier,
+                'idbarang' => $dt->idbarang,
+                'harga_barang' => number_format($dt->harga_barang),
+                'nama_barang' => $dt->nama_barang,
+                'jumlah_permintaan' => $jumlah_permintaan,
+                'biaya_pemesanan' => number_format($dt->biaya_pemesanan),
+                'biaya_penyimpanan' => number_format($dt->biaya_penyimpanan),
+                'jumlah_unit' => ceil($ex_q),
+                'total_cost' => number_format(ceil($ex_tc)),
+                'frekuensi_pembelian' => $F,
+                'reorder_point' => $B,
+                'tipe' => 'EOQ Sederhana',
+                'kapasitas_gudang' => number_format($Q_luas_gudang, 2),
+                'ukuran_barang' => number_format($Q_luas_gudang, 2)
+            ]);
+        }
 
         return json_encode([
-            'kendala_modal' => $kendala_modal
+            'total_luas_gudang' => number_format($total_luas_gudang, 2),
+            'data' => $dataSave
         ]);
     }
 }

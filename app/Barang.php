@@ -36,6 +36,13 @@ class Barang extends Model
         ->count('id');
     }
 
+    public function scopeGetTotalByKategori($query, $idetalase)
+    {
+        return DB::table($this->table)
+        ->where('idetalase', $idetalase)
+        ->count('id');
+    }
+
     public function scopeGetBiayaPemesanan($query, $id)
     {
         return DB::table($this->table)
@@ -78,6 +85,7 @@ class Barang extends Model
             'supplier.waktu_operasional',
             'supplier.biaya_pemesanan',
             'etalase.etalase',
+            'etalase.ukuran_etalase',
             'kategori.kategori',
             DB::raw('(select count(id) from diskons where idbarang=barang.id) as jumlah_diskon')
         )
@@ -107,6 +115,7 @@ class Barang extends Model
             'supplier.waktu_operasional',
             'supplier.biaya_pemesanan',
     		'etalase.etalase',
+            'etalase.ukuran_etalase',
     		'kategori.kategori',
             DB::raw('(select count(id) from diskons where idbarang=barang.id) as jumlah_diskon')
     	)
@@ -136,6 +145,7 @@ class Barang extends Model
             'supplier.waktu_operasional',
             'supplier.biaya_pemesanan',
             'etalase.etalase',
+            'etalase.ukuran_etalase',
             'kategori.kategori',
             DB::raw('(select count(id) from diskons where idbarang=barang.id) as jumlah_diskon')
         )

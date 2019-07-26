@@ -166,7 +166,7 @@
                                 name="ukuran" 
                                 id="input-ukuran" 
                                 class="form-control form-control-alternative{{ $errors->has('ukuran') ? ' is-invalid' : '' }}" 
-                                placeholder="{{ __('Masukan ukuran') }}"  
+                                placeholder="{{ __('00.00') }}"  
                                 required>
 
                             @if ($errors->has('ukuran'))
@@ -249,7 +249,7 @@
                                 name="ukuran" 
                                 id="ubah_ukuran" 
                                 class="form-control form-control-alternative{{ $errors->has('ukuran') ? ' is-invalid' : '' }}" 
-                                placeholder="{{ __('Masukan ukuran') }}"  
+                                placeholder="{{ __('00.00') }}"  
                                 required 
                                 autofocus>
 
@@ -299,7 +299,7 @@
                     $('#editModal').attr('class', clOpen).show();
                     $('#ubah_id').val(data[0].id);
                     $('#ubah_etalase').val(data[0].etalase);
-                    $('#ubah_ukuran').val(data[0].ubah_ukuran);
+                    $('#ubah_ukuran').val(data[0].ukuran_etalase);
 
                     clLoading();
                     // console.log(data);

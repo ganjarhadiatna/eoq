@@ -219,6 +219,23 @@
                             
                         </div>
 
+                        <div class="form-group{{ $errors->has('ukuran_barang') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="ukuran_barang">{{ __('Ukuran Barang (M3) *') }}</label>
+                            <input 
+                                type="text" 
+                                name="ukuran_barang" 
+                                id="ukuran_barang" 
+                                class="form-control form-control-alternative{{ $errors->has('ukuran_barang') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('00.00') }}"  
+                                required >
+                                @if ($errors->has('ukuran_barang'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('ukuran_barang') }}</strong>
+                                    </span>
+                                @endif
+                            
+                        </div>
+
                         <div class="form-group{{ $errors->has('stok') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="stok">{{ __('Stok *') }}</label>
                             <input 
@@ -497,6 +514,23 @@
                             
                         </div>
 
+                        <div class="form-group{{ $errors->has('ukuran_barang') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="ukuran_barang">{{ __('Ukuran Barang (M3) *') }}</label>
+                            <input 
+                                type="text" 
+                                name="ukuran_barang" 
+                                id="ubah_ukuran_barang" 
+                                class="form-control form-control-alternative{{ $errors->has('ukuran_barang') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('00.00') }}"  
+                                required >
+                                @if ($errors->has('ukuran_barang'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('ukuran_barang') }}</strong>
+                                    </span>
+                                @endif
+                            
+                        </div>
+
                         <div class="form-group{{ $errors->has('stok') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="stok">{{ __('Stok *') }}</label>
                             <input 
@@ -740,6 +774,7 @@
                     $('#ubah_id').val(data[0].id);
                     $('#ubah_nama_barang').val(data[0].nama_barang);
                     $('#ubah_satuan_barang').val(data[0].satuan_barang);
+                    $('#ubah_ukuran_barang').val(data[0].ukuran_barang);
                     $('#ubah_stok').val(data[0].stok);
                     $('#ubah_stok_pengaman').val(data[0].stok_pengaman);
                     $('#ubah_harga_barang').val(data[0].harga_barang);

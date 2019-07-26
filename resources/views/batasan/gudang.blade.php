@@ -8,23 +8,23 @@
 
     <div class="row mb-2">
 
-        <div class="col-sm">
-            <div class="form-group{{ $errors->has('kendala_modal') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="kendala_modal">{{ __('Modal Yang Dimiliki') }}</label>
+        <!-- <div class="col-sm">
+            <div class="form-group{{ $errors->has('luas_gudang') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="luas_gudang">{{ __('Luas Gudang Dimiliki') }}</label>
                 <input 
                     type="text" 
-                    name="kendala_modal" 
-                    id="kendala_modal" 
-                    class="form-control form-control-alternative{{ $errors->has('kendala_modal') ? ' is-invalid' : '' }}" 
+                    name="luas_gudang" 
+                    id="luas_gudang" 
+                    class="form-control form-control-alternative{{ $errors->has('luas_gudang') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     required>
-                @if ($errors->has('kendala_modal'))
+                @if ($errors->has('luas_gudang'))
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('kendala_modal') }}</strong>
+                        <strong>{{ $errors->first('luas_gudang') }}</strong>
                     </span>
                 @endif
             </div>
-        </div>
+        </div> -->
 
         <div class="col-sm">
             <div>
@@ -41,6 +41,8 @@
         </div>
 
     </div>
+
+    <br>
 
     <div>
         <h3 class="mb-0">Daftar Barang</h3>
@@ -61,19 +63,19 @@
                         <th scope="col">Biaya Simpan</th>
                         <th scope="col">EOQ</th>
                         <th scope="col">Total Cost</th>
-                        <th scope="col">Kebutuhan Investasi</th>
+                        <th scope="col">Kapasitas Gudang</th>
                     </tr>
                 </thead>
                 <tbody id="daftar-barang"></tbody>
                 <tbody>
                     <tr>
-                        <th scope="col" colspan="8">Total Investasi</th>
+                        <th scope="col" colspan="8">Total Luas Gudang</th>
                         <th 
                             scope="col" 
-                            id="total-investasi">0</th>
+                            id="total-luas-gudang">0</th>
                     </tr>
                 </tbody>
-                <tbody>
+               <!--  <tbody>
                     <tr>
                         <th scope="col" colspan="8">Modal</th>
                         <th 
@@ -88,7 +90,7 @@
                             scope="col" 
                             id="status-investasi"></th>
                     </tr>
-                </tbody>
+                </tbody> -->
             </table>
         </form>
     </div>
@@ -99,24 +101,16 @@
 
         function generate_method()
         {
-            var route = '{{ url("/batasan/modal/generate") }}';
-            var kendala_modal = $('#kendala_modal').val();
+            var route = '{{ url("/batasan/gudang/generate") }}';
+            // var luas_gudang = $('#luas_gudang').val();
             var bm_idbarang = 1;
-            console.log(kendala_modal);
 
-            if (kendala_modal == '') 
-            {
-                alert('kendala modal harus diisi.');
-            } 
-            else 
+            if (1) 
             {
                 $.ajax({
                     url: route,
                     type: 'GET',
                     dataType: 'JSON',
-                    data: {
-                        'kendala_modal': kendala_modal
-                    },
                     beforeSend: function () {
                         opLoading();
                     }
@@ -135,23 +129,24 @@
                                 <td>Rp. '+data_save[i].biaya_penyimpanan+'</td>\
                                 <td>'+data_save[i].jumlah_unit+'</td>\
                                 <td>Rp. '+data_save[i].total_cost+'</td>\
-                                <td><b>Rp. '+data_save[i].kebutuhan_investasi+'</b></td>\
+                                <td><b>'+data_save[i].kapasitas_gudang+' M3</b></td>\
                             </tr>\
                         ';
                     }
                     $('#daftar-barang').html(dt);
+                    $('#total-luas-gudang').html('<b class="text-green">' + data.total_luas_gudang + ' M3 </b>');
 
-                    if (data.status_investasi === 'Feasible') {
-                        $('#total-investasi').html('<span class="text-green">Rp. ' + data.total_investasi + '</span>');
-                        $('#total-modal').html('<span class="text-green">Rp. ' + data.kendala_modal + '</span>');
-                        $('#status-investasi').html('<span class="text-green">' + data.status_investasi + '</span>');
-                    } else {
-                        $('#total-investasi').html('<span class="text-red">Rp. ' + data.total_investasi + '</span>');
-                        $('#total-modal').html('<span class="text-green">Rp. ' + data.kendala_modal + '</span>');
-                        $('#status-investasi').html('<span class="text-red">' + data.status_investasi + '</span>');
-                    }
+                    // if (data.status_investasi === 'Feasible') {
+                    //     $('#total-investasi').html('<span class="text-green">Rp. ' + data.total_investasi + '</span>');
+                    //     $('#total-modal').html('<span class="text-green">Rp. ' + data.luas_gudang + '</span>');
+                    //     $('#status-investasi').html('<span class="text-green">' + data.status_investasi + '</span>');
+                    // } else {
+                    //     $('#total-investasi').html('<span class="text-red">Rp. ' + data.total_investasi + '</span>');
+                    //     $('#total-modal').html('<span class="text-green">Rp. ' + data.luas_gudang + '</span>');
+                    //     $('#status-investasi').html('<span class="text-red">' + data.status_investasi + '</span>');
+                    // }
 
-                    // console.log(data);
+                    console.log(data);
                     clLoading();
                 })
                 .fail(function(e) {
