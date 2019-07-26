@@ -529,6 +529,8 @@ class PemesananSingleitemController extends Controller
 
         $F = number_format(($R / $Qa), 2);
 
+        $habis_barang = ($jumlah_unit / $R) * $N;
+
 
         $data = [
             'jumlah_barang_sekarang' => $q,
@@ -537,9 +539,10 @@ class PemesananSingleitemController extends Controller
             'jumlah_unit' => ceil($jumlah_unit),
             'total_cost' => ceil($total_cost),
             'besar_penghematan' => ceil($gs),
+            'habis_barang' => ceil($habis_barang),
             'biaya_penyimpanan' => $H,
             'frekuensi_pembelian' => $F,
-            'reorder_point' => $B
+            'reorder_point' => number_format($B, 2)
         ];
 
         return json_encode($data);
@@ -567,30 +570,6 @@ class PemesananSingleitemController extends Controller
     {
         $pesanan = Barang::where('id', $id)->get();
         return view('pesanan.singleitem.edit', ['pesanan' => $pesanan]);
-    }
-
-    // batasan
-    public function batasan_modal()
-    {
-        $barang = Barang::orderBy('id', 'desc')->get();
-        $supplier = Supplier::orderBy('id', 'desc')->get();
-        $pemesanan = Pemesanan::GetAllSingleItem(5);
-        return view('batasan.modal', [
-            'barang' => $barang,
-            'supplier' => $supplier,
-            'pemesanan' => $pemesanan
-        ]);
-    }
-    public function batasan_gudang()
-    {
-        $barang = Barang::orderBy('id', 'desc')->get();
-        $supplier = Supplier::orderBy('id', 'desc')->get();
-        $pemesanan = Pemesanan::GetAllSingleItem(5);
-        return view('batasan.gudang', [
-            'barang' => $barang,
-            'supplier' => $supplier,
-            'pemesanan' => $pemesanan
-        ]);
     }
 
     // crud

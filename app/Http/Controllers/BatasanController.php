@@ -1,0 +1,144 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Penjualan;
+use App\Pemesanan;
+use App\Pembelian;
+Use App\Barang;
+Use App\Supplier;
+use App\Diskon;
+
+use Auth;
+
+class BatasanController extends Controller
+{
+    // batasan
+    public function batasan_modal()
+    {
+        $barang = Barang::orderBy('id', 'desc')->get();
+        $supplier = Supplier::orderBy('id', 'desc')->get();
+        $pemesanan = Pemesanan::GetAllSingleItem(5);
+        return view('batasan.modal', [
+            'barang' => $barang,
+            'supplier' => $supplier,
+            'pemesanan' => $pemesanan
+        ]);
+    }
+    public function batasan_gudang()
+    {
+        $barang = Barang::orderBy('id', 'desc')->get();
+        $supplier = Supplier::orderBy('id', 'desc')->get();
+        $pemesanan = Pemesanan::GetAllSingleItem(5);
+        return view('batasan.gudang', [
+            'barang' => $barang,
+            'supplier' => $supplier,
+            'pemesanan' => $pemesanan
+        ]);
+    }
+
+    public function batasan_modal_generate(Request $req)
+    {
+        $kendala_modal = $req['kendala_modal'];
+
+        $dataString = Barang::GetAllWithoutLimit();
+        $month = date('m', strtotime('-1 month'));
+        $monthCurrent = date('m', strtotime('0 month'));
+
+        $idusers = Auth::id();
+        $a = 0;
+        $b = 0;
+        $d = 0;
+        $Q = 0;
+
+        $dataSave = [];
+        $total_investasi = 0;
+
+        foreach ($dataString as $key => $dt) {
+            if (Penjualan::GetTotalOrderByMonth($dt->idbarang, $monthCurrent) > 0) 
+            {
+                $jumlah_permintaan = Penjualan::GetTotalOrderByMonth($dt->idbarang, $monthCurrent);
+            }
+            else
+            {
+                $jumlah_permintaan = Penjualan::GetTotalOrderByMonth($dt->idbarang, $month);
+            }
+
+            $L = Supplier::GetLeadtime($dt->idsupplier);
+            $N = Supplier::GetWaktuOperasional($dt->idsupplier);
+
+            $ex_q = sqrt((2 * $dt->biaya_pemesanan * $jumlah_permintaan) / $dt->biaya_penyimpanan);
+            $ex_a = ($dt->harga_barang * $jumlah_permintaan);
+            $ex_b = sqrt(($dt->biaya_penyimpanan * $jumlah_permintaan) / (2 * $dt->biaya_pemesanan));
+            $ex_d = (($dt->biaya_penyimpanan * $ex_q) / 2);
+            $ex_tc = $ex_a + ($dt->biaya_pemesanan * $ex_b) + $ex_d;
+            $a = $a + $ex_a;
+            $b = $b + $ex_b;
+            $d = $d + $ex_d;
+            $Q = $Q + $ex_q;
+
+            $F = number_format(($jumlah_permintaan / $ex_q), 2);
+            $B = number_format((($jumlah_permintaan * $L) / $N), 2);
+
+            // kendala modal
+            $kebutuhan_investasi = $Q * $dt->biaya_pemesanan;
+            $total_investasi = $total_investasi + $kebutuhan_investasi;
+
+            // save data
+            array_push($dataSave, [
+                'idusers' => $idusers,
+                'idsupplier' => $dt->idsupplier,
+                'idbarang' => $dt->idbarang,
+                'harga_barang' => number_format($dt->harga_barang),
+                'nama_barang' => $dt->nama_barang,
+                'jumlah_permintaan' => $jumlah_permintaan,
+                'biaya_pemesanan' => number_format($dt->biaya_pemesanan),
+                'biaya_penyimpanan' => number_format($dt->biaya_penyimpanan),
+                'jumlah_unit' => ceil($ex_q),
+                'total_cost' => number_format(ceil($ex_tc)),
+                'frekuensi_pembelian' => $F,
+                'reorder_point' => $B,
+                'tipe' => 'EOQ Sederhana',
+                'kebutuhan_investasi' => number_format(ceil($kebutuhan_investasi))
+            ]);
+        }
+
+        // Pemesanan::Insert($dataSave);
+
+        // $TC = $a + ($dt->biaya_pemesanan * $b) + $d;
+
+        // // update total cost
+        // foreach ($dataString as $key => $dt) {
+        //     Pemesanan::where('idbarang', $dt->idbarang)
+        //     ->where('tipe', 'EOQ Sederhana')
+        //     ->Update(['total_cost_multiitem' => $TC]);
+        // }
+
+        // status investasi
+        if ($kendala_modal > $total_investasi)
+        {
+            $status_investasi = 'Feasible';
+        }
+        else 
+        {
+            $status_investasi = 'Tidak Feasible';
+        }
+
+        return json_encode([
+            'kendala_modal' => number_format($kendala_modal),
+            'total_investasi' => number_format(ceil($total_investasi)),
+            'status_investasi' => $status_investasi,
+            'data' => $dataSave
+        ]);
+    }
+
+    public function batasan_gudang_generate(Request $req)
+    {
+        $kendala_modal = $req['kendala_modal'];
+
+        return json_encode([
+            'kendala_modal' => $kendala_modal
+        ]);
+    }
+}

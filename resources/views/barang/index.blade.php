@@ -45,8 +45,8 @@
                         <th scope="col" width="100">NO</th>
                         <th scope="col">Barang</th>
                         <th scope="col">Stok</th>
-                        <th scope="col">Safetly Stock</th>
-                        <th scope="col">Harga</th>
+                        <th scope="col">Safety Stock</th>
+                        <th scope="col">Harga Beli</th>
                         <th scope="col">Harga Jual</th>
                         <th scope="col">Satuan</th>
                         <th scope="col">Biaya Penyimpanan</th>

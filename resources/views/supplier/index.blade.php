@@ -80,7 +80,7 @@
                                 {{ $sp->leadtime }}
                             </td>
                             <td>
-                                {{ $sp->waktu_operasional }}
+                                {{ $sp->waktu_operasional }} hari
                             </td>
                             <td>
                                 <a 
@@ -464,6 +464,7 @@
                     $('#ubah_alamat').val(data[0].alamat);
                     $('#ubah_leadtime').val(data[0].leadtime);
                     $('#ubah_waktu_operasional').val(data[0].waktu_operasional);
+                    $('#ubah_biaya_pemesanan').val(data[0].biaya_pemesanan);
 
                     console.log(data);
                 })

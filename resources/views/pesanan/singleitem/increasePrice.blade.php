@@ -205,6 +205,25 @@
                 @endif
             </div>
 
+            <div class="form-group{{ $errors->has('habis_barang') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="ip_habis_barang">
+                    {{ __('Waktu barang akan habis') }}
+                </label>
+                <input 
+                    type="text" 
+                    name="habis_barang" 
+                    id="ip_habis_barang" 
+                    class="form-control form-control-alternative{{ $errors->has('habis_barang') ? ' is-invalid' : '' }}" 
+                    placeholder="0" 
+                    readonly="true" 
+                    required>
+                @if ($errors->has('habis_barang'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('habis_barang') }}</strong>
+                    </span>
+                @endif
+            </div>
+
         </div>
 
     </div>
@@ -259,6 +278,7 @@
                     $('#ip_frekuensi_pembelian').val(data.frekuensi_pembelian);
                     $('#ip_reorder_point').val(data.reorder_point);
                     $('#ip_jumlah_permintaan').val(data.jumlah_permintaan);
+                    $('#ip_habis_barang').val(data.habis_barang + ' hari');
                     console.log(data);
                 })
                 .fail(function(e) {

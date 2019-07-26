@@ -149,8 +149,11 @@ Route::middleware('auth')->group(function() {
     Route::get('/pesanan/multiitem/bg', 'PemesananMultiitemController@generate_bg')->name('pesanan-singleitem-bg');
 
     // batasan
-    Route::get('/batasan/modal', 'PemesananSingleitemController@batasan_modal')->name('batasan-modal');
-    Route::get('/batasan/gudang', 'PemesananSingleitemController@batasan_gudang')->name('batasan-gudang');
+    Route::get('/batasan/modal', 'BatasanController@batasan_modal')->name('batasan-modal');
+    Route::get('/batasan/gudang', 'BatasanController@batasan_gudang')->name('batasan-gudang');
+
+    Route::get('/batasan/modal/generate', 'BatasanController@batasan_modal_generate')->name('batasan-modal-generate');
+    Route::get('/batasan/gudang/generate', 'BatasanController@batasan_gudang_generate')->name('batasan-gudang-generate');
 
     // laporan
     // Route::get('/laporan/pemesanan', 'LaporanController@laporanPemesanan')->name('laporan-pemesanan');

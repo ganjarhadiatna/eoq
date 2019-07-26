@@ -14,33 +14,12 @@
     <div class="row mb-2">
 
         <div class="col-sm">
-            <div class="form-group{{ $errors->has('idsupplier') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="bm_idsupplier">{{ __('Pilih Supplier') }}</label>
-                <select 
-                    name="idsupplier"
-                    id="bm_idsupplier" 
-                    class="form-control form-control-alternative{{ $errors->has('idsupplier') ? ' is-invalid' : '' }}" 
-                    required>
-                    <option value="0">Pilih Supplier</option>
-                    @foreach ($supplier as $br)
-                        <option value="{{ $br->id }}">{{ $br->nama }}</option>
-                    @endforeach
-                </select>
-                @if ($errors->has('eoq_idsupplier'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('eoq_idsupplier') }}</strong>
-                    </span>
-                @endif
-            </div>
-        </div>
-
-        <div class="col-sm">
             <div class="form-group{{ $errors->has('kendala_modal') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="bm_kendala_modal">{{ __('Kendala Modal') }}</label>
+                <label class="form-control-label" for="kendala_modal">{{ __('Kendala Modal') }}</label>
                 <input 
                     type="text" 
                     name="kendala_modal" 
-                    id="bm_kendala_modal" 
+                    id="kendala_modal" 
                     class="form-control form-control-alternative{{ $errors->has('kendala_modal') ? ' is-invalid' : '' }}" 
                     placeholder="0" 
                     required>
@@ -51,6 +30,21 @@
                 @endif
             </div>
         </div>
+
+        <div class="col-sm">
+            <div>
+               <label class="form-control-label" for="idbarang">{{ __('Mulai perhitungan?') }}</label>
+               <div>
+                    <button 
+                        type="button" 
+                        class="btn btn-success" 
+                        onclick="generate_method()">
+                        Generate Metode
+                    </button>
+               </div>
+           </div>
+        </div>
+
     </div>
 
     <div class="row mb-2">
@@ -184,19 +178,14 @@
 
 <script type="text/javascript">
 
-        function generate_special_price()
+        function generate_method()
         {
-            var route = '{{ url("/pesanan/multiitem/bm") }}';
-            var bm_idsupplier = $('#bm_idsupplier').val();
-            var bm_kendala_modal = $('#bm_kendala_modal').val();
+            var route = '{{ url("/batasan/modal") }}';
+            var kendala_modal = $('#kendala_modal').val();
             var bm_idbarang = 1;
-            console.log(bm_kendala_modal);
+            console.log(kendala_modal);
 
-            if (bm_idbarang == 0) 
-            {
-                alert('pilih barang terlebih dahulu.');
-            } 
-            if (bm_kendala_modal == '') 
+            if (kendala_modal == '') 
             {
                 alert('kenaikan harga harus diisi.');
             } 
@@ -208,7 +197,7 @@
                     dataType: 'JSON',
                     data: {
                         'idsupplier': bm_idsupplier,
-                        'kendala_modal': bm_kendala_modal
+                        'kendala_modal': kendala_modal
                     }
                 })
                 .done(function(data) {
