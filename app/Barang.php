@@ -29,6 +29,13 @@ class Barang extends Model
         ->value('idsupplier');
     }
 
+    public function scopeGetTotalByEtalase($query, $idetalase)
+    {
+        return DB::table($this->table)
+        ->where('idetalase', $idetalase)
+        ->count('id');
+    }
+
     public function scopeGetBiayaPemesanan($query, $id)
     {
         return DB::table($this->table)
@@ -57,6 +64,7 @@ class Barang extends Model
             'barang.id as idbarang',
             'barang.nama_barang',
             'barang.satuan_barang',
+            'barang.ukuran_barang',
             'barang.stok',
             'barang.stok_pengaman',
             'barang.harga_barang',
@@ -87,6 +95,7 @@ class Barang extends Model
     		'barang.id',
     		'barang.nama_barang',
             'barang.satuan_barang',
+            'barang.ukuran_barang',
     		'barang.stok',
             'barang.stok_pengaman',
     		'barang.harga_barang',
@@ -115,6 +124,7 @@ class Barang extends Model
             'barang.id',
             'barang.nama_barang',
             'barang.satuan_barang',
+            'barang.ukuran_barang',
             'barang.stok',
             'barang.stok_pengaman',
             'barang.harga_barang',

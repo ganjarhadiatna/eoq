@@ -267,6 +267,9 @@
                         'idbarang': sp_idbarang,
                         'special_price': sp_harga_spesial,
                         'tipe_harga': sp_tipe_harga
+                    },
+                    beforeSend: function () {
+                        opLoading();
                     }
                 })
                 .done(function(data) {
@@ -278,9 +281,11 @@
                     $('#sp_besar_penghematan').val(data.besar_penghematan);
                     $('#sp_jumlah_permintaan').val(data.jumlah_permintaan);
                     console.log(data);
+                    clLoading();
                 })
                 .fail(function(e) {
                     console.log("error " + e.responseJSON.message);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");

@@ -269,6 +269,9 @@
                         'idbarang': ip_idbarang,
                         'increase_price': ip_increase_price,
                         'tipe_harga': ip_tipe_harga
+                    },
+                    beforeSend: function () {
+                        opLoading();
                     }
                 })
                 .done(function(data) {
@@ -280,9 +283,11 @@
                     $('#ip_jumlah_permintaan').val(data.jumlah_permintaan);
                     $('#ip_habis_barang').val(data.habis_barang + ' hari');
                     console.log(data);
+                    clLoading();
                 })
                 .fail(function(e) {
                     console.log("error " + e.responseJSON.message);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");

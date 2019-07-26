@@ -250,16 +250,21 @@
                     url: route,
                     type: 'GET',
                     dataType: 'json',
+                    beforeSend: function () {
+                        opLoading();
+                    }
                 })
                 .done(function(data) {
                     $('#editModal').attr('class', clOpen).show();
                     $('#ubah_id').val(data[0].id);
                     $('#ubah_kategori').val(data[0].kategori);
 
-                    console.log(data);
+                    // console.log(data);
+                    clLoading();
                 })
                 .fail(function(e) {
                     console.log("error " + e);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");

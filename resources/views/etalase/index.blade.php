@@ -1,3 +1,5 @@
+<?php use App\Barang; ?>
+
 @extends('layouts.app')
 
 @section('content')
@@ -45,6 +47,8 @@
                     <tr>
                         <th scope="col" width="100">NO</th>
                         <th scope="col">Etalase</th>
+                        <th scope="col">Ukuran (m3)</th>
+                        <th scope="col">Jumlah Barang</th>
                         <th scope="col">Tanggal</th>
                         <th scope="col" width="200">#</th>
                     </tr>
@@ -58,6 +62,12 @@
                             </th>
                             <td>
                                 {{ $etl->etalase }}
+                            </td>
+                            <td>
+                                {{ $etl->ukuran_etalase }}
+                            </td>
+                            <td>
+                                {{ Barang::GetTotalByEtalase($etl->id) }} Barang
                             </td>
                             <td>
                                 {{ $etl->created_at }}
@@ -149,6 +159,22 @@
                                 </span>
                             @endif
                         </div>
+                        <div class="form-group{{ $errors->has('ukuran') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="input-ukuran">{{ __('Ukuran (m3)') }}</label>
+                            <input 
+                                type="text" 
+                                name="ukuran" 
+                                id="input-ukuran" 
+                                class="form-control form-control-alternative{{ $errors->has('ukuran') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('Masukan ukuran') }}"  
+                                required>
+
+                            @if ($errors->has('ukuran'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('ukuran') }}</strong>
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button 
@@ -215,6 +241,24 @@
                                 </span>
                             @endif
                         </div>
+
+                        <div class="form-group{{ $errors->has('ukuran') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="ubah-ukuran">{{ __('Ukuran (m3)') }}</label>
+                            <input 
+                                type="text" 
+                                name="ukuran" 
+                                id="ubah_ukuran" 
+                                class="form-control form-control-alternative{{ $errors->has('ukuran') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('Masukan ukuran') }}"  
+                                required 
+                                autofocus>
+
+                            @if ($errors->has('ukuran'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('ukuran') }}</strong>
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button 
@@ -247,16 +291,22 @@
                     url: route,
                     type: 'GET',
                     dataType: 'json',
+                    beforeSend: function () {
+                        opLoading();
+                    }
                 })
                 .done(function(data) {
                     $('#editModal').attr('class', clOpen).show();
                     $('#ubah_id').val(data[0].id);
                     $('#ubah_etalase').val(data[0].etalase);
+                    $('#ubah_ukuran').val(data[0].ubah_ukuran);
 
-                    console.log(data);
+                    clLoading();
+                    // console.log(data);
                 })
                 .fail(function(e) {
                     console.log("error " + e);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");

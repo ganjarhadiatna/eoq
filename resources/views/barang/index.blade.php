@@ -49,6 +49,7 @@
                         <th scope="col">Harga Beli</th>
                         <th scope="col">Harga Jual</th>
                         <th scope="col">Satuan</th>
+                        <th scope="col">Ukuran (m3)</th>
                         <th scope="col">Biaya Penyimpanan</th>
                         <th scope="col">Biaya Pemesanan</th>
                         <th scope="col">Tanggal Kadaluarsa</th>
@@ -85,6 +86,9 @@
                             </td>
                             <td>
                                 {{ $etl->satuan_barang }}
+                            </td>
+                            <td>
+                                {{ $etl->ukuran_barang }}
                             </td>
                             <td>
                                 <b>Rp {{ number_format($etl->biaya_penyimpanan) }}</b>
@@ -727,6 +731,9 @@
                     url: route,
                     type: 'GET',
                     dataType: 'json',
+                    beforeSend: function () {
+                        opLoading();
+                    }
                 })
                 .done(function(data) {
                     $('#editModal').attr('class', clOpen).show();
@@ -744,10 +751,12 @@
                     $('#ubah_idetalase').val(data[0].idetalase);
                     $('#ubah_idsupplier').val(data[0].idsupplier);
 
-                    console.log(data);
+                    // console.log(data);
+                    clLoading();
                 })
                 .fail(function(e) {
                     console.log("error " + e);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");

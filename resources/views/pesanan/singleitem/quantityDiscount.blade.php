@@ -93,6 +93,9 @@
                 dataType: 'JSON',
                 data: {
                     'idbarang': idbarang
+                },
+                beforeSend: function () {
+                    opLoading();
                 }
             })
             .done(function(data) {
@@ -110,9 +113,9 @@
                         dt = '\
                             <tr>\
                                 <td>1</td>\
-                                <td>'+diskon.harga_barang+'</td>\
+                                <td>Rp. '+diskon.harga_barang+'</td>\
                                 <td>'+diskon.jumlah_unit+'</td>\
-                                <td><b>'+diskon.total_cost+'</b></td>\
+                                <td><b>Rp. '+diskon.total_cost+'</b></td>\
                                 <td>'+(diskon.diskon * 100)+'%</td>\
                                 <td>'+diskon.min+'-'+diskon.max+'</td>\
                                 <td>\
@@ -154,9 +157,9 @@
                             dt += '\
                             <tr>\
                                 <td>'+(i + 1)+'</td>\
-                                <td>'+diskon[i].harga_barang+'</td>\
+                                <td>Rp. '+diskon[i].harga_barang+'</td>\
                                 <td>'+diskon[i].jumlah_unit+'</td>\
-                                <td><b>'+diskon[i].total_cost+'</b></td>\
+                                <td><b>Rp. '+diskon[i].total_cost+'</b></td>\
                                 <td>'+(diskon[i].diskon * 100)+'%</td>\
                                 <td>'+diskon[i].min+'-'+diskon[i].max+'</td>\
                                 <td>'+stt+'</td>\
@@ -167,16 +170,18 @@
                         }
                     }
                     $('#eoq-diskon').html(dt);
-                    console.log(data);
+                    // console.log(data);
                 } else {
                     // alert('barang tidak punya diskon');
                     var dt = '<tr><td colspan="7">barang tidak punya diskon</td></tr>';
                     $('#eoq-diskon').html(dt);
                 }
 
+                clLoading();
             })
             .fail(function(e) {
                 console.log("error " + e.responseJSON.message);
+                clLoading();
             })
             .always(function() {
                 console.log("complete");
@@ -207,6 +212,9 @@
                 // processData: false,
                 // contentType: false,
                 data: data,
+                beforeSend: function () {
+                    opLoading();
+                }
             })
             .done(function(data) {
                 if (data.status === 'success') {
@@ -214,11 +222,13 @@
                 } else {
                     alert(data.message);
                 }
+                clLoading();
                 // console.log(data);
             })
             .fail(function(data) {
                 console.log(data);
                 alert(data.responseJSON.message);
+                clLoading();
             })
             .always(function() {
                 console.log("complete");

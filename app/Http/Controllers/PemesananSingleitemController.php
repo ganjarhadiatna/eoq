@@ -218,12 +218,12 @@ class PemesananSingleitemController extends Controller
                     $dataDiskonUnit = [
                         'type' => 'unit',
                         'diskon' => $du->diskon,
-                        'harga_barang' => $du_P,
+                        'harga_barang' => number_format($du_P),
                         'jumlah_permintaan' => $R,
                         'biaya_penyimpanan' => $H,
                         'biaya_pemesanan' => $C,
                         'jumlah_unit' => ceil($du_Q),
-                        'total_cost' => ceil($du_TC),
+                        'total_cost' => number_format(ceil($du_TC)),
                         'min' => $du->min,
                         'max' => $du->max
                     ];
@@ -261,12 +261,12 @@ class PemesananSingleitemController extends Controller
                         'key' => $key,
                         'type' => 'incremental',
                         'diskon' => $di->diskon,
-                        'harga_barang' => $di_current_P,
+                        'harga_barang' => number_format($di_current_P),
                         'jumlah_permintaan' => $R,
                         'biaya_penyimpanan' => $H,
                         'biaya_pemesanan' => $C,
                         'jumlah_unit' => ceil($di_Q),
-                        'total_cost' => ceil($di_TC),
+                        'total_cost' => number_format(ceil($di_TC)),
                         'min' => $di->min,
                         'max' => $di->max
                     ];

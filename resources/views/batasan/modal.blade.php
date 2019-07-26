@@ -120,6 +120,9 @@
                     dataType: 'JSON',
                     data: {
                         'kendala_modal': kendala_modal
+                    },
+                    beforeSend: function () {
+                        opLoading();
                     }
                 })
                 .done(function(data) {
@@ -164,10 +167,12 @@
                         // $('#status-investasi').html('<span class="text-red">' + data.status_investasi + '</span>');
                     }
 
-                    console.log(data);
+                    // console.log(data);
+                    clLoading();
                 })
                 .fail(function(e) {
                     console.log("error " + e.responseJSON.message);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");

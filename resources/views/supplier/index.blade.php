@@ -74,7 +74,7 @@
                                 {{ $sp->alamat }}
                             </td>
                             <td>
-                                {{ $sp->biaya_pemesanan }}
+                                Rp. {{ number_format($sp->biaya_pemesanan) }}
                             </td>
                             <td>
                                 {{ $sp->leadtime }}
@@ -454,6 +454,9 @@
                     url: route,
                     type: 'GET',
                     dataType: 'json',
+                    beforeSend: function () {
+                        opLoading();
+                    }
                 })
                 .done(function(data) {
                     $('#editModal').attr('class', clOpen).show();
@@ -466,10 +469,12 @@
                     $('#ubah_waktu_operasional').val(data[0].waktu_operasional);
                     $('#ubah_biaya_pemesanan').val(data[0].biaya_pemesanan);
 
-                    console.log(data);
+                    clLoading();
+                    // console.log(data);
                 })
                 .fail(function(e) {
                     console.log("error " + e);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");

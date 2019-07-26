@@ -112,7 +112,10 @@
             $.ajax({
                 url: route,
                 type: 'GET',
-                dataType: 'json'
+                dataType: 'json',
+                beforeSend: function () {
+                    opLoading();
+                }
             })
             .done(function(data) {
                 var dt = '';
@@ -158,9 +161,11 @@
                 $('#eoq-daftar-barang').html(dt);
 
                 // console.log(data);
+                clLoading();
             })
             .fail(function(e) {
                 console.log("error => " + e);
+                clLoading();
             })
             .always(function() {
                 console.log("complete");
@@ -197,6 +202,9 @@
                     data: {
                         'idsupplier': idsupplier, 
                         'data': dataEoq
+                    },
+                    beforeSend: function () {
+                        opLoading();
                     }
                 })
                 .done(function(data) {
@@ -204,9 +212,11 @@
                         window.location = '{{ route("pesanan-item") }}';
                     }
                     // console.log(data);
+                    clLoading();
                 })
                 .fail(function(e) {
                     console.log("error => " + e.responseJSON.message);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");
@@ -234,6 +244,9 @@
                 'idbarang': idbarang,
                 'idsupplier': idsupplier,
                 // 'tipe_harga': eoq_tipe_harga
+            },
+            beforeSend: function () {
+                opLoading();
             }
         })
         .done(function(data) {
@@ -250,6 +263,7 @@
             $('#eoq-total-cost-'+idbarang).html(data.total_cost);
 
             eoq_update_total();
+            clLoading();
             console.log(data);
         })
         .fail(function(e) {
@@ -260,6 +274,7 @@
             $('#eoq-total-cost-'+idbarang).html('0');
 
             eoq_update_total();
+            clLoading();
         })
         .always(function() {
             console.log("complete");

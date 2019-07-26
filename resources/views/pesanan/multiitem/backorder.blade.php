@@ -130,7 +130,10 @@
             $.ajax({
                 url: route,
                 type: 'GET',
-                dataType: 'json'
+                dataType: 'json',
+                beforeSend: function () {
+                    opLoading();
+                }
             })
             .done(function(data) {
                 var dt = '';
@@ -174,11 +177,12 @@
                 }
 
                 $('#bo-daftar-barang').html(dt);
-
+                clLoading();
                 // console.log(data);
             })
             .fail(function(e) {
                 console.log("error => " + e.responseJSON.message);
+                clLoading();
             })
             .always(function() {
                 console.log("complete");
@@ -217,16 +221,21 @@
                         'idsupplier': idsupplier, 
                         'biaya_backorder': biaya_backorder,
                         'data': databo
+                    },
+                    beforeSend: function () {
+                        opLoading();
                     }
                 })
                 .done(function(data) {
                     if (data.status === 'success') {
                         window.location = '{{ route("pesanan-item") }}';
                     }
+                    clLoading();
                     // console.log(data);
                 })
                 .fail(function(e) {
                     console.log("error => " + e.responseJSON.message);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");
@@ -253,6 +262,9 @@
                     'idbarang': idbarang,
                     'idsupplier': idsupplier,
                     'biaya_backorder': bo_biaya_backorder
+                },
+                beforeSend: function () {
+                    opLoading();
                 }
             })
             .done(function(data) {
@@ -270,6 +282,7 @@
                 $('#bo-total-cost-'+idbarang).html(data.total_cost);
 
                 bo_update_total();
+                clLoading();
                 // console.log(data);
             })
             .fail(function(e) {
@@ -280,6 +293,7 @@
                 $('#bo-total-cost-'+idbarang).html('0');
 
                 bo_update_total();
+                clLoading();
             })
             .always(function() {
                 console.log("complete");
