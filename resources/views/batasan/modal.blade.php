@@ -59,7 +59,7 @@
                         <th scope="col">Jumlah Permintaan</th>
                         <th scope="col">Biaya Pemesanan</th>
                         <th scope="col">Biaya Simpan</th>
-                        <th scope="col">EOQ</th>
+                        <th scope="col">Jumlah Unit</th>
                         <th scope="col">Total Cost</th>
                         <th scope="col">Kebutuhan Investasi</th>
                     </tr>
@@ -81,14 +81,14 @@
                             id="total-modal">0</th>
                     </tr>
                 </tbody>
-                <tbody>
+                <!-- <tbody>
                     <tr>
                         <th scope="col" colspan="8">Status Investasi</th>
                         <th 
                             scope="col" 
                             id="status-investasi"></th>
                     </tr>
-                </tbody>
+                </tbody> -->
             </table>
         </form>
     </div>
@@ -99,6 +99,10 @@
 
         function generate_method()
         {
+            $('#daftar-barang').html('');
+            $('#total-investasi').html('0');
+            $('#total-modal').html('0');
+
             var route = '{{ url("/batasan/modal/generate") }}';
             var kendala_modal = $('#kendala_modal').val();
             var bm_idbarang = 1;
@@ -121,7 +125,19 @@
                 .done(function(data) {
                     var data_save = data.data;
                     var dt = [];
+                    var jumlah_unit = 0;
+                    var total_cost = 0;
                     for (var i = 0; i < data_save.length; i++) {
+                        
+                        if (data.status_investasi === 'Feasible') {
+                            jumlah_unit = data_save[i].jumlah_unit;
+                            total_cost = data_save[i].total_cost;
+                        }
+                        else  {
+                            jumlah_unit =  data_save[i].jumlah_unit_feasible;
+                            total_cost = data_save[i].total_cost_feasible;
+                        }
+
                         dt += '\
                             <tr>\
                                 <td>'+(i + 1)+'</td>\
@@ -130,8 +146,8 @@
                                 <td>'+data_save[i].jumlah_permintaan+'</td>\
                                 <td>Rp. '+data_save[i].biaya_pemesanan+'</td>\
                                 <td>Rp. '+data_save[i].biaya_penyimpanan+'</td>\
-                                <td>'+data_save[i].jumlah_unit+'</td>\
-                                <td>Rp. '+data_save[i].total_cost+'</td>\
+                                <td>'+jumlah_unit+'</td>\
+                                <td>Rp. '+total_cost+'</td>\
                                 <td><b>Rp. '+data_save[i].kebutuhan_investasi+'</b></td>\
                             </tr>\
                         ';
@@ -141,11 +157,11 @@
                     if (data.status_investasi === 'Feasible') {
                         $('#total-investasi').html('<span class="text-green">Rp. ' + data.total_investasi + '</span>');
                         $('#total-modal').html('<span class="text-green">Rp. ' + data.kendala_modal + '</span>');
-                        $('#status-investasi').html('<span class="text-green">' + data.status_investasi + '</span>');
+                        // $('#status-investasi').html('<span class="text-green">' + data.status_investasi + '</span>');
                     } else {
-                        $('#total-investasi').html('<span class="text-red">Rp. ' + data.total_investasi + '</span>');
+                        $('#total-investasi').html('<span class="text-red">Rp. ' + data.minimum_biaya + '</span>');
                         $('#total-modal').html('<span class="text-green">Rp. ' + data.kendala_modal + '</span>');
-                        $('#status-investasi').html('<span class="text-red">' + data.status_investasi + '</span>');
+                        // $('#status-investasi').html('<span class="text-red">' + data.status_investasi + '</span>');
                     }
 
                     console.log(data);

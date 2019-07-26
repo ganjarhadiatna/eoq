@@ -54,6 +54,9 @@ class BatasanController extends Controller
 
         $dataSave = [];
         $total_investasi = 0;
+        $minimum_biaya = 0;
+
+        // $beta = 0;
 
         foreach ($dataString as $key => $dt) {
             if (Penjualan::GetTotalOrderByMonth($dt->idbarang, $monthCurrent) > 0) 
@@ -85,6 +88,16 @@ class BatasanController extends Controller
             $kebutuhan_investasi = $Q * $dt->biaya_pemesanan;
             $total_investasi = $total_investasi + $kebutuhan_investasi;
 
+            // feaseble
+            $ex_beta = ($dt->biaya_pemesanan * pow(sqrt($dt->harga_barang * $jumlah_permintaan), 2)) / pow((2 * $kendala_modal), 2);
+
+            $Q_feaseble = sqrt((2 * $dt->biaya_pemesanan * $jumlah_permintaan) / (($F + $ex_beta) * $dt->harga_barang));
+
+            // $beta += $ex_beta;
+            $total_cost_feasible = (($jumlah_permintaan * $dt->biaya_pemesanan) / $Q_feaseble) + (($Q_feaseble * $dt->harga_barang * $F) / 2);
+
+            $minimum_biaya += $total_cost_feasible;
+
             // save data
             array_push($dataSave, [
                 'idusers' => $idusers,
@@ -100,7 +113,10 @@ class BatasanController extends Controller
                 'frekuensi_pembelian' => $F,
                 'reorder_point' => $B,
                 'tipe' => 'EOQ Sederhana',
-                'kebutuhan_investasi' => number_format(ceil($kebutuhan_investasi))
+                'kebutuhan_investasi' => number_format(ceil($kebutuhan_investasi)),
+                'beta' => $ex_beta,
+                'jumlah_unit_feasible' => ceil($Q_feaseble),
+                'total_cost_feasible' => number_format(ceil($total_cost_feasible))
             ]);
         }
 
@@ -116,7 +132,7 @@ class BatasanController extends Controller
         // }
 
         // status investasi
-        if ($kendala_modal > $total_investasi)
+        if ($kendala_modal >= $total_investasi)
         {
             $status_investasi = 'Feasible';
         }
@@ -128,6 +144,7 @@ class BatasanController extends Controller
         return json_encode([
             'kendala_modal' => number_format($kendala_modal),
             'total_investasi' => number_format(ceil($total_investasi)),
+            'minimum_biaya' => number_format(ceil($minimum_biaya)),
             'status_investasi' => $status_investasi,
             'data' => $dataSave
         ]);
