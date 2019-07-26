@@ -7,6 +7,7 @@ use App\Penjualan;
 use App\Pembelian;
 use App\Pemesanan;
 use App\Barang;
+use App\Supplier;
 
 use DateTime;
 
@@ -53,12 +54,21 @@ class HomeController extends Controller
 
         $barangKedaluarsa = Barang::whereBetween('tanggal_kadaluarsa',[$from, $to])->get();
         $pemesanan = Pemesanan::all();
+
+        $jumlah_penjualan = Penjualan::GetTotal();
+        $jumlah_barang = Barang::GetTotal();
+        $jumlah_pesanan = Pemesanan::GetTotal();
+        $jumlah_barang_kadaluarsa = Barang::whereBetween('tanggal_kadaluarsa',[$from, $to])->count('id');
         
         return view('home',[
             'chartPembelian' => $chartPembelian,
             'chartPenjualan' => $chartPenjualan,
             'barangKedaluarsa' => $barangKedaluarsa,
-            'pemesanan' => $pemesanan
+            'pemesanan' => $pemesanan,
+            'jumlah_penjualan' => $jumlah_penjualan,
+            'jumlah_barang' => $jumlah_barang,
+            'jumlah_pesanan' => $jumlah_pesanan,
+            'jumlah_barang_kadaluarsa' => $jumlah_barang_kadaluarsa
         ]);
     }
 

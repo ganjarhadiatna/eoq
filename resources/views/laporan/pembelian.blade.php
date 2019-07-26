@@ -149,17 +149,30 @@
                 <thead>
                 <tr>
                   <th>No</th>
+                  <th>Kode Transaksi</th>
                   <th>Nama Supplier</th>
                   <th>Nama Barang</th>
-                  <th>Total Barang\</th>
+                  <th>Satuan Barang</th>
+                  <th>Tanggal</th>
+                  <th>Jumlah</th>
+                  <th>Biaya Penyimpanan</th>
+                  <th>Harga Barang</th>
+                  <th>Total Biaya</th>
                 </tr>
                 </thead>
                 <tbody>
-                    <?php $i = 1; ?>
+                <?php $i = 1; ?>
+                <?php $jumlah = 0; ?>
+                <?php $total = 0; ?>
+                <?php $penyimpanan = 0; ?>
+                <?php $biaya = 0; ?>
                 @foreach($pembelian as $pj)
                   <tr>
                     <td>
                       {{ $i }}
+                    </td>
+                    <td>
+                      {{ $pj->kode_transaksi }}
                     </td>
                     <td>
                       {{ $pj->nama_supplier }}
@@ -168,12 +181,41 @@
                       {{ $pj->nama_barang }}
                     </td>
                     <td>
-                      {{ $pj->total_barang }}
+                      {{ $pj->satuan_barang }}
                     </td>
-                  </tr>
+                    <td>
+                      {{ $pj->tanggal_pembelian }}
+                    </td>
+                    <td>
+                      {{ $pj->jumlah_pembelian }}
+                    </td>
+                    <td>
+                      Rp. {{ number_format($pj->biaya_penyimpanan) }}
+                    </td>
+                    <td>
+                      Rp. {{ number_format($pj->harga_barang) }}
+                    </td>
+                    <td>
+                        <?php $biaya = ($pj->harga_barang * $pj->jumlah_pembelian) + $pj->biaya_penyimpanan; ?>
+                        Rp. {{ number_format($biaya) }}
+                    </td>
+                    </tr>
                   <?php $i++ ?>
+                  <?php $jumlah += $pj->jumlah_pembelian; ?>
+                  <?php $total += $biaya; ?>
+                  <?php $penyimpanan += $pj->biaya_penyimpanan; ?>
                 @endforeach
                     
+                </tbody>
+                <tbody>
+                    <tr>
+                        <td colspan="9">
+                            <b>Total Keseluruhan</b>
+                        </td>
+                        <td>
+                            <b>Rp. {{ number_format($total) }}</b>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

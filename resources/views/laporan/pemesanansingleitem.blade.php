@@ -144,7 +144,7 @@
 </head>
 <body class="container">
         <div class="card-body next-page">
-            <h2 align="center">Laporan Pemesanan Single Item</h2>
+            <h2 align="center">Laporan Pemesanan Per-Barang</h2>
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -161,39 +161,42 @@
                 </thead>
                 <tbody>
                     <?php $i = 1; ?>
-                @foreach($pemesanan as $pj)
-                  <tr>
-                    <td>
-                      {{ $i }}
-                    </td>
-                    <td>
-                      {{ $pj->nama_barang }}
-                    </td>
-                    <td>
-                      {{ $pj->harga_barang }}
-                    </td>
-                    <td>
-                      {{ $pj->nama_supplier }}
-                    </td>
-                    <td>
-                      {{ $pj->jumlah_unit }}
-                    </td>
-                    <td>
-                      {{ $pj->total_cost }}
-                    </td>
-                    <td>
-                      {{ $pj->biaya_penyimpanan }}
-                    </td>
-                    <td>
-                      {{ $pj->biaya_pemesanan }}
-                    </td>
-                    <td>
-                      {{ $pj->reorder_point }}
-                    </td>
-                  </tr>
-                  <?php $i++ ?>
-                @endforeach
-                    
+                    @foreach($pemesanan as $pj)
+                        <tr>
+                            <td>
+                                {{ $i }}
+                            </td>
+                            <td>
+                                {{ $pj->nama_barang }}
+                            </td>
+                            <td>
+                                Rp. {{ number_format($pj->harga_barang) }}
+                            </td>
+                            <td>
+                                {{ $pj->nama_supplier }}
+                            </td>
+                            <td>
+                                {{ $pj->jumlah_unit }}
+                            </td>
+                            <td>
+                                Rp. {{ number_format($pj->total_cost) }}
+                            </td>
+                            <td>
+                                Rp. {{ number_format($pj->biaya_penyimpanan) }}
+                            </td>
+                            <td>
+                                Rp. {{ number_format($pj->biaya_pemesanan) }}
+                            </td>
+                            <td>
+                                @if ($pj->reorder_point == 0)
+                                    {{ '0' }}
+                                @else
+                                    {{ $pj->reorder_point }}
+                                @endif
+                            </td>
+                        </tr>
+                        <?php $i++ ?>
+                    @endforeach
                 </tbody>
             </table>
         </div>

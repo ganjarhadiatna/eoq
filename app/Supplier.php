@@ -14,6 +14,12 @@ class Supplier extends Model
         return $this->get();
     }
 
+    public function scopeGetTotal($query)
+    {
+        return DB::table($this->table)
+        ->count('id');
+    }
+
     public function scopeGetById($query, $idSupplier)
     {
         return $this

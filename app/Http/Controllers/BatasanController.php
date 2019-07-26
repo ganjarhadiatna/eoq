@@ -184,9 +184,9 @@ class BatasanController extends Controller
             $B = number_format((($jumlah_permintaan * $L) / $N), 2);
 
             // kendala gudang
-            $ex_beta = (($dt->biaya_pemesanan * pow(sqrt($dt->harga_barang * $jumlah_permintaan), 2)) / pow((2 * $dt->ukuran_etalase), 2)) - $F;
+            $ex_beta = (($dt->biaya_pemesanan * pow(sqrt(2 * $dt->biaya_pemesanan * $dt->harga_barang), 2)) / pow((2 * $dt->ukuran_etalase), 2)) - $F;
 
-            $Q_luas_gudang = sqrt((2 * $dt->biaya_pemesanan * $jumlah_permintaan) / (($F * $dt->harga_barang) + (2 * $ex_beta * $dt->ukuran_barang)));
+            $Q_luas_gudang = sqrt((2 * $dt->biaya_pemesanan * $jumlah_permintaan) / (($F * $dt->harga_barang) + (2 * $dt->ukuran_barang)));
 
             $total_luas_gudang += $Q_luas_gudang;
 

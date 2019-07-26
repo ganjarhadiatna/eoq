@@ -43,6 +43,12 @@ class Barang extends Model
         ->count('id');
     }
 
+    public function scopeGetTotal($query)
+    {
+        return DB::table($this->table)
+        ->count('id');
+    }
+
     public function scopeGetBiayaPemesanan($query, $id)
     {
         return DB::table($this->table)

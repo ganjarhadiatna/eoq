@@ -4,13 +4,13 @@
 
     <div class="container-fluid">
         <div class="row">
-        	<div class="col-xl-4 col-lg-6">
+        	<div class="col-xl-6">
         		<div class="card card-stats mb-4 mb-xl-0">
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <h5 class="card-title text-uppercase text-muted mb-0">Transaksi</h5>
-                                <span class="h2 font-weight-bold mb-0">350,897</span>
+                                <h5 class="card-title text-uppercase text-muted mb-0">Jumlah Transaksi Penjualan</h5>
+                                <span class="h2 font-weight-bold mb-0">{{ $jumlah_penjualan }}</span>
                             </div>
                             <div class="col-auto">
                                 <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
@@ -21,13 +21,13 @@
                     </div>
                 </div>
         	</div>
-        	<div class="col-xl-4 col-lg-6">
+        	<div class="col-xl-6">
                 <div class="card card-stats mb-4 mb-xl-0">
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <h5 class="card-title text-uppercase text-muted mb-0">Barang</h5>
-                                <span class="h2 font-weight-bold mb-0">2,356</span>
+                                <h5 class="card-title text-uppercase text-muted mb-0">Jumlah Barang Yang Sudah Sampai</h5>
+                                <span class="h2 font-weight-bold mb-0">{{ $jumlah_barang }}</span>
                             </div>
                             <div class="col-auto">
                                 <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
@@ -38,17 +38,37 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-4 col-lg-6">
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-xl-6">
                 <div class="card card-stats mb-4 mb-xl-0">
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <h5 class="card-title text-uppercase text-muted mb-0">Supplier</h5>
-                                <span class="h2 font-weight-bold mb-0">924</span>
+                                <h5 class="card-title text-uppercase text-muted mb-0">Jumlah Barang Dalam Pemesanan</h5>
+                                <span class="h2 font-weight-bold mb-0">{{ $jumlah_pesanan }}</span>
                             </div>
                             <div class="col-auto">
                                 <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                                    <i class="fas fa-users"></i>
+                                    <i class="fas fa-th"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6">
+                <div class="card card-stats mb-4 mb-xl-0">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="card-title text-uppercase text-muted mb-0">Jumlah Barang Akan Kadaluarsa</h5>
+                                <span class="h2 font-weight-bold mb-0">{{ $jumlah_barang_kadaluarsa }}</span>
+                            </div>
+                            <div class="col-auto">
+                                <div class="icon icon-shape bg-green text-white rounded-circle shadow">
+                                    <i class="fas fa-th"></i>
                                 </div>
                             </div>
                         </div>
@@ -151,7 +171,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-5">
+            <div class="col">
                 <div class="card shadow">
                     <div class="card-header border-0">
                         <div class="row align-items-center">

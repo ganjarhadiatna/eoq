@@ -14,9 +14,13 @@ class LaporanPenjualanController extends Controller
         return view('laporan.penjualanindex');
     }
 
-    public function laporanPenjualan()
+    public function laporanPenjualan(Request $req)
     {
-    	$penjualan = Penjualan::GetAll(50);
+        $tanggal_awal = $req['tanggal_awal'];
+        $tanggal_akhir = $req['tanggal_akhir'];
+        $sort_by = 'asc';
+
+    	$penjualan = Penjualan::GetAllForLaporan($tanggal_awal, $tanggal_akhir, $sort_by);
     	$pdf = PDF::loadView('laporan.penjualan', compact('penjualan'));
     	return $pdf->download('penjualan.pdf');
     }

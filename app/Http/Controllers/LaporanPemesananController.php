@@ -18,18 +18,25 @@ class LaporanPemesananController extends Controller
         ]);
     }
 
-    public function laporanPemesananSingleItem()
+    public function laporanPemesananSingleItem(Request $req)
     {
-        $pemesanan = Pemesanan::GetAllSingleItem(50);
+        $tanggal_awal = $req['tanggal_awal'];
+        $tanggal_akhir = $req['tanggal_akhir'];
+        $sort_by = 'asc';
+
+        $pemesanan = Pemesanan::GetAllReportPerItem($tanggal_awal, $tanggal_akhir, $sort_by);
     	$pdf = PDF::loadView('laporan.pemesanansingleitem', compact('pemesanan'))->setPaper('a4', 'landscape');;
     	return $pdf->download('pemesanan-single-item.pdf');
     }
 
-    public function laporanPemesananMultiItem(Request $request)
+    public function laporanPemesananMultiItem(Request $req)
     {
-        $idSupplier = $request['id-supplier'];
-        $supplier = Supplier::GetById($idSupplier);
-        $pemesanan = Pemesanan::GetAllMultiItemByIdsupplier(50, $supplier);
+        $idSupplier = $req['id-supplier'];
+        $tanggal_awal = $req['tanggal_awal'];
+        $tanggal_akhir = $req['tanggal_akhir'];
+        $sort_by = 'asc';
+
+        $pemesanan = Pemesanan::GetAllReportPerItemBySupplier($tanggal_awal, $tanggal_akhir, $sort_by, $idSupplier);
         $pdf = PDF::loadView('laporan.pemesananmultiitem', compact('pemesanan'))->setPaper('a4', 'landscape');;
         return $pdf->download('pemesanan-multi-item.pdf');
     }
