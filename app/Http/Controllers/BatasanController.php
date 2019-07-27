@@ -9,6 +9,7 @@ use App\Pembelian;
 Use App\Barang;
 Use App\Supplier;
 use App\Diskon;
+use App\Etalase;
 
 use Auth;
 
@@ -28,13 +29,9 @@ class BatasanController extends Controller
     }
     public function batasan_gudang()
     {
-        $barang = Barang::orderBy('id', 'desc')->get();
-        $supplier = Supplier::orderBy('id', 'desc')->get();
-        $pemesanan = Pemesanan::GetAllSingleItem(5);
+        $etalase = Etalase::orderBy('id', 'desc')->get();
         return view('batasan.gudang', [
-            'barang' => $barang,
-            'supplier' => $supplier,
-            'pemesanan' => $pemesanan
+            'etalase' => $etalase
         ]);
     }
 
@@ -141,8 +138,9 @@ class BatasanController extends Controller
 
     public function batasan_gudang_generate(Request $req)
     {
+        $idetalase = $req['idetalase'];
 
-        $dataString = Barang::GetAllWithoutLimit();
+        $dataString = Barang::GetAllByEtalase($idetalase);
         $month = date('m', strtotime('-1 month'));
         $monthCurrent = date('m', strtotime('0 month'));
 
@@ -186,9 +184,15 @@ class BatasanController extends Controller
             // kendala gudang
             $ex_beta = (($dt->biaya_pemesanan * pow(sqrt(2 * $dt->biaya_pemesanan * $dt->harga_barang), 2)) / pow((2 * $dt->ukuran_barang), 2)) - $F;
 
-            $Q_luas_gudang = sqrt((2 * $dt->biaya_pemesanan * $jumlah_permintaan) / (($F * $dt->harga_barang) + (2 * $ex_beta * $dt->ukuran_barang)));
+            // $QL = sqrt((2 * $dt->biaya_pemesanan * $jumlah_permintaan) / (($F * $dt->harga_barang) + (2 * $ex_beta * $dt->ukuran_barang)));
 
-            $total_luas_gudang += $Q_luas_gudang;
+            $E = ($dt->ukuran_barang * $Q);
+
+            $QL = sqrt((2 * $dt->biaya_pemesanan * $jumlah_permintaan) / ($dt->biaya_pemesanan + (2 * $dt->ukuran_etalase) * $dt->ukuran_barang));
+
+            $kebutuhan_gudang = $QL * $dt->ukuran_barang;
+
+            $total_luas_gudang += $QL;
 
             // save data
             array_push($dataSave, [
@@ -197,6 +201,7 @@ class BatasanController extends Controller
                 'idbarang' => $dt->idbarang,
                 'harga_barang' => number_format($dt->harga_barang),
                 'nama_barang' => $dt->nama_barang,
+                'etalase' => $dt->etalase,
                 'jumlah_permintaan' => $jumlah_permintaan,
                 'biaya_pemesanan' => number_format($dt->biaya_pemesanan),
                 'biaya_penyimpanan' => number_format($dt->biaya_penyimpanan),
@@ -205,8 +210,10 @@ class BatasanController extends Controller
                 'frekuensi_pembelian' => $F,
                 'reorder_point' => $B,
                 'tipe' => 'EOQ Sederhana',
-                'kapasitas_gudang' => number_format($Q_luas_gudang, 2),
-                'ukuran_barang' => number_format($Q_luas_gudang, 2)
+                'ukuran_etalase' => $dt->ukuran_etalase,
+                'ukuran_barang' => $dt->ukuran_barang,
+                'QL' => number_format($QL, 2),
+                'kebutuhan_gudang' => number_format($kebutuhan_gudang, 2)
             ]);
         }
 
