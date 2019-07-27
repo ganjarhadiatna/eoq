@@ -141,11 +141,15 @@ class PemesananMultiitemController extends Controller
         $dataSave = [];
 
         foreach ($dataString as $key => $dt) {
+            
             $ex_q = sqrt((2 * $biaya_pemesanan * $dt->jumlah_permintaan) / $dt->biaya_penyimpanan);
+
             $ex_a = ($dt->harga_barang * $dt->jumlah_permintaan);
             $ex_b = sqrt(($dt->biaya_penyimpanan * $dt->jumlah_permintaan) / (2 * $biaya_pemesanan));
             $ex_d = (($dt->biaya_penyimpanan * $ex_q) / 2);
+            
             $ex_tc = $ex_a + ($biaya_pemesanan * $ex_b) + $ex_d;
+
             $a = $a + $ex_a;
             $b = $b + $ex_b;
             $d = $d + $ex_d;
