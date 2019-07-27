@@ -86,6 +86,7 @@ class Pemesanan extends Model
             'barang.satuan_barang',
             'barang.idsupplier',
             'barang.biaya_penyimpanan',
+            'barang.stok',
             'supplier.biaya_pemesanan',
             'supplier.nama as nama_supplier'
         )
