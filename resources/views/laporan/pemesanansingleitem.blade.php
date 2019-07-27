@@ -145,6 +145,8 @@
 <body class="container">
         <div class="card-body next-page">
             <h2 align="center">Laporan Pemesanan Per-Barang</h2>
+            <h3 align="center">Apotek Muthia</h3>
+            <h4 align="center">Permata Hijau Nomor A-79 RT 04 / RW 15</h4>
             <table class="table table-bordered">
                 <thead>
                 <tr>
