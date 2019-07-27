@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/barang/byid/{idbarang}', 'BarangController@byid')->name('barang_byid');
     Route::get('/barang/price_item/{idiems}', 'BarangController@price_item')->name('barang-price-item');
     Route::get('/barang/bysupplier/{idsupplier}', 'BarangController@bysupplier')->name('barang_bysupplier');
+
     Route::post('/barang/push', 'BarangController@push')->name('barang-push');
     Route::post('/barang/put', 'BarangController@put')->name('barang-put');
     Route::post('/barang/remove', 'BarangController@remove')->name('barang-remove');
@@ -124,6 +125,8 @@ Route::middleware('auth')->group(function() {
     Route::get('/pesanan/increases_price/{idbarang}/{price}', 'PemesananSingleitemController@increases_price')->name('pesanan-singleitemincreases-price');
 
     Route::get('/pesanan/pushAjax', 'PemesananSingleitemController@pushAjax')->name('pesanan-singleitem-push-ajax');
+
+    Route::get('/pesanan/bytype/{type}', 'PemesananSingleitemController@getDataByType')->name('barang_bytype');
 
     Route::post('/pesanan/push', 'PemesananSingleitemController@push')->name('pesanan-singleitem-push');
     Route::post('/pesanan/remove', 'PemesananSingleitemController@remove')->name('pesanan-singleitem-remove');

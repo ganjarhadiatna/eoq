@@ -70,6 +70,32 @@ class Pemesanan extends Model
         ->get();
     }
 
+    public function scopeGetAllItemByType($query, $type)
+    {
+        return DB::table($this->table)
+        ->select(
+            'pemesanan.id',
+            'pemesanan.harga_barang',
+            'pemesanan.jumlah_unit',
+            'pemesanan.total_cost',
+            'pemesanan.reorder_point',
+            'pemesanan.frekuensi_pembelian',
+            'pemesanan.tipe',
+            'barang.id as id_barang',
+            'barang.nama_barang',
+            'barang.satuan_barang',
+            'barang.idsupplier',
+            'barang.biaya_penyimpanan',
+            'supplier.biaya_pemesanan',
+            'supplier.nama as nama_supplier'
+        )
+        ->leftJoin('barang', 'barang.id', '=', 'pemesanan.idbarang')
+        ->leftJoin('supplier', 'supplier.id', '=', 'pemesanan.idsupplier')
+        ->orderBy('pemesanan.id', 'desc')
+        ->where('pemesanan.tipe', $type)
+        ->get();
+    }
+
     public function scopeGetAllSingleItem($query, $limit)
     {
         return DB::table($this->table)

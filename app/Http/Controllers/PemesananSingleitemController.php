@@ -615,13 +615,22 @@ class PemesananSingleitemController extends Controller
             'tipe' => $req['tipe']
         ];
 
+
         if (Pemesanan::Insert($data)) 
         {
-             return redirect(route('pesanan-item'));
+             // return redirect(route('pesanan-item'));
+            return json_encode([
+                'status' => 'success',
+                'message' => 'Data submited'
+            ]);
         } 
         else 
         {
-             return redirect(route('pesanan-item'));
+             // return redirect(route('pesanan-item'));
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Failed to submit data'
+            ]);
         }
     }
 
@@ -734,6 +743,12 @@ class PemesananSingleitemController extends Controller
             return redirect(route('pesanan-item'));
         }
 
+    }
+
+    function getDataByType($type)
+    {
+        $pesanan = Pemesanan::GetAllItemByType($type);
+        return json_encode($pesanan);
     }
 
 }

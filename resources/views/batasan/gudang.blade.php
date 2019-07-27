@@ -63,7 +63,7 @@
                         <th scope="col">Biaya Simpan</th>
                         <th scope="col">EOQ</th>
                         <th scope="col">Total Cost</th>
-                        <th scope="col">Kapasitas Gudang</th>
+                        <th scope="col">Kebutuhan Gudang</th>
                     </tr>
                 </thead>
                 <tbody id="daftar-barang"></tbody>

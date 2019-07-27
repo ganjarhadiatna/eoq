@@ -1,3 +1,9 @@
+<!-- <form 
+    name="form-generate-increase-price" 
+    method="post" 
+    action="{{ route('pesanan-singleitem-push') }}"
+    autocomplete="off" 
+    id="form-generate-increase-price"> -->
 <form 
     name="form-generate-increase-price" 
     method="post" 
@@ -133,6 +139,8 @@
                     </span>
                 @endif
             </div>
+        </div>
+        <div class="col-sm">
 
             <div class="form-group{{ $errors->has('jumlah_unit') ? ' has-danger' : '' }}">
                 <label class="form-control-label" for="ip_jumlah_unit">{{ __('EOQ') }}</label>
@@ -205,6 +213,9 @@
                 @endif
             </div>
 
+        </div>
+        <div class="col-sm">
+
             <div class="form-group{{ $errors->has('habis_barang') ? ' has-danger' : '' }}">
                 <label class="form-control-label" for="ip_habis_barang">
                     {{ __('Waktu barang akan habis') }}
@@ -241,7 +252,111 @@
 
 </form>
 
+    <div>
+        <h3 class="mb-0">Daftar Barang</h3>
+    </div>
+
+    <br>
+
+    <div class="table-responsive">
+        <form id="eoq-form-barang">
+            <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" width="100">NO</th>
+                        <th scope="col">Barang</th>
+                        <th scope="col">Harga</th>
+                        <th scope="col">Tipe</th>
+                        <th scope="col">Frekuensi Pembelian</th>
+                        <th scope="col">Reorder Point</th>
+                        <th scope="col">EOQ</th>
+                        <th scope="col">Total Cost</th>
+                    </tr>
+                </thead>
+                <tbody id="ip-daftar-barang"></tbody>
+                <tbody>
+                    <tr>
+                        <th scope="col" colspan="6">Total Keseluruhan</th>
+                        <th scope="col" id="ip-jumlah-unit">0</th>
+                        <th scope="col" id="ip-total-cost">0</th>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
 <script type="text/javascript">
+
+    function ip_munculkan_barang() {
+        // get barang
+        var type = 'Price Increase';
+        var route = '{{ url("/pesanan/bytype/") }}' + '/' + type;
+
+        if (1) {
+            $.ajax({
+                url: route,
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function () {
+                    opLoading();
+                }
+            })
+            .done(function(data) {
+                var dt = '';
+                var ttl_eoq = 0;
+                var ttl_total_cost = 0;
+                
+                if (data.length > 0) {
+                    // op_eoq_daftar_brang('open');
+                    for (var i = 0; i < data.length; i++) {
+
+                        // status pemesanan
+                        if (data[i].status_pemesanan !== null) {
+                            var status_pemesanan = '<td class="text-orange">Sudah Dihitung</td>';
+                        } else {
+                            var status_pemesanan = '<td class="text-green">Belum Dihitung</td>';
+                        }
+
+                        if (data[i].status_pembelian !== null) {
+                            var status_pembelian = '<td class="text-orange">Dalam Pemesanan</td>';
+                        } else {
+                            var status_pembelian = '<td class="text-green">Belum Dipesan</td>';
+                        }
+
+                        ttl_eoq += data[i].jumlah_unit;
+                        ttl_total_cost += data[i].total_cost;
+
+                        dt += '\
+                        <tr>\
+                            <td>'+(i + 1)+'</td>\
+                            <td>'+data[i].nama_barang+'</td>\
+                            <td>'+data[i].harga_barang+'</td>\
+                            <td>'+data[i].tipe+'</td>\
+                            <td>'+data[i].frekuensi_pembelian+'</td>\
+                            <th>'+data[i].reorder_point+'</th>\
+                            <th>'+data[i].jumlah_unit+'</th>\
+                            <th>'+data[i].total_cost+'</th>\
+                        </tr>'
+                    }
+                }
+
+                $('#ip-daftar-barang').html(dt);
+                $('#ip-jumlah-unit').html(ttl_eoq);
+                $('#ip-total-cost').html(ttl_total_cost);
+
+                // console.log(data);
+                clLoading();
+            })
+            .fail(function(e) {
+                console.log("error => " + e.responseJSON.message);
+                clLoading();
+            })
+            .always(function() {
+                console.log("complete");
+            });
+            
+        }
+    }
 
         function generate_increase_price()
         {
@@ -294,5 +409,58 @@
                 });
             }
         }
+
+    $(document).ready(function() {
+        ip_munculkan_barang();
+
+        $('#form-generate-increase-price').on('submit', function(event) {
+            event.preventDefault();
+            /* Act on the event */
+
+            // console.log(event.target);
+            var target = event.target;
+            var token = target[0].value;
+            var tipe = target[1].value;
+            var idbarang = target[2].value;
+            var harga_barang = target[6].value;
+            var jumlah_unit = target[8].value;
+            var total_cost = target[9].value;
+            var frekuensi_pembelian = target[11].value;
+            var reorder_point = target[12].value;
+
+            $.ajax({
+                url: '{{ route("pesanan-singleitem-push") }}',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    '_token': token,
+                    'idbarang': idbarang,
+                    'tipe': tipe,
+                    'harga_barang': harga_barang,
+                    'total_cost': total_cost,
+                    'jumlah_unit': jumlah_unit,
+                    'frekuensi_pembelian': frekuensi_pembelian,
+                    'reorder_point': reorder_point
+                },
+            })
+            .done(function(data) {
+                if (data.status === 'success') {
+                    ip_munculkan_barang();
+                } else {
+                    alert(data.message);
+                }
+                
+                // console.log(data);
+            })
+            .fail(function(e) {
+                console.log("error => " + e.responseJSON.message);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+            
+        });
+
+    });
         
 </script>

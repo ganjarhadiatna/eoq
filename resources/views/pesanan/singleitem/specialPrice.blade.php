@@ -1,7 +1,13 @@
-<form 
+<!-- <form 
     name="form-generate-special-price" 
     method="post" 
     action="{{ route('pesanan-singleitem-push') }}"
+    autocomplete="off" 
+    id="form-generate-special-price"> -->
+<form 
+    name="form-generate-special-price" 
+    method="post" 
+    action="javascript:void(0)"
     autocomplete="off" 
     id="form-generate-special-price">
 
@@ -117,6 +123,9 @@
                 @endif
             </div>
 
+        </div>
+        <div class="col-sm">
+
             <div class="form-group{{ $errors->has('jumlah_permintaan') ? ' has-danger' : '' }}">
                 <label class="form-control-label" for="sp_jumlah_permintaan">{{ __('Jumlah Permintaan') }}</label>
                 <input 
@@ -150,7 +159,8 @@
                     </span>
                 @endif
             </div>
-
+        </div>
+        <div class="col-sm">
             <div class="form-group{{ $errors->has('total_cost') ? ' has-danger' : '' }}">
                 <label class="form-control-label" for="sp_total_cost">{{ __('Total Cost') }}</label>
                 <input 
@@ -236,10 +246,113 @@
             </button>
         </div>
     </div>
-
 </form>
 
+    <div>
+        <h3 class="mb-0">Daftar Barang</h3>
+    </div>
+
+    <br>
+
+    <div class="table-responsive">
+        <form id="eoq-form-barang">
+            <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" width="100">NO</th>
+                        <th scope="col">Barang</th>
+                        <th scope="col">Harga</th>
+                        <th scope="col">Tipe</th>
+                        <th scope="col">Frekuensi Pembelian</th>
+                        <th scope="col">Reorder Point</th>
+                        <th scope="col">EOQ</th>
+                        <th scope="col">Total Cost</th>
+                    </tr>
+                </thead>
+                <tbody id="sp-daftar-barang"></tbody>
+                <tbody>
+                    <tr>
+                        <th scope="col" colspan="6">Total Keseluruhan</th>
+                        <th scope="col" id="sp-jumlah-unit">0</th>
+                        <th scope="col" id="sp-total-cost">0</th>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
 <script type="text/javascript">
+
+    function sp_munculkan_barang() {
+        // get barang
+        var type = 'Special Order';
+        var route = '{{ url("/pesanan/bytype/") }}' + '/' + type;
+
+        if (1) {
+            $.ajax({
+                url: route,
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function () {
+                    opLoading();
+                }
+            })
+            .done(function(data) {
+                var dt = '';
+                var ttl_eoq = 0;
+                var ttl_total_cost = 0;
+                
+                if (data.length > 0) {
+                    // op_eoq_daftar_brang('open');
+                    for (var i = 0; i < data.length; i++) {
+
+                        // status pemesanan
+                        if (data[i].status_pemesanan !== null) {
+                            var status_pemesanan = '<td class="text-orange">Sudah Dihitung</td>';
+                        } else {
+                            var status_pemesanan = '<td class="text-green">Belum Dihitung</td>';
+                        }
+
+                        if (data[i].status_pembelian !== null) {
+                            var status_pembelian = '<td class="text-orange">Dalam Pemesanan</td>';
+                        } else {
+                            var status_pembelian = '<td class="text-green">Belum Dipesan</td>';
+                        }
+
+                        ttl_eoq += data[i].jumlah_unit;
+                        ttl_total_cost += data[i].total_cost;
+
+                        dt += '\
+                        <tr>\
+                            <td>'+(i + 1)+'</td>\
+                            <td>'+data[i].nama_barang+'</td>\
+                            <td>'+data[i].harga_barang+'</td>\
+                            <td>'+data[i].tipe+'</td>\
+                            <td>'+data[i].frekuensi_pembelian+'</td>\
+                            <th>'+data[i].reorder_point+'</th>\
+                            <th>'+data[i].jumlah_unit+'</th>\
+                            <th>'+data[i].total_cost+'</th>\
+                        </tr>'
+                    }
+                }
+
+                $('#sp-daftar-barang').html(dt);
+                $('#sp-jumlah-unit').html(ttl_eoq);
+                $('#sp-total-cost').html(ttl_total_cost);
+
+                // console.log(data);
+                clLoading();
+            })
+            .fail(function(e) {
+                console.log("error => " + e.responseJSON.message);
+                clLoading();
+            })
+            .always(function() {
+                console.log("complete");
+            });
+            
+        }
+    }
 
         function generate_special_price()
         {
@@ -280,7 +393,7 @@
                     $('#sp_reorder_point').val(data.reorder_point);
                     $('#sp_besar_penghematan').val(data.besar_penghematan);
                     $('#sp_jumlah_permintaan').val(data.jumlah_permintaan);
-                    console.log(data);
+                    // console.log(data);
                     clLoading();
                 })
                 .fail(function(e) {
@@ -292,5 +405,58 @@
                 });
             }
         }
+
+    $(document).ready(function() {
+        sp_munculkan_barang();
+
+        $('#form-generate-special-price').on('submit', function(event) {
+            event.preventDefault();
+            /* Act on the event */
+
+            // console.log(event.target);
+            var target = event.target;
+            var token = target[0].value;
+            var tipe = target[1].value;
+            var idbarang = target[2].value;
+            var harga_barang = target[6].value;
+            var jumlah_unit = target[8].value;
+            var total_cost = target[9].value;
+            var frekuensi_pembelian = target[11].value;
+            var reorder_point = target[12].value;
+
+            $.ajax({
+                url: '{{ route("pesanan-singleitem-push") }}',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    '_token': token,
+                    'idbarang': idbarang,
+                    'tipe': tipe,
+                    'harga_barang': harga_barang,
+                    'total_cost': total_cost,
+                    'jumlah_unit': jumlah_unit,
+                    'frekuensi_pembelian': frekuensi_pembelian,
+                    'reorder_point': reorder_point
+                },
+            })
+            .done(function(data) {
+                if (data.status === 'success') {
+                    sp_munculkan_barang();
+                } else {
+                    alert(data.message);
+                }
+
+                // console.log(data);
+            })
+            .fail(function(e) {
+                console.log("error => " + e.responseJSON.message);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+            
+        });
+
+    });
         
 </script>
