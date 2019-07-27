@@ -199,7 +199,7 @@
         <div class="col-sm">
                                 
             <div class="form-group{{ $errors->has('frekuensi_pembelian') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="sp_frekuensi_pembelian">{{ __('Frekuensi pembelian per-tahun') }}</label>
+                <label class="form-control-label" for="sp_frekuensi_pembelian">{{ __('Frekuensi pembelian per-bulan') }}</label>
                 <input 
                     type="text" 
                     name="frekuensi_pembelian" 

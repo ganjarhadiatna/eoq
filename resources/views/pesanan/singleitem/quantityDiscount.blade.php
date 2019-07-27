@@ -63,7 +63,7 @@
                     <th scope="col">Jumlah Unit</th>
                     <th scope="col">Total Cost</th>
                     <th scope="col">Diskon</th>
-                    <th scope="col">Min - Max</th>
+                    <th scope="col">Interval</th>
                     <th scope="col">Status</th>
                     <th scope="col" width="200">#</th>
                 </tr>
@@ -117,15 +117,16 @@
                                 <td>'+diskon.jumlah_unit+'</td>\
                                 <td><b>Rp. '+diskon.total_cost+'</b></td>\
                                 <td>'+(diskon.diskon * 100)+'%</td>\
-                                <td>'+diskon.min+'-'+diskon.max+'</td>\
+                                <td></td>\
+                                <td></td>\
                                 <td>\
                                     <button type="button" onclick="op_e_generate(\
-                                        '+idbarang+',\
-                                        '+diskon.harga_barang+',\
-                                        '+diskon.jumlah_unit+',\
-                                        '+diskon.total_cost+',\
-                                        '+diskon.frekuensi_pembelian+',\
-                                        '+diskon.reorder_point+'\
+                                        '+"'"+idbarang+"'"+',\
+                                        '+"'"+diskon.harga_barang+"'"+',\
+                                        '+"'"+diskon.jumlah_unit+"'"+',\
+                                        '+"'"+diskon.total_cost+"'"+',\
+                                        '+"'"+diskon.frekuensi_pembelian+"'"+',\
+                                        '+"'"+diskon.reorder_point+"'"+'\
                                     )" \
                                     class="btn btn-danger">\
                                         Pilih Diskon Ini?\
@@ -141,12 +142,12 @@
                             } else {
                                 var btn = '\
                                     <button type="button" onclick="op_e_generate(\
-                                        '+idbarang+',\
-                                        '+diskon[i].harga_barang+',\
-                                        '+diskon[i].jumlah_unit+',\
-                                        '+diskon[i].total_cost+',\
-                                        '+diskon[i].frekuensi_pembelian+',\
-                                        '+diskon[i].reorder_point+'\
+                                        '+"'"+idbarang+"'"+',\
+                                        '+"'"+diskon[i].harga_barang+"'"+',\
+                                        '+"'"+diskon[i].jumlah_unit+"'"+',\
+                                        '+"'"+diskon[i].total_cost+"'"+',\
+                                        '+"'"+diskon[i].frekuensi_pembelian+"'"+',\
+                                        '+"'"+diskon[i].reorder_point+"'"+'\
                                     )" \
                                     class="btn btn-danger">\
                                         Pilih Diskon Ini?\

@@ -68,7 +68,7 @@
                     id="ip_tipe_harga" 
                     class="form-control form-control-alternative{{ $errors->has('tipe_harga') ? ' is-invalid' : '' }}" 
                     required>
-                    <option value="1">Pemesanan Sebelum Kenaikan</option>
+                    <option value="1">Pemesanan Normal</option>
                     <option value="2">Pemesanan Khusus</option>
                 </select>
                 @if ($errors->has('tipe_harga'))
@@ -180,7 +180,7 @@
         <div class="col-sm">
                                 
             <div class="form-group{{ $errors->has('frekuensi_pembelian') ? ' has-danger' : '' }}">
-                <label class="form-control-label" for="ip_frekuensi_pembelian">{{ __('Frekuensi pembelian per-tahun') }}</label>
+                <label class="form-control-label" for="ip_frekuensi_pembelian">{{ __('Frekuensi pembelian per-bulan') }}</label>
                 <input 
                     type="text" 
                     name="frekuensi_pembelian" 
@@ -425,8 +425,8 @@
             var harga_barang = target[6].value;
             var jumlah_unit = target[8].value;
             var total_cost = target[9].value;
-            var frekuensi_pembelian = target[11].value;
-            var reorder_point = target[12].value;
+            var frekuensi_pembelian = target[10].value;
+            var reorder_point = target[11].value;
 
             $.ajax({
                 url: '{{ route("pesanan-singleitem-push") }}',
