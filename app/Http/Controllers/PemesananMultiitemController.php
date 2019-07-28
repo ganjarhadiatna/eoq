@@ -248,6 +248,7 @@ class PemesananMultiitemController extends Controller
                 'idbarang' => $dt->idbarang,
                 'harga_barang' => $dt->harga_barang,
                 'jumlah_unit' => ceil($Q),
+                'jumlah_maximum' => ceil($Q),
                 'total_cost' => ceil($ex_tc),
                 'frekuensi_pembelian' => $F,
                 'reorder_point' => $B,

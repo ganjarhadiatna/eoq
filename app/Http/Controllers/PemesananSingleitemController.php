@@ -136,10 +136,12 @@ class PemesananSingleitemController extends Controller
 
                 foreach ($diskon as $du) {
                     $du_H = ($H - ($H * $du->diskon));
-                    $du_Q = sqrt((2 * $C * $R) / ($du->diskon * $du_H));
+                    // $du_Q = sqrt((2 * $C * $R) / ($du->diskon * $du_H));
+                    $du_Q = sqrt((2 * $R * $C + $du->diskon) / $H);
 
                     $du_P = ($P - ($P * $du->diskon));
-                    $du_TC = (($du_P * $R) + (($C * $R) / $du_Q) + (($du_P * $T * $du_Q) / 2));
+                    // $du_TC = (($du_P * $R) + (($C * $R) / $du_Q) + (($du_P * $T * $du_Q) / 2));
+                    $du_TC = ($R * $P) + ((($C + $du->diskon) * $R) / $du_Q) + (($H * $du_Q) / 2) + (($H * $du->diskon) / 2);
 
                     $dataDiskonUnit = [
                         'type' => 'unit',
@@ -444,7 +446,7 @@ class PemesananSingleitemController extends Controller
         $jumlah_unit = 0;
         $total_cost = 0;
 
-        if ($tipe_harga == 1) {
+        if ($tipe_harga == 2) {
             // khusus
             $TCs = ($P * $Q) + (($P * $T * $q * $Q) / $R) + (($P * $T * pow($Q, 2)) / (2 * $R)) + (($P * $T * pow($q, 2)) / (2 * $R)) + $C;
 
@@ -454,13 +456,13 @@ class PemesananSingleitemController extends Controller
             // normal
             $TCn = (($P + $K) * $Q) + ((($P + $K) * $T * $Qa * $Q) / (2 * $R)) + (($P * $T * pow($q, 2)) / (2 * $R));
 
-            $jumlah_unit = $Qa;
+            $jumlah_unit = $Q;
             $total_cost = $TCn;
         }
 
         // $gs = $C * (($P / ($P - $K)) * (pow(($Q / $Qa), 2) - 1));
-        // $gs = (($K + ((($P + $K) * $T * $Qa) / $R) - (($P * $T * $q) / $R)) * $Q) - (($P * $T * pow($Q, 2)) / (2 * $R)) - $C;
-        $gs = ($C * ($P + $K) / $P) * pow((($Q / $Qa) - 1), 2);
+        // $gs = $C * pow((($Qs / $Qa) - 1), 2);
+        $gs = $C * (pow(($Qs / $Qa), 2) - 1);
         // $g = $TCn - $TCs;
 
         $F = ($R / $Qa);
