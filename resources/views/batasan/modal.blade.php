@@ -49,7 +49,7 @@
     <br>
 
     <div class="table-responsive">
-        <form id="form-barang">
+        <form id="form-modal-barang">
             <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                     <tr>
@@ -59,15 +59,18 @@
                         <th scope="col">Jumlah Permintaan</th>
                         <th scope="col">Biaya Pemesanan</th>
                         <th scope="col">Biaya Simpan</th>
+                        <th scope="col">Frekuensi Pembelian</th>
+                        <th scope="col">Reorder Point</th>
                         <th scope="col">Jumlah Unit</th>
                         <th scope="col">Total Cost</th>
                         <th scope="col">Kebutuhan Investasi</th>
+                        <th scope="col">#</th>
                     </tr>
                 </thead>
                 <tbody id="daftar-barang"></tbody>
                 <tbody>
                     <tr>
-                        <th scope="col" colspan="8">Total Investasi</th>
+                        <th scope="col" colspan="10">Total Investasi</th>
                         <th 
                             scope="col" 
                             id="total-investasi">0</th>
@@ -75,20 +78,25 @@
                 </tbody>
                 <tbody>
                     <tr>
-                        <th scope="col" colspan="8">Modal</th>
+                        <th scope="col" colspan="10">Modal</th>
                         <th 
                             scope="col" 
                             id="total-modal">0</th>
                     </tr>
                 </tbody>
-                <!-- <tbody>
+                <tbody>
                     <tr>
-                        <th scope="col" colspan="8">Status Investasi</th>
-                        <th 
-                            scope="col" 
-                            id="status-investasi"></th>
+                        <th scope="col" colspan="11">Simpan pemesanan?</th>
+                        <td scope="col" width="50">
+                            <button 
+                                type="button" 
+                                class="btn btn-success" 
+                                onclick="generate_batasan_modal()">
+                                Simpan Pesanan
+                            </button>
+                        </td>
                     </tr>
-                </tbody> -->
+                </tbody>
             </table>
         </form>
     </div>
@@ -96,6 +104,47 @@
 
 
     <script type="text/javascript">
+
+        var dataBM = [];
+
+        function generate_batasan_modal() {
+            // var idsupplier = $('#eoq_idsupplier').val();
+            var route = '{{ route("batasan-modal-save") }}';
+
+            // console.log(route);
+            if (dataBM.length > 0) {
+                var a = confirm('apakah barang yang dipilih sudah tepat?');
+                if (a) {
+                    $.ajax({
+                        url: route,
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            'data': dataBM
+                        },
+                        beforeSend: function () {
+                            opLoading();
+                        }
+                    })
+                    .done(function(data) {
+                        if (data.status === 'success') {
+                            window.location = '{{ route("pesanan-item") }}';
+                        }
+                        // console.log(data);
+                        clLoading();
+                    })
+                    .fail(function(e) {
+                        console.log("error => " + e.responseJSON.message);
+                        clLoading();
+                    })
+                    .always(function() {
+                        console.log("complete");
+                    });
+                }
+            } else {
+                alert('pilih satu atau lebih barang barang.');
+            }
+        }
 
         function generate_method()
         {
@@ -145,13 +194,21 @@
                             <tr>\
                                 <td>'+(i + 1)+'</td>\
                                 <td>'+data_save[i].nama_barang+'</td>\
-                                <td>Rp. '+data_save[i].harga_barang+'</td>\
-                                <td>'+data_save[i].jumlah_permintaan+'</td>\
-                                <td>Rp. '+data_save[i].biaya_pemesanan+'</td>\
-                                <td>Rp. '+data_save[i].biaya_penyimpanan+'</td>\
-                                <td>'+jumlah_unit+'</td>\
-                                <td>Rp. '+total_cost+'</td>\
+                                <td>Rp. <span id="bm-harga-barang-'+data_save[i].idbarang+'">'+data_save[i].harga_barang+'</span></td>\
+                                <td><span id="bm-jumlah-permintaan-'+data_save[i].idbarang+'">'+data_save[i].jumlah_permintaan+'</span></td>\
+                                <td>Rp. <span id="bm-biaya-pemesanan-'+data_save[i].idbarang+'">'+data_save[i].biaya_pemesanan+'</span></td>\
+                                <td>Rp. <span id="bm-biaya-penyimpanan-'+data_save[i].idbarang+'">'+data_save[i].biaya_penyimpanan+'</span></td>\
+                                <td><span id="bm-frekuensi-pembelian-'+data_save[i].idbarang+'">'+data_save[i].frekuensi_pembelian+'</span></td>\
+                                <td><span id="bm-reorder-point-'+data_save[i].idbarang+'">'+data_save[i].reorder_point+'</span></td>\
+                                <td><span id="bm-jumlah-unit-'+data_save[i].idbarang+'">'+jumlah_unit+'</span></td>\
+                                <td>Rp. <span id="bm-total-cost-'+data_save[i].idbarang+'">'+total_cost+'</span></td>\
                                 <td><b>Rp. '+data_save[i].kebutuhan_investasi+'</b></td>\
+                                <td>\
+                                    <label class="custom-toggle">\
+                                        <input type="checkbox" value="'+data_save[i].idbarang+'" class="checkbox" />\
+                                        <span class="custom-toggle-slider rounded-circle"></span>\
+                                    </label>\
+                                </td>\
                             </tr>\
                         ';
                     }
@@ -179,6 +236,43 @@
                 });
             }
         }
+
+        $(document).ready(function () {
+            $('#form-modal-barang').on('change', ':checkbox', function () {
+                if ($(this).is(':checked')) {
+                    var idbarang = $(this).val();
+                    var harga_barang = $('#bm-harga-barang-'+idbarang).html();
+                    var biaya_penyimpanan = $('#bm-biaya-penyimpanan-'+idbarang).html();
+                    var biaya_pemesanan = $('#bm-biaya-pemesanan-'+idbarang).html();
+                    var frekuensi_pembelian = $('#bm-frekuensi-pembelian-'+idbarang).html();
+                    var reorder_point = $('#bm-reorder-point-'+idbarang).html();
+                    var jumlah_permintaan = $('#bm-jumlah-permintaan-'+idbarang).html();
+                    var jumlah_unit = $('#bm-jumlah-unit-'+idbarang).html();
+                    var total_cost = $('#bm-total-cost-'+idbarang).html();
+
+                    dataBM.push({
+                        'idbarang': idbarang, 
+                        'biaya_penyimpanan': biaya_penyimpanan,
+                        'biaya_pemesanan': biaya_pemesanan,
+                        'jumlah_permintaan': jumlah_permintaan,
+                        'frekuensi_pembelian': frekuensi_pembelian,
+                        'reorder_point': reorder_point,
+                        'harga_barang': harga_barang,
+                        'jumlah_unit': jumlah_unit,
+                        'total_cost': total_cost
+                    });
+
+                    // console.log(dataBM);
+                } else {
+                    for (var i = 0; i < dataBM.length; i++) {
+                        if (dataBM[i].idbarang === $(this).val()) {
+                            dataBM.splice(i, 1);
+                        }
+                    }
+                    // console.log(dataBM);
+                }
+            });
+        });
         
     </script>
 

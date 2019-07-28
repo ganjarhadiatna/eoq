@@ -212,7 +212,7 @@ class BatasanController extends Controller
                 'tipe' => 'EOQ Sederhana',
                 'ukuran_etalase' => $dt->ukuran_etalase,
                 'ukuran_barang' => $dt->ukuran_barang,
-                'QL' => number_format($QL, 2),
+                'QL' => ceil($QL),
                 'kebutuhan_gudang' => number_format($kebutuhan_gudang, 2)
             ]);
         }
@@ -221,5 +221,81 @@ class BatasanController extends Controller
             'total_luas_gudang' => number_format($total_luas_gudang, 2),
             'data' => $dataSave
         ]);
+    }
+
+    public function save_batasan_modal()
+    {
+        $data = $_GET['data'];
+        $dataString = json_decode(json_encode($data), false);
+
+        $dataSave = [];
+
+        foreach ($dataString as $key => $dt) {
+            array_push($dataSave, [
+                'idusers' => Barang::where('id', $dt->idbarang)->value('idusers'),
+                'idsupplier' => Barang::where('id', $dt->idbarang)->value('idsupplier'),
+                'idbarang' => $dt->idbarang,
+                'harga_barang' => str_replace(',', '', $dt->harga_barang),
+                'jumlah_unit' => str_replace(',', '', $dt->jumlah_unit),
+                'total_cost' => str_replace(',', '', $dt->total_cost),
+                'frekuensi_pembelian' => $dt->frekuensi_pembelian,
+                'reorder_point' => $dt->reorder_point,
+                'tipe' => 'Batasan Modal'
+            ]);
+        }
+
+        if (Pemesanan::Insert($dataSave))
+        {
+            return json_encode([
+                'status' => 'success',
+                'message' => 'data saved',
+                'data' => $dataSave
+            ]);
+        } 
+        else 
+        {
+            return json_encode([
+                'status' => 'error',
+                'message' => 'failed to save data'
+            ]);
+        }
+    }
+
+    public function save_batasan_gudang()
+    {
+        $data = $_GET['data'];
+        $dataString = json_decode(json_encode($data), false);
+
+        $dataSave = [];
+
+        foreach ($dataString as $key => $dt) {
+            array_push($dataSave, [
+                'idusers' => Barang::where('id', $dt->idbarang)->value('idusers'),
+                'idsupplier' => Barang::where('id', $dt->idbarang)->value('idsupplier'),
+                'idbarang' => $dt->idbarang,
+                'harga_barang' => str_replace(',', '', $dt->harga_barang),
+                'jumlah_unit' => str_replace(',', '', $dt->jumlah_unit),
+                'total_cost' => str_replace(',', '', $dt->total_cost),
+                'frekuensi_pembelian' => $dt->frekuensi_pembelian,
+                'reorder_point' => $dt->reorder_point,
+                'tipe' => 'Batasan Gudang'
+            ]);
+        }
+
+        if (Pemesanan::Insert($dataSave))
+        {
+            return json_encode([
+                'status' => 'success',
+                'message' => 'data saved',
+                'data' => $dataSave
+            ]);
+        } 
+        else 
+        {
+            return json_encode([
+                'status' => 'error',
+                'message' => 'failed to save data'
+            ]);
+        }
     }
 }

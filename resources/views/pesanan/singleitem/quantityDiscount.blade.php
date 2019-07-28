@@ -110,17 +110,8 @@
                     var diskon = data.data;
                     // add diskon
                     if (data.counter === 1) {
-                        dt = '\
-                            <tr>\
-                                <td>1</td>\
-                                <td>Rp. '+diskon.harga_barang+'</td>\
-                                <td>'+diskon.jumlah_unit+'</td>\
-                                <td><b>Rp. '+diskon.total_cost+'</b></td>\
-                                <td>'+(diskon.diskon * 100)+'%</td>\
-                                <td></td>\
-                                <td></td>\
-                                <td>\
-                                    <button type="button" onclick="op_e_generate(\
+                        if (diskon.jumlah_unit > diskon.min) {
+                            var btn = '<button type="button" onclick="op_e_generate(\
                                         '+"'"+idbarang+"'"+',\
                                         '+"'"+diskon.harga_barang+"'"+',\
                                         '+"'"+diskon.jumlah_unit+"'"+',\
@@ -130,7 +121,23 @@
                                     )" \
                                     class="btn btn-danger">\
                                         Pilih Diskon Ini?\
-                                    </button>\
+                                    </button>';
+                            var stt = '<b class="text-green">Valid</b>'
+                        } else {
+                            var stt = '<b class="text-red">Tidak Valid</b>'
+                            var btn = '';
+                        }
+                        dt = '\
+                            <tr>\
+                                <td>1</td>\
+                                <td>Rp. '+diskon.harga_barang+'</td>\
+                                <td>'+diskon.jumlah_unit+'</td>\
+                                <td><b>Rp. '+diskon.total_cost+'</b></td>\
+                                <td>'+(diskon.diskon * 100)+'%</td>\
+                                <td>'+diskon.min+'</td>\
+                                <td>'+stt+'</td>\
+                                <td>\
+                                    '+btn+'\
                                 </td>\
                             </tr>';
                     } else {

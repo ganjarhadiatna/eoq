@@ -154,6 +154,8 @@ Route::middleware('auth')->group(function() {
     // batasan
     Route::get('/batasan/modal', 'BatasanController@batasan_modal')->name('batasan-modal');
     Route::get('/batasan/gudang', 'BatasanController@batasan_gudang')->name('batasan-gudang');
+    Route::get('/batasan/modal/save', 'BatasanController@save_batasan_modal')->name('batasan-modal-save');
+    Route::get('/batasan/gudang/save', 'BatasanController@save_batasan_gudang')->name('batasan-gudang-save');
 
     Route::get('/batasan/modal/generate', 'BatasanController@batasan_modal_generate')->name('batasan-modal-generate');
     Route::get('/batasan/gudang/generate', 'BatasanController@batasan_gudang_generate')->name('batasan-gudang-generate');
