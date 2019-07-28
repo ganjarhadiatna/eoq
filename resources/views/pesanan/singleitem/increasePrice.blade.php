@@ -235,6 +235,23 @@
                 @endif
             </div>
 
+            <div class="form-group{{ $errors->has('besar_penghematan') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="sp_besar_penghematan">{{ __('Besar Penghematan') }}</label>
+                <input 
+                    type="text" 
+                    name="besar_penghematan" 
+                    id="ip_besar_penghematan" 
+                    class="form-control form-control-alternative{{ $errors->has('besar_penghematan') ? ' is-invalid' : '' }}" 
+                    placeholder="0" 
+                    readonly="true" 
+                    required>
+                @if ($errors->has('besar_penghematan'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('besar_penghematan') }}</strong>
+                    </span>
+                @endif
+            </div>
+
         </div>
 
     </div>
@@ -397,7 +414,8 @@
                     $('#ip_reorder_point').val(data.reorder_point);
                     $('#ip_jumlah_permintaan').val(data.jumlah_permintaan);
                     $('#ip_habis_barang').val(data.habis_barang + ' hari');
-                    console.log(data);
+                    $('#ip_besar_penghematan').val(data.besar_penghematan);
+                    // console.log(data);
                     clLoading();
                 })
                 .fail(function(e) {

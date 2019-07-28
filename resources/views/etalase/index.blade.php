@@ -47,7 +47,7 @@
                     <tr>
                         <th scope="col" width="100">NO</th>
                         <th scope="col">Etalase</th>
-                        <th scope="col">Ukuran (m3)</th>
+                        <th scope="col">Ukuran (cm3)</th>
                         <th scope="col">Jumlah Barang</th>
                         <th scope="col">Tanggal</th>
                         <th scope="col" width="200">#</th>
@@ -160,7 +160,7 @@
                             @endif
                         </div>
                         <div class="form-group{{ $errors->has('ukuran') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="input-ukuran">{{ __('Ukuran (m3)') }}</label>
+                            <label class="form-control-label" for="input-ukuran">{{ __('Ukuran (cm3)') }}</label>
                             <input 
                                 type="text" 
                                 name="ukuran" 
@@ -243,7 +243,7 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('ukuran') ? ' has-danger' : '' }}">
-                            <label class="form-control-label" for="ubah-ukuran">{{ __('Ukuran (m3)') }}</label>
+                            <label class="form-control-label" for="ubah-ukuran">{{ __('Ukuran (cm3)') }}</label>
                             <input 
                                 type="text" 
                                 name="ukuran" 

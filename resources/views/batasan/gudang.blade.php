@@ -18,7 +18,7 @@
                     required>
                     @foreach ($etalase as $etl)
                         <option value="{{ $etl->id }}">
-                            {{ $etl->etalase }} | Luas etalase : {{ $etl->ukuran_etalase }} M3
+                            {{ $etl->etalase }} | Luas etalase : {{ $etl->ukuran_etalase }} cm3
                         </option>
                     @endforeach
                 </select>
@@ -116,14 +116,14 @@
                                 <td>'+data_save[i].nama_barang+'</td>\
                                 <td>Rp. '+data_save[i].harga_barang+'</td>\
                                 <td>'+data_save[i].jumlah_unit+'</td>\
-                                <td>'+data_save[i].ukuran_barang+' M3</td>\
-                                <td>'+data_save[i].QL+' M3</td>\
-                                <td>'+data_save[i].kebutuhan_gudang+' M3</td>\
+                                <td>'+data_save[i].ukuran_barang+' cm3</td>\
+                                <td>'+data_save[i].QL+' cm3</td>\
+                                <td>'+data_save[i].kebutuhan_gudang+' cm3</td>\
                             </tr>\
                         ';
                     }
                     $('#daftar-barang').html(dt);
-                    // $('#total-luas-gudang').html('<b class="text-green">' + data.total_luas_gudang + ' M3 </b>');
+                    // $('#total-luas-gudang').html('<b class="text-green">' + data.total_luas_gudang + ' cm3 </b>');
 
                     // if (data.status_investasi === 'Feasible') {
                     //     $('#total-investasi').html('<span class="text-green">Rp. ' + data.total_investasi + '</span>');

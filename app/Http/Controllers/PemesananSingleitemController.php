@@ -287,6 +287,7 @@ class PemesananSingleitemController extends Controller
             'biaya_pemesanan' => $C,
             'jumlah_unit' => ceil($Q),
             'total_cost' => ceil($TC),
+            'maximum_persediaan' => ceil($J),
             'frekuensi_pembelian' => number_format($F, 2),
             'reorder_point' => number_format($B, 2)
         ];
@@ -444,14 +445,16 @@ class PemesananSingleitemController extends Controller
         $total_cost = 0;
 
         if ($tipe_harga == 1) {
+            // khusus
             $TCs = ($P * $Q) + (($P * $T * $q * $Q) / $R) + (($P * $T * pow($Q, 2)) / (2 * $R)) + (($P * $T * pow($q, 2)) / (2 * $R)) + $C;
 
             $jumlah_unit = $Q;
             $total_cost = $TCs;
         } else {
+            // normal
             $TCn = (($P + $K) * $Q) + ((($P + $K) * $T * $Qa * $Q) / (2 * $R)) + (($P * $T * pow($q, 2)) / (2 * $R));
 
-            $jumlah_unit = $Q;
+            $jumlah_unit = $Qa;
             $total_cost = $TCn;
         }
 
