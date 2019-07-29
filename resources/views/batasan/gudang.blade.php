@@ -62,17 +62,17 @@
                         <th scope="col" width="100">NO</th>
                         <th scope="col">Barang</th>
                         <th scope="col">Harga Beli</th>
-                        <th scope="col">Jumlah Unit</th>
+                        <th scope="col">EOQ</th>
+                        <th scope="col">Ukuran Kemasan</th>
+                        <th scope="col">EOQ Batasan Gudang</th>
+                        <th scope="col">Kebutuhan Luas Gudang</th>
                         <th scope="col">Jumlah Permintaan</th>
                         <th scope="col">Biaya Pemesanan</th>
                         <th scope="col">Biaya Penyimpanan</th>
-                        <th scope="col">Ukuran Kemasan</th>
-                        <th scope="col">Kebutuhan Luas Gudang</th>
                         <th scope="col">Frekuensi Pembelian</th>
                         <th scope="col">Reorder Point</th>
-                        <th scope="col">EOQ Luas Gudang</th>
                         <th scope="col">Total Cost</th>
-                        <th scope="col">#</th>
+                        <th scope="col">Pilih Barang Untuk Disimpan</th>
                     </tr>
                 </thead>
                 <tbody id="daftar-barang"></tbody>
@@ -176,14 +176,14 @@
                                 <td>'+data_save[i].nama_barang+'</td>\
                                 <td>Rp. <span id="gl-harga-barang-'+data_save[i].idbarang+'">'+data_save[i].harga_barang+'</span></td>\
                                 <td><span id="gl-jumlah-unit-dulu-'+data_save[i].idbarang+'">'+data_save[i].jumlah_unit+'</span></td>\
+                                <td><span id="gl-ukuran-barang-'+data_save[i].idbarang+'">'+data_save[i].ukuran_barang+'</span> cm3</td>\
+                                <td><span id="gl-jumlah-unit-'+data_save[i].idbarang+'">'+data_save[i].QL+'</span></td>\
+                                <td><span id="gl-kebutuhan-gudang-'+data_save[i].idbarang+'">'+data_save[i].kebutuhan_gudang+'</span> cm3</td>\
                                 <td><span id="gl-jumlah-permintaan-'+data_save[i].idbarang+'">'+data_save[i].jumlah_permintaan+'</span></td>\
                                 <td><span id="gl-biaya-pemesanan-'+data_save[i].idbarang+'">'+data_save[i].biaya_pemesanan+'</span></td>\
                                 <td><span id="gl-biaya-penyimpanan-'+data_save[i].idbarang+'">'+data_save[i].biaya_penyimpanan+'</span></td>\
-                                <td><span id="gl-ukuran-barang-'+data_save[i].idbarang+'">'+data_save[i].ukuran_barang+'</span> cm3</td>\
-                                <td><span id="gl-kebutuhan-gudang-'+data_save[i].idbarang+'">'+data_save[i].kebutuhan_gudang+'</span> cm3</td>\
                                 <td><span id="gl-frekuensi-pembelian-'+data_save[i].idbarang+'">'+data_save[i].frekuensi_pembelian+'</span></td>\
                                 <td><span id="gl-reorder-point-'+data_save[i].idbarang+'">'+data_save[i].reorder_point+'</span></td>\
-                                <td><span id="gl-jumlah-unit-'+data_save[i].idbarang+'">'+data_save[i].QL+'</span></td>\
                                 <td><span id="gl-total-cost-'+data_save[i].idbarang+'">'+data_save[i].total_cost+'</span></td>\
                                 <td>\
                                     <label class="custom-toggle">\

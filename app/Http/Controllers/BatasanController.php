@@ -39,7 +39,10 @@ class BatasanController extends Controller
     {
         $kendala_modal = $req['kendala_modal'];
 
-        $dataString = Barang::GetAllWithoutLimit();
+        // $dataString = Barang::GetAllWithoutLimit();
+        $data = json_decode(json_encode($_GET['data']));
+        $dataString = Barang::GetAllWithID($data);
+
         $month = date('m', strtotime('-1 month'));
         $monthCurrent = date('m', strtotime('0 month'));
 
@@ -53,7 +56,24 @@ class BatasanController extends Controller
         $total_investasi = 0;
         $minimum_biaya = 0;
 
-        // $beta = 0;
+        $beta = 0;
+        foreach ($dataString as $key => $bt) {
+            if (Penjualan::GetTotalOrderByMonth($bt->idbarang, $monthCurrent) > 0) 
+            {
+                $jumlah_permintaan = Penjualan::GetTotalOrderByMonth($bt->idbarang, $monthCurrent);
+            }
+            else
+            {
+                $jumlah_permintaan = Penjualan::GetTotalOrderByMonth($bt->idbarang, $month);
+            }
+
+            $ex_q = sqrt((2 * $bt->biaya_pemesanan * $jumlah_permintaan) / $bt->biaya_penyimpanan);
+
+            $F = number_format(($jumlah_permintaan / $ex_q), 2);
+
+            $beta += pow(sqrt($bt->harga_barang * $jumlah_permintaan), 2);
+            // $beta += (($bt->biaya_pemesanan * pow(sqrt($bt->harga_barang * $jumlah_permintaan), 2)) / (2 * pow($kendala_modal, 2))) - $F;
+        }
 
         foreach ($dataString as $key => $dt) {
             if (Penjualan::GetTotalOrderByMonth($dt->idbarang, $monthCurrent) > 0) 
@@ -81,18 +101,19 @@ class BatasanController extends Controller
             $F = number_format(($jumlah_permintaan / $ex_q), 2);
             $B = number_format((($jumlah_permintaan * $L) / $N), 2);
 
-            // kendala modal
-            $kebutuhan_investasi = $Q * $dt->biaya_pemesanan;
-            $total_investasi = $total_investasi + $kebutuhan_investasi;
-
             // feaseble
-            $ex_beta = (($dt->biaya_pemesanan * pow(sqrt($dt->harga_barang * $jumlah_permintaan), 2)) / pow((2 * $kendala_modal), 2)) - $F;
+            $ex_beta = (($dt->biaya_pemesanan * $beta) / (2 * pow($kendala_modal, 2))) - $F;
+            // $ex_beta = (($dt->biaya_pemesanan * pow(sqrt($dt->harga_barang * $jumlah_permintaan), 2)) / (2 * pow($kendala_modal, 2))) - $F;
 
             $Q_feaseble = sqrt((2 * $dt->biaya_pemesanan * $jumlah_permintaan) / (($F + $ex_beta) * $dt->harga_barang));
 
             // $beta += $ex_beta;
             $total_cost_feasible = (($jumlah_permintaan * $dt->biaya_pemesanan) / $Q_feaseble) + (($Q_feaseble * $dt->harga_barang * $F) / 2);
 
+            // kendala modal
+            $kebutuhan_investasi = $dt->harga_barang * ceil($Q_feaseble);
+
+            $total_investasi += $kebutuhan_investasi;
             $minimum_biaya += $total_cost_feasible;
 
             // save data
@@ -108,12 +129,11 @@ class BatasanController extends Controller
                 'jumlah_unit' => ceil($ex_q),
                 'total_cost' => number_format(ceil($ex_tc)),
                 'frekuensi_pembelian' => $F,
-                'reorder_point' => $B,
+                'reorder_point' => ceil($B),
                 'tipe' => 'EOQ Sederhana',
-                'kebutuhan_investasi' => number_format(ceil($kebutuhan_investasi)),
-                'beta' => $ex_beta,
+                'kebutuhan_investasi' => number_format($kebutuhan_investasi),
                 'jumlah_unit_feasible' => ceil($Q_feaseble),
-                'total_cost_feasible' => number_format(ceil($total_cost_feasible))
+                'total_cost_feasible' => number_format($total_cost_feasible)
             ]);
         }
 

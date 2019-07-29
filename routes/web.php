@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/barang/edit/{iditems}', 'BarangController@edit')->name('barang-edit');
     
     // crud
+    Route::get('/barang/all', 'BarangController@all')->name('barang_all');
     Route::get('/barang/byid/{idbarang}', 'BarangController@byid')->name('barang_byid');
     Route::get('/barang/price_item/{idiems}', 'BarangController@price_item')->name('barang-price-item');
     Route::get('/barang/bysupplier/{idsupplier}', 'BarangController@bysupplier')->name('barang_bysupplier');

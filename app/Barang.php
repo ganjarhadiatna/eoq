@@ -102,6 +102,45 @@ class Barang extends Model
         ->get();
     }
 
+    public function scopeGetAllWithID($query, $data)
+    {
+        return DB::table($this->table)
+        ->select(
+            'barang.id as idbarang',
+            'barang.nama_barang',
+            'barang.satuan_barang',
+            'barang.ukuran_barang',
+            'barang.stok',
+            'barang.stok_pengaman',
+            'barang.harga_barang',
+            'barang.harga_jual',
+            'barang.biaya_penyimpanan',
+            'barang.tanggal_kadaluarsa',
+            'barang.idusers',
+            'barang.idsupplier',
+            'supplier.nama as nama_supplier',
+            'supplier.leadtime',
+            'supplier.waktu_operasional',
+            'supplier.biaya_pemesanan',
+            'etalase.etalase',
+            'etalase.ukuran_etalase',
+            'kategori.kategori',
+            DB::raw('(select count(id) from diskons where idbarang=barang.id) as jumlah_diskon')
+        )
+        ->join('supplier', 'supplier.id', '=', 'barang.idsupplier')
+        ->join('kategori', 'kategori.id', '=', 'barang.idkategori')
+        ->join('etalase', 'etalase.id', '=', 'barang.idetalase')
+        // ->where('barang.id', $data)
+        ->where(function ($q) use ($data)
+        {
+            foreach ($data as $value) {
+                $q->orWhere('barang.id', $value->idbarang);
+            }
+        })
+        ->orderBy('barang.id', 'desc')
+        ->get();
+    }
+
     public function scopeGetAllByEtalase($query, $idetalase)
     {
         return DB::table($this->table)

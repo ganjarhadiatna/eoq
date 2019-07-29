@@ -56,6 +56,10 @@ class BarangController extends Controller
     }
 
     // CRUD
+    public function all()
+    {
+        return json_encode(Barang::get());
+    }
     public function byid($id)
     {
         return json_encode(Barang::where('id', $id)->get());
