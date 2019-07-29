@@ -46,6 +46,8 @@ class BatasanController extends Controller
         $month = date('m', strtotime('-1 month'));
         $monthCurrent = date('m', strtotime('0 month'));
 
+        $T = 0.02;
+
         $idusers = Auth::id();
         $a = 0;
         $b = 0;
@@ -71,7 +73,7 @@ class BatasanController extends Controller
 
             $F = number_format(($jumlah_permintaan / $ex_q), 2);
 
-            $beta += pow(sqrt($bt->harga_barang * $jumlah_permintaan), 2);
+            $beta += ($bt->harga_barang * $jumlah_permintaan);
             // $beta += (($bt->biaya_pemesanan * pow(sqrt($bt->harga_barang * $jumlah_permintaan), 2)) / (2 * pow($kendala_modal, 2))) - $F;
         }
 
@@ -102,10 +104,16 @@ class BatasanController extends Controller
             $B = number_format((($jumlah_permintaan * $L) / $N), 2);
 
             // feaseble
-            $ex_beta = (($dt->biaya_pemesanan * $beta) / (2 * pow($kendala_modal, 2))) - $F;
+            $shit = pow(sqrt($beta), 2);
+            $ex_beta = (($dt->biaya_pemesanan * $shit) / (2 * pow($kendala_modal, 2))) - $T;
+            //(($dt->biaya_pemesanan * pow(sqrt($beta), 2)) / (2 * pow($kendala_modal, 2))) - $F;
             // $ex_beta = (($dt->biaya_pemesanan * pow(sqrt($dt->harga_barang * $jumlah_permintaan), 2)) / (2 * pow($kendala_modal, 2))) - $F;
 
-            $Q_feaseble = sqrt((2 * $dt->biaya_pemesanan * $jumlah_permintaan) / (($F + $ex_beta) * $dt->harga_barang));
+            $Q_feaseble = sqrt((2 * $dt->biaya_pemesanan * $jumlah_permintaan) / (($T + $ex_beta) * $dt->harga_barang));
+
+            $E = ($dt->harga_barang * $ex_tc);
+
+            // $Q_feaseble = ($kendala_modal / $E) * $ex_tc;
 
             // $beta += $ex_beta;
             $total_cost_feasible = (($jumlah_permintaan * $dt->biaya_pemesanan) / $Q_feaseble) + (($Q_feaseble * $dt->harga_barang * $F) / 2);

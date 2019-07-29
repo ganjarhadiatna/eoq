@@ -64,7 +64,7 @@
                         <th scope="col">EOQ Biasa</th>
                         <th scope="col">EOQ Batasan Modal</th>
                         <th scope="col">Total Cost</th>
-                        <th scope="col">Total Pemesanan</th>
+                        <th scope="col">Kebutuhan Modal</th>
                         <th scope="col">#</th>
                     </tr>
                 </thead>
@@ -422,6 +422,10 @@
                     $('#bm-jumlah-unit-feasible-'+id).html('0');
                     $('#bm-total-cost-'+id).html('0');
                     $('#bm-kebutuhan-investasi-'+id).html('0');
+
+
+                    $('#total-investasi').html('0');
+                    $('#total-modal').html('0');
 
                     update_items();
 
