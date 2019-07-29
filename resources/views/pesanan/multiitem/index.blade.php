@@ -74,14 +74,14 @@
                     id="tabs-icons-text-5" 
                     role="tabpanel" 
                     aria-labelledby="tabs-icons-text-5-tab">
-                    @include('pesanan.singleitem.specialPrice')
+                    @include('pesanan.multiitem.specialPrice')
                 </div>
                 <div 
                     class="tab-pane fade show" 
                     id="tabs-icons-text-6" 
                     role="tabpanel" 
                     aria-labelledby="tabs-icons-text-6-tab">
-                    @include('pesanan.singleitem.increasePrice')
+                    @include('pesanan.multiitem.increasePrice')
                 </div>
                 <div 
                     class="tab-pane fade show" 

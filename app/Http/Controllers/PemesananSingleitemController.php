@@ -376,7 +376,9 @@ class PemesananSingleitemController extends Controller
             'besar_penghematan' => ceil($gs),
             'biaya_penyimpanan' => $H,
             'frekuensi_pembelian' => number_format($F, 2),
-            'reorder_point' => number_format($B, 2)
+            'reorder_point' => number_format($B, 2),
+            'special_price' => $special_price,
+            'tipe_harga' => $tipe_harga
         ];
 
         return json_encode($data);
@@ -480,7 +482,9 @@ class PemesananSingleitemController extends Controller
             'habis_barang' => ceil($habis_barang),
             'biaya_penyimpanan' => $H,
             'frekuensi_pembelian' => number_format($F, 2),
-            'reorder_point' => number_format($B, 2)
+            'reorder_point' => number_format($B, 2),
+            'increase_price' => $increase_price,
+            'tipe_harga' => $tipe_harga
         ];
 
         return json_encode($data);
