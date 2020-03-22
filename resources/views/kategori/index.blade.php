@@ -1,3 +1,5 @@
+<?php use App\Barang; ?>
+
 @extends('layouts.app')
 
 @section('content')
@@ -44,6 +46,7 @@
                     <tr>
                         <th scope="col" width="100">NO</th>
                         <th scope="col">Kategori</th>
+                        <th scope="col">Jumlah Barang</th>
                         <th scope="col">Tanggal</th>
                         <th scope="col" width="200">#</th>
                     </tr>
@@ -57,6 +60,9 @@
                             </th>
                             <td>
                                 {{ $ctr->kategori }}
+                            </td>
+                            <td>
+                                {{ Barang::GetTotalByKategori($ctr->id) }} Barang
                             </td>
                             <td>
                                 {{ $ctr->created_at }}
@@ -250,16 +256,21 @@
                     url: route,
                     type: 'GET',
                     dataType: 'json',
+                    beforeSend: function () {
+                        opLoading();
+                    }
                 })
                 .done(function(data) {
                     $('#editModal').attr('class', clOpen).show();
                     $('#ubah_id').val(data[0].id);
                     $('#ubah_kategori').val(data[0].kategori);
 
-                    console.log(data);
+                    // console.log(data);
+                    clLoading();
                 })
                 .fail(function(e) {
                     console.log("error " + e);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");

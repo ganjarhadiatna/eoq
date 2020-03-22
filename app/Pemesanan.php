@@ -13,6 +13,90 @@ class Pemesanan extends Model
         return $this->hasOne('App\Barang','id','idbarang');
     }
 
+    public function scopeGetTotal($query)
+    {
+        return DB::table($this->table)
+        ->count('id');
+    }
+
+    public function scopeGetAllReportPerItem($query, $tglAwal, $tglAkhir, $order)
+    {
+        return DB::table($this->table)
+        ->select(
+            'pemesanan.id',
+            'pemesanan.harga_barang',
+            'pemesanan.jumlah_unit',
+            'pemesanan.total_cost',
+            'pemesanan.reorder_point',
+            'pemesanan.frekuensi_pembelian',
+            'barang.id as id_barang',
+            'barang.nama_barang',
+            'barang.satuan_barang',
+            'barang.idsupplier',
+            'barang.biaya_penyimpanan',
+            'supplier.biaya_pemesanan',
+            'supplier.nama as nama_supplier'
+        )
+        ->leftJoin('barang', 'barang.id', '=', 'pemesanan.idbarang')
+        ->leftJoin('supplier', 'supplier.id', '=', 'pemesanan.idsupplier')
+        ->whereBetween('pemesanan.created_at', [$tglAwal, $tglAkhir])
+        ->orderBy('pemesanan.id', $order)
+        ->get();
+    }
+
+    public function scopeGetAllReportPerItemBySupplier($query, $tglAwal, $tglAkhir, $order, $idsupplier)
+    {
+        return DB::table($this->table)
+        ->select(
+            'pemesanan.id',
+            'pemesanan.harga_barang',
+            'pemesanan.jumlah_unit',
+            'pemesanan.total_cost',
+            'pemesanan.reorder_point',
+            'pemesanan.frekuensi_pembelian',
+            'barang.id as id_barang',
+            'barang.nama_barang',
+            'barang.satuan_barang',
+            'barang.idsupplier',
+            'barang.biaya_penyimpanan',
+            'supplier.biaya_pemesanan',
+            'supplier.nama as nama_supplier'
+        )
+        ->leftJoin('barang', 'barang.id', '=', 'pemesanan.idbarang')
+        ->leftJoin('supplier', 'supplier.id', '=', 'pemesanan.idsupplier')
+        ->whereBetween('pemesanan.created_at', [$tglAwal, $tglAkhir])
+        ->where('pemesanan.idsupplier', $idsupplier)
+        ->orderBy('pemesanan.id', $order)
+        ->get();
+    }
+
+    public function scopeGetAllItemByType($query, $type)
+    {
+        return DB::table($this->table)
+        ->select(
+            'pemesanan.id',
+            'pemesanan.harga_barang',
+            'pemesanan.jumlah_unit',
+            'pemesanan.total_cost',
+            'pemesanan.reorder_point',
+            'pemesanan.frekuensi_pembelian',
+            'pemesanan.tipe',
+            'barang.id as id_barang',
+            'barang.nama_barang',
+            'barang.satuan_barang',
+            'barang.idsupplier',
+            'barang.biaya_penyimpanan',
+            'barang.stok',
+            'supplier.biaya_pemesanan',
+            'supplier.nama as nama_supplier'
+        )
+        ->leftJoin('barang', 'barang.id', '=', 'pemesanan.idbarang')
+        ->leftJoin('supplier', 'supplier.id', '=', 'pemesanan.idsupplier')
+        ->orderBy('pemesanan.id', 'desc')
+        ->where('pemesanan.tipe', $type)
+        ->get();
+    }
+
     public function scopeGetAllSingleItem($query, $limit)
     {
         return DB::table($this->table)

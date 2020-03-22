@@ -61,81 +61,9 @@ class PemesananSingleitemController extends Controller
         $Q = sqrt((2 * $C * $R) / $H);
         $TC = ($P * $R) + (($C * $R) / $Q) + (($H * $Q) / 2);
 
-        $F = ceil(($R / $Q));
+        $F = ($R / $Q);
 
         $B = ($R * $L) / $N;
-
-
-        // diskon unit
-        // satu validasi
-        // $diskonUnit = Diskon::GetAllByType($idbarang, 'unit');
-        // $dataDiskonUnit = [];
-        // foreach ($diskonUnit as $du) {
-            
-        //     $du_H = ($H - ($H * $du->diskon));
-        //     $du_Q = sqrt((2 * $C * $R) / ($du->diskon * $du_H));
-
-        //     $du_P = ($P - ($P * $du->diskon));
-        //     $du_TC = (($du_P * $R) + (($C * $R) / $du_Q) + (($du_P * $T * $du_Q) / 2));
-
-        //     $dataDiskonUnit = [
-        //         'diskon' => $du->diskon,
-        //         'harga_barang' => $du_P,
-        //         'jumlah_permintaan' => $R,
-        //         'biaya_penyimpanan' => $H,
-        //         'biaya_pemesanan' => $C,
-        //         'jumlah_unit' => ceil($du_Q),
-        //         'total_cost' => ceil($du_TC),
-        //         'min' => $du->min,
-        //         'max' => $du->max
-        //     ];
-        // }
-
-
-        // diskon incremental
-        // $diskonIncremental = Diskon::GetAllByType($idbarang, 'incremental');
-        // $dataDiskonIncremetal = [];
-
-        // $ds_before = 0;
-
-        // foreach ($diskonIncremental as $key => $di) {
-        //     $ui = ($di->min - 1);
-
-        //     if ($key != 0) 
-        //     {
-        //         $di_before_P = ($P - ($P * $diskonIncremental[$key - 1]->diskon));
-        //         $di_current_P = ($P - ($P * $di->diskon));
-
-        //         $pi = $di_before_P - $di_current_P;
-        //         $ds = $ds_before + ($ui * $pi);
-        //         $ds_before = $ds;
-        //     } 
-        //     else 
-        //     {
-        //         $di_before_P = 0;
-        //         $di_current_P = ($P - ($P * $di->diskon));
-
-        //         $ds = 0;
-        //     }
-
-        //     $di_Q = sqrt(((2 * $R) * ($C + $ds)) / ($di_current_P * $T));
-        //     $di_TC = ($di_current_P * $R) + ((($C + $ds) * $R) / $di_Q) + (($di_current_P * $T * $di_Q) / 2) + (($T * $ds) / 2);
-
-        //     $dt = [
-        //         'diskon' => $di->diskon,
-        //         'harga_barang' => $di_current_P,
-        //         'jumlah_permintaan' => $R,
-        //         'biaya_penyimpanan' => $H,
-        //         'biaya_pemesanan' => $C,
-        //         'jumlah_unit' => ceil($di_Q),
-        //         'total_cost' => ceil($di_TC),
-        //         'min' => $di->min,
-        //         'max' => $di->max
-        //     ];
-
-        //     array_push($dataDiskonIncremetal, $dt);
-
-        // }
 
         $data = [
             'harga_barang' => $P,
@@ -144,10 +72,8 @@ class PemesananSingleitemController extends Controller
             'biaya_pemesanan' => $C,
             'jumlah_unit' => ceil($Q),
             'total_cost' => ceil($TC),
-            'frekuensi_pembelian' => $F,
-            'reorder_point' => $B,
-            // 'diskon_unit' => $dataDiskonUnit,
-            // 'diskon_incremental' => $dataDiskonIncremetal,
+            'frekuensi_pembelian' => number_format($F, 2),
+            'reorder_point' => number_format($B, 2)
         ];
         return json_encode($data);
     }
@@ -195,7 +121,7 @@ class PemesananSingleitemController extends Controller
         $Q = sqrt((2 * $C * $R) / $H);
         $TC = ($P * $R) + (($C * $R) / $Q) + (($H * $Q) / 2);
 
-        $F = number_format(($R / $Q), 2);
+        $F = ($R / $Q);
 
         $B = ($R * $L) / $N;
 
@@ -210,27 +136,33 @@ class PemesananSingleitemController extends Controller
 
                 foreach ($diskon as $du) {
                     $du_H = ($H - ($H * $du->diskon));
-                    $du_Q = sqrt((2 * $C * $R) / ($du->diskon * $du_H));
+                    // $du_Q = sqrt((2 * $C * $R) / ($du->diskon * $du_H));
+                    $du_Q = sqrt((2 * $R * $C + $du->diskon) / $H);
 
                     $du_P = ($P - ($P * $du->diskon));
-                    $du_TC = (($du_P * $R) + (($C * $R) / $du_Q) + (($du_P * $T * $du_Q) / 2));
+                    // $du_TC = (($du_P * $R) + (($C * $R) / $du_Q) + (($du_P * $T * $du_Q) / 2));
+                    $du_TC = ($R * $P) + ((($C + $du->diskon) * $R) / $du_Q) + (($H * $du_Q) / 2) + (($H * $du->diskon) / 2);
 
                     $dataDiskonUnit = [
+                        'type' => 'unit',
                         'diskon' => $du->diskon,
-                        'harga_barang' => $du_P,
+                        'harga_barang' => number_format($du_P),
                         'jumlah_permintaan' => $R,
                         'biaya_penyimpanan' => $H,
                         'biaya_pemesanan' => $C,
                         'jumlah_unit' => ceil($du_Q),
-                        'total_cost' => ceil($du_TC),
+                        'total_cost' => number_format(ceil($du_TC)),
                         'min' => $du->min,
-                        'max' => $du->max
+                        'max' => $du->max,
+                        'frekuensi_pembelian' => number_format($F, 2),
+                        'reorder_point' => number_format($B, 2)
                     ];
                 }
 
             } else {
                 $counter = count($diskon);
                 $ds_before = 0;
+
                 foreach ($diskon as $key => $di) {
                     $ui = ($di->min - 1);
 
@@ -251,20 +183,24 @@ class PemesananSingleitemController extends Controller
                         $ds = 0;
                     }
 
-                    // $di_Q = sqrt(((2 * $R) * ($C + $ds)) / ($di_current_P * $T));
-                    $di_Q = ((2 * $R) * ($C + $ds)) / ($di_current_P * $T);
+                    // $di_Q = ((2 * $R) * ($C + $ds)) / ($di_current_P * $T);
+                    $di_Q = sqrt(((2 * $R) * ($C + $ds)) / ($di_current_P * $T));
                     $di_TC = ($di_current_P * $R) + ((($C + $ds) * $R) / $di_Q) + (($di_current_P * $T * $di_Q) / 2) + (($T * $ds) / 2);
 
                     $dt = [
+                        'key' => $key,
+                        'type' => 'incremental',
                         'diskon' => $di->diskon,
-                        'harga_barang' => $di_current_P,
+                        'harga_barang' => number_format($di_current_P),
                         'jumlah_permintaan' => $R,
                         'biaya_penyimpanan' => $H,
                         'biaya_pemesanan' => $C,
                         'jumlah_unit' => ceil($di_Q),
-                        'total_cost' => ceil($di_TC),
+                        'total_cost' => number_format(ceil($di_TC)),
                         'min' => $di->min,
-                        'max' => $di->max
+                        'max' => $di->max,
+                        'frekuensi_pembelian' => number_format($F, 2),
+                        'reorder_point' => number_format($B, 2)
                     ];
 
                     array_push($dataDiskonUnit, $dt);
@@ -330,7 +266,10 @@ class PemesananSingleitemController extends Controller
         // biaya back order
         $K = $biaya_backorder;
 
-        $Q = sqrt(((2 * $C * $R) / $H)) * (sqrt(($H + $K) / $K));
+        // $Q = sqrt(((2 * $C * $R) / $H) * (($H + $K) / $K));
+        $aQ = (2 * $C * $R) / $H;
+        $bQ = ($H + $K) / $K;
+        $Q = sqrt($aQ * $bQ);
 
         // maximum persediaan
         $J = ($H * $Q) / ($H + $K);
@@ -339,7 +278,7 @@ class PemesananSingleitemController extends Controller
 
         $TC = ($P * $R) + (($C * $R) / $Q) + (($H * pow(($Q - $J), 2)) / (2 * $Q)) + (($K * pow(($Q - $M),2)) / (2 * $Q));
 
-        $F = number_format(($R / $Q), 2);
+        $F = ($R / $Q);
 
         $B = ($R * $L) / $N;
 
@@ -350,8 +289,9 @@ class PemesananSingleitemController extends Controller
             'biaya_pemesanan' => $C,
             'jumlah_unit' => ceil($Q),
             'total_cost' => ceil($TC),
-            'frekuensi_pembelian' => $F,
-            'reorder_point' => ceil($B)
+            'maximum_persediaan' => ceil($J),
+            'frekuensi_pembelian' => number_format($F, 2),
+            'reorder_point' => number_format($B, 2)
         ];
 
         return json_encode($data);
@@ -424,9 +364,9 @@ class PemesananSingleitemController extends Controller
 
         $gs = ($C * ($P - $d) / $P) * pow((($Q / $Qs) - 1), 2);
 
-        $F = number_format(($R / $Q), 2);
+        $F = ($R / $Q);
 
-        $B = ceil(($R * $L) / $N);
+        $B = (($R * $L) / $N);
 
         $data = [
             'harga_barang' => $P,
@@ -435,8 +375,10 @@ class PemesananSingleitemController extends Controller
             'total_cost' => ceil($total_cost),
             'besar_penghematan' => ceil($gs),
             'biaya_penyimpanan' => $H,
-            'frekuensi_pembelian' => $F,
-            'reorder_point' => $B
+            'frekuensi_pembelian' => number_format($F, 2),
+            'reorder_point' => number_format($B, 2),
+            'special_price' => $special_price,
+            'tipe_harga' => $tipe_harga
         ];
 
         return json_encode($data);
@@ -501,40 +443,48 @@ class PemesananSingleitemController extends Controller
         $Qa = sqrt((2 * $C * $R) / (($P + $K) * $T));
 
         // jumlah unit pesanan khusus
-        $Q = (($K * $R) / ($P * $T)) + ((($P + $K) * $Qa) / $R) - $q;
+        $Q = (($K * $R) / ($P * $T)) + ((($P + $K) * $Qa) / $P) - ($q - $B);
 
         $jumlah_unit = 0;
         $total_cost = 0;
 
-        if ($tipe_harga == 1) {
+        if ($tipe_harga == 2) {
+            // khusus
             $TCs = ($P * $Q) + (($P * $T * $q * $Q) / $R) + (($P * $T * pow($Q, 2)) / (2 * $R)) + (($P * $T * pow($q, 2)) / (2 * $R)) + $C;
 
             $jumlah_unit = $Q;
             $total_cost = $TCs;
         } else {
+            // normal
             $TCn = (($P + $K) * $Q) + ((($P + $K) * $T * $Qa * $Q) / (2 * $R)) + (($P * $T * pow($q, 2)) / (2 * $R));
 
-            $jumlah_unit = $Qa;
+            $jumlah_unit = $Q;
             $total_cost = $TCn;
         }
 
         // $gs = $C * (($P / ($P - $K)) * (pow(($Q / $Qa), 2) - 1));
-        $gs = (($K + ((($P + $K) * $T * $Qa) / $R) - (($P * $T * $q) / $R)) * $Q) - (($P * $T * pow($Q, 2)) / (2 * $R)) - $C;
-        // $gs = ($C * ($P + $K) / $P) * pow((($Q / $Qa) - 1), 2);
+        // $gs = $C * pow((($Qs / $Qa) - 1), 2);
+        $gs = $C * (pow(($Qs / $Qa), 2) - 1);
         // $g = $TCn - $TCs;
 
-        $F = number_format(($R / $Qa), 2);
+        $F = ($R / $Qa);
+
+        $habis_barang = ($jumlah_unit / $R) * $N;
 
 
         $data = [
+            'jumlah_barang_sekarang' => $q,
             'harga_barang' => $P,
             'jumlah_permintaan' => $R,
             'jumlah_unit' => ceil($jumlah_unit),
             'total_cost' => ceil($total_cost),
             'besar_penghematan' => ceil($gs),
+            'habis_barang' => ceil($habis_barang),
             'biaya_penyimpanan' => $H,
-            'frekuensi_pembelian' => $F,
-            'reorder_point' => $B
+            'frekuensi_pembelian' => number_format($F, 2),
+            'reorder_point' => number_format($B, 2),
+            'increase_price' => $increase_price,
+            'tipe_harga' => $tipe_harga
         ];
 
         return json_encode($data);
@@ -562,30 +512,6 @@ class PemesananSingleitemController extends Controller
     {
         $pesanan = Barang::where('id', $id)->get();
         return view('pesanan.singleitem.edit', ['pesanan' => $pesanan]);
-    }
-
-    // batasan
-    public function batasan_modal()
-    {
-        $barang = Barang::orderBy('id', 'desc')->get();
-        $supplier = Supplier::orderBy('id', 'desc')->get();
-        $pemesanan = Pemesanan::GetAllSingleItem(5);
-        return view('batasan.modal', [
-            'barang' => $barang,
-            'supplier' => $supplier,
-            'pemesanan' => $pemesanan
-        ]);
-    }
-    public function batasan_gudang()
-    {
-        $barang = Barang::orderBy('id', 'desc')->get();
-        $supplier = Supplier::orderBy('id', 'desc')->get();
-        $pemesanan = Pemesanan::GetAllSingleItem(5);
-        return view('batasan.gudang', [
-            'barang' => $barang,
-            'supplier' => $supplier,
-            'pemesanan' => $pemesanan
-        ]);
     }
 
     // crud
@@ -631,13 +557,22 @@ class PemesananSingleitemController extends Controller
             'tipe' => $req['tipe']
         ];
 
+
         if (Pemesanan::Insert($data)) 
         {
-             return redirect(route('pesanan-item'));
+             // return redirect(route('pesanan-item'));
+            return json_encode([
+                'status' => 'success',
+                'message' => 'Data submited'
+            ]);
         } 
         else 
         {
-             return redirect(route('pesanan-item'));
+             // return redirect(route('pesanan-item'));
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Failed to submit data'
+            ]);
         }
     }
 
@@ -653,11 +588,11 @@ class PemesananSingleitemController extends Controller
 
         if ($req['total_cost']) 
         {
-            $tc = $req['total_cost'];
+            $tc = str_replace(',', '', $req['total_cost']);
         } 
         else 
         {
-            $tc = $req['besar_penghematan'];
+            $tc = str_replace(',', '', $req['besar_penghematan']);
         }
 
         if ($tc <= 0) 
@@ -680,7 +615,7 @@ class PemesananSingleitemController extends Controller
             'idusers' => $idusers,
             'idsupplier' => Barang::where('id', $req['idbarang'])->value('idsupplier'),
             'idbarang' => $req['idbarang'],
-            'harga_barang' => $req['harga_barang'],
+            'harga_barang' => str_replace(',', '', $req['harga_barang']),
             'jumlah_unit' => $jumlah_unit,
             'total_cost' => $tcn,
             'total_cost_multiitem' => 0,
@@ -689,11 +624,13 @@ class PemesananSingleitemController extends Controller
             'tipe' => $req['tipe']
         ];
 
-        if (Pemesanan::Insert($data)) 
+        // Pemesanan::Insert($data
+        if (Pemesanan::Insert($data))
         {
             $result = [
                 'status' => 'success',
-                'message' => 'data saved'
+                'message' => 'data saved',
+                'data' => $data
             ];
         } 
         else 
@@ -750,6 +687,12 @@ class PemesananSingleitemController extends Controller
             return redirect(route('pesanan-item'));
         }
 
+    }
+
+    function getDataByType($type)
+    {
+        $pesanan = Pemesanan::GetAllItemByType($type);
+        return json_encode($pesanan);
     }
 
 }

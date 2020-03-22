@@ -398,15 +398,20 @@
                     url: route,
                     type: 'GET',
                     dataType: 'json',
+                    beforeSend: function () {
+                        opLoading();
+                    }
                 })
                 .done(function(data) {
                     $('#editModal').attr('class', clOpen).show();
                     $('#ubah_id').val(data[0].id);
 
                     console.log(data);
+                    clLoading();
                 })
                 .fail(function(e) {
                     console.log("error " + e);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");
@@ -443,6 +448,9 @@
                         url: url,
                         type: 'GET',
                         dataType: 'json',
+                        beforeSend: function () {
+                            opLoading();
+                        }
                     })
                     .done(function(data) {
                         var total = data.harga_barang * jumlah_barang;
@@ -451,9 +459,11 @@
                         $('#harga_barang').val(data.harga_barang);
                         $('#stok_barang').val(data.stok_barang);
                         $('#total_biaya').val(total);
+                        clLoading();
                     })
                     .fail(function(data) {
                         console.log(data);
+                        clLoading();
                     })
                     .always(function() {
                         console.log("complete");

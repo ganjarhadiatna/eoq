@@ -57,6 +57,14 @@
 
 
     <script type="text/javascript">
+
+        function opLoading() {
+            $('#loadingModal').show();
+        }
+        function clLoading() {
+            $('#loadingModal').hide();
+        }
+
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
         ]) !!};
@@ -81,6 +89,21 @@
             </div>
             <div class="main-content" style="padding: 0 0 20px 0;">
                 @yield('profile')
+            </div>
+        </div>
+    </div>
+
+    <div 
+        class="modal fade show" 
+        id="loadingModal" 
+        tabindex="1" 
+        role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="width: 200px !important; margin: auto; text-align: center;">
+                <div class="modal-body">
+                    <i class="fa fa-lg fa-circle-notch fa-spin" style="margin-right: 5px;"></i>
+                    Please wait..
+                </div>
             </div>
         </div>
     </div>

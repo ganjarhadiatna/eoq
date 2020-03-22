@@ -67,19 +67,21 @@
                         <th scope="col">Barang</th>
                         <th scope="col">Harga</th>
                         <th scope="col">Stok</th>
+                        <th scope="col">Status Perhitungan</th>
                         <th scope="col">Status Pemesanan</th>
-                        <th scope="col">Status Pembelian</th>
-                        <th scope="col">Status Pemesanan</th>
+                        <th scope="col">Jumlah Permintaan</th>
+                        <th scope="col">Maximum Persediaan</th>
                         <th scope="col">EOQ</th>
                         <th scope="col">Total Cost</th>
                         <th scope="col" width="50">#</th>
                     </tr>
                 </thead>
                 <tbody id="bo-daftar-barang"></tbody>
-                <tbody id="bo-daftar-barang">
+                <tbody>
                     <tr>
-                        <th scope="col" colspan="7">Total Keseluruhan</th>
+                        <th scope="col" colspan="8">Total Keseluruhan</th>
                         <th scope="col" id="bo-jumlah-unit">0</th>
+                        <!-- <th scope="col" id="bo-maximum-persediaan">0</th> -->
                         <th scope="col" id="bo-total-cost">0</th>
                         <td scope="col" width="50">
                             <button 
@@ -130,7 +132,10 @@
             $.ajax({
                 url: route,
                 type: 'GET',
-                dataType: 'json'
+                dataType: 'json',
+                beforeSend: function () {
+                    opLoading();
+                }
             })
             .done(function(data) {
                 var dt = '';
@@ -141,15 +146,15 @@
 
                         // status pemesanan
                         if (data[i].status_pemesanan !== null) {
-                            var status_pemesanan = '<td class="text-orange">Sudah Dipesan</td>';
+                            var status_pemesanan = '<td class="text-orange">Sudah Dihitung</td>';
                         } else {
-                            var status_pemesanan = '<td class="text-green">Belum Dipesan</td>';
+                            var status_pemesanan = '<td class="text-green">Belum Dihitung</td>';
                         }
 
                         if (data[i].status_pembelian !== null) {
-                            var status_pembelian = '<td class="text-orange">Dalam Pembelian</td>';
+                            var status_pembelian = '<td class="text-orange">Dalam Pemesanan</td>';
                         } else {
-                            var status_pembelian = '<td class="text-green">Belum Dibeli</td>';
+                            var status_pembelian = '<td class="text-green">Belum Dipesan</td>';
                         }
 
                         dt += '\
@@ -161,6 +166,7 @@
                             '+status_pemesanan+'\
                             '+status_pembelian+'\
                             <th id="bo-jumlah-permintaan-'+data[i].id+'">0</th>\
+                            <th id="bo-maximum-persediaan-'+data[i].id+'">0</th>\
                             <th id="bo-jumlah-unit-'+data[i].id+'">0</th>\
                             <th id="bo-total-cost-'+data[i].id+'">0</th>\
                             <td>\
@@ -174,11 +180,12 @@
                 }
 
                 $('#bo-daftar-barang').html(dt);
-
+                clLoading();
                 // console.log(data);
             })
             .fail(function(e) {
                 console.log("error => " + e.responseJSON.message);
+                clLoading();
             })
             .always(function() {
                 console.log("complete");
@@ -217,16 +224,21 @@
                         'idsupplier': idsupplier, 
                         'biaya_backorder': biaya_backorder,
                         'data': databo
+                    },
+                    beforeSend: function () {
+                        opLoading();
                     }
                 })
                 .done(function(data) {
                     if (data.status === 'success') {
                         window.location = '{{ route("pesanan-item") }}';
                     }
+                    clLoading();
                     // console.log(data);
                 })
                 .fail(function(e) {
                     console.log("error => " + e.responseJSON.message);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");
@@ -253,6 +265,9 @@
                     'idbarang': idbarang,
                     'idsupplier': idsupplier,
                     'biaya_backorder': bo_biaya_backorder
+                },
+                beforeSend: function () {
+                    opLoading();
                 }
             })
             .done(function(data) {
@@ -262,15 +277,18 @@
                     'jumlah_permintaan': data.jumlah_permintaan,
                     'harga_barang': data.harga_barang,
                     'jumlah_unit': data.jumlah_unit,
+                    'maximum_persediaan': data.maximum_persediaan,
                     'total_cost': data.total_cost
                 });
 
                 $('#bo-jumlah-permintaan-'+idbarang).html(data.jumlah_permintaan);
                 $('#bo-jumlah-unit-'+idbarang).html(data.jumlah_unit);
+                $('#bo-maximum-persediaan-'+idbarang).html(data.maximum_persediaan);
                 $('#bo-total-cost-'+idbarang).html(data.total_cost);
 
                 bo_update_total();
-                // console.log(data);
+                clLoading();
+                console.log(data);
             })
             .fail(function(e) {
                 alert(e.responseJSON.message);
@@ -280,6 +298,7 @@
                 $('#bo-total-cost-'+idbarang).html('0');
 
                 bo_update_total();
+                clLoading();
             })
             .always(function() {
                 console.log("complete");

@@ -49,13 +49,14 @@ class EtalaseController extends Controller
     {
         $this->validate($req, [
             'etalase' => ['required', 'string', 'max:150'],
+            'ukuran' => ['required', 'string', 'max:150']
         ]);
 
         $idusers = Auth::id();
-        $etalase = $req['etalase'];
         $data = [
-            'idusers' => $idusers,
-            'etalase' => $etalase
+            'etalase' => $req['etalase'],
+            'ukuran_etalase' => $req['ukuran'],
+            'idusers' => $idusers
         ];
 
         if (etalase::Insert($data)) 
@@ -72,14 +73,15 @@ class EtalaseController extends Controller
     {
         $this->validate($req, [
             'etalase' => ['required', 'string', 'max:150'],
+            'ukuran' => ['required', 'string', 'max:150']
         ]);
 
         $idusers = Auth::id();
         $id = $req['id'];
-        $etalase = $req['etalase'];
         $data = [
             'idusers' => $idusers,
-            'etalase' => $etalase
+            'etalase' => $req['etalase'],
+            'ukuran_etalase' => $req['ukuran']
         ];
 
         if (Etalase::where('id', $id)->update($data)) 

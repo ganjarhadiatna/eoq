@@ -262,6 +262,9 @@
                     url: route,
                     type: 'GET',
                     dataType: 'json',
+                    beforeSend: function () {
+                        opLoading();
+                    }
                 })
                 .done(function(data) {
                     if (data.status == 'success') {
@@ -270,9 +273,11 @@
                     } else {
                         alert('data gagal dihapus');
                     }
+                    clLoading();
                 })
                 .fail(function(e) {
                     console.log("error " + e.responseJSON.message);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");
@@ -286,6 +291,9 @@
                 url: route,
                 type: 'GET',
                 dataType: 'json',
+                beforeSend: function () {
+                    // opLoading();
+                }
             })
             .done(function(data) {
                 var dt = '';
@@ -317,9 +325,12 @@
                 $('#total_penjualan').val(total_penjualan);
                 $('#jumlah_uang').val('');
                 $('#jumlah_kembalian').val('');
+
+                // clLoading();
             })
             .fail(function(e) {
                 console.log("error " + e.responseJSON.message);
+                // clLoading();
             })
             .always(function() {
                 console.log("complete");
@@ -359,6 +370,9 @@
                             'harga_barang': harga_barang,
                             'total_biaya': total_biaya
                         },
+                        beforeSend: function () {
+                            opLoading();
+                        }
                     })
                     .done(function(data) {
                         // console.log(data);
@@ -367,9 +381,11 @@
                         } else {
                             alert('data gagal di upload');
                         }
+                        clLoading();
                     })
                     .fail(function(e) {
                         console.log("error => " + e.responseJSON.message);
+                        clLoading();
                     })
                     .always(function() {
                         console.log("complete");
@@ -391,6 +407,9 @@
                         url: url,
                         type: 'GET',
                         dataType: 'json',
+                        beforeSend: function () {
+                            opLoading();
+                        }
                     })
                     .done(function(data) {
                         var total = data.harga_jual * jumlah_barang;
@@ -399,9 +418,11 @@
                         $('#harga_barang').val(data.harga_barang);
                         $('#stok_barang').val(data.stok_barang);
                         $('#total_biaya').val(total);
+                        clLoading();
                     })
                     .fail(function(data) {
                         console.log(data);
+                        clLoading();
                     })
                     .always(function() {
                         console.log("complete");

@@ -56,6 +56,10 @@ class BarangController extends Controller
     }
 
     // CRUD
+    public function all()
+    {
+        return json_encode(Barang::get());
+    }
     public function byid($id)
     {
         return json_encode(Barang::where('id', $id)->get());
@@ -79,6 +83,7 @@ class BarangController extends Controller
         $this->validate($req, [
             'nama_barang' => ['required', 'string', 'max:150'],
             'satuan_barang' => ['required', 'string', 'max:150'],
+            'ukuran_barang' => ['required', 'min:0'],
             'stok' => ['required', 'int', 'max:1000'],
             'stok_pengaman' => ['required', 'int', 'max:1000'],
             'harga_barang' => ['required', 'int', 'max:1000000'],
@@ -99,6 +104,7 @@ class BarangController extends Controller
             'idsupplier' => $req['idsupplier'],
             'nama_barang' => $req['nama_barang'],
             'satuan_barang' => $req['satuan_barang'],
+            'ukuran_barang' => $req['ukuran_barang'],
             'stok' => $req['stok'],
             'stok_pengaman' => $req['stok_pengaman'],
             'harga_barang' => $req['harga_barang'],
@@ -124,6 +130,7 @@ class BarangController extends Controller
         $this->validate($req, [
             'nama_barang' => ['required', 'string', 'max:150'],
             'satuan_barang' => ['required', 'string', 'max:150'],
+            'ukuran_barang' => ['required', 'min:0'],
             'stok' => ['required', 'int', 'max:1000'],
             'stok_pengaman' => ['required', 'int', 'max:1000'],
             'harga_barang' => ['required', 'int', 'max:1000000'],
@@ -142,6 +149,7 @@ class BarangController extends Controller
             'idsupplier' => $req['idsupplier'],
             'nama_barang' => $req['nama_barang'],
             'satuan_barang' => $req['satuan_barang'],
+            'ukuran_barang' => $req['ukuran_barang'],
             'stok' => $req['stok'],
             'stok_pengaman' => $req['stok_pengaman'],
             'harga_barang' => $req['harga_barang'],

@@ -14,10 +14,14 @@ class LaporanPembelianController extends Controller
         return view('laporan.pembelianindex');
     }
 
-    public function laporanPembelian()
+    public function laporanPembelian(Request $req)
     {
-    	$pembelian = Pembelian::GetAll(50);
-    	$pdf = PDF::loadView('laporan.pembelian', compact('pembelian'));
+        $tanggal_awal = $req['tanggal_awal'];
+        $tanggal_akhir = $req['tanggal_akhir'];
+        $sort_by = 'asc';
+
+    	$pembelian = Pembelian::GetAllForLaporan($tanggal_awal, $tanggal_akhir, $sort_by);
+    	$pdf = PDF::loadView('laporan.pembelian', compact('pembelian'))->setPaper('a4', 'landscape');
     	return $pdf->download('pembelian.pdf');
     }
 }

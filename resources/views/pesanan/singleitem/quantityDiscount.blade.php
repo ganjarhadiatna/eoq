@@ -63,7 +63,8 @@
                     <th scope="col">Jumlah Unit</th>
                     <th scope="col">Total Cost</th>
                     <th scope="col">Diskon</th>
-                    <th scope="col">Min - Max</th>
+                    <th scope="col">Interval</th>
+                    <th scope="col">Status</th>
                     <th scope="col" width="200">#</th>
                 </tr>
             </thead>
@@ -92,6 +93,9 @@
                 dataType: 'JSON',
                 data: {
                     'idbarang': idbarang
+                },
+                beforeSend: function () {
+                    opLoading();
                 }
             })
             .done(function(data) {
@@ -106,64 +110,86 @@
                     var diskon = data.data;
                     // add diskon
                     if (data.counter === 1) {
-                        dt = '\
-                            <tr>\
-                                <td>1</td>\
-                                <td>'+diskon.harga_barang+'</td>\
-                                <td>'+diskon.jumlah_unit+'</td>\
-                                <td>'+diskon.total_cost+'</td>\
-                                <td>'+(diskon.diskon * 100)+'%</td>\
-                                <td>'+diskon.min+'-'+diskon.max+'</td>\
-                                <td>\
-                                    <button type="button" onclick="op_e_generate(\
-                                        '+idbarang+',\
-                                        '+diskon.harga_barang+',\
-                                        '+diskon.jumlah_unit+',\
-                                        '+diskon.total_cost+',\
-                                        '+diskon.frekuensi_pembelian+',\
-                                        '+diskon.reorder_point+'\
+                        if (diskon.jumlah_unit > diskon.min) {
+                            var btn = '<button type="button" onclick="op_e_generate(\
+                                        '+"'"+idbarang+"'"+',\
+                                        '+"'"+diskon.harga_barang+"'"+',\
+                                        '+"'"+diskon.jumlah_unit+"'"+',\
+                                        '+"'"+diskon.total_cost+"'"+',\
+                                        '+"'"+diskon.frekuensi_pembelian+"'"+',\
+                                        '+"'"+diskon.reorder_point+"'"+'\
                                     )" \
                                     class="btn btn-danger">\
                                         Pilih Diskon Ini?\
-                                    </button>\
+                                    </button>';
+                            var stt = '<b class="text-green">Valid</b>'
+                        } else {
+                            var stt = '<b class="text-red">Tidak Valid</b>'
+                            var btn = '';
+                        }
+                        dt = '\
+                            <tr>\
+                                <td>1</td>\
+                                <td>Rp. '+diskon.harga_barang+'</td>\
+                                <td>'+diskon.jumlah_unit+'</td>\
+                                <td><b>Rp. '+diskon.total_cost+'</b></td>\
+                                <td>'+(diskon.diskon * 100)+'%</td>\
+                                <td>'+diskon.min+'</td>\
+                                <td>'+stt+'</td>\
+                                <td>\
+                                    '+btn+'\
                                 </td>\
                             </tr>';
                     } else {
                         for (var i = 0; i < diskon.length; i++) {
-                            dt += '\
-                            <tr>\
-                                <td>'+(i + 1)+'</td>\
-                                <td>'+diskon[i].harga_barang+'</td>\
-                                <td>'+diskon[i].jumlah_unit+'</td>\
-                                <td>'+diskon[i].total_cost+'</td>\
-                                <td>'+(diskon[i].diskon * 100)+'%</td>\
-                                <td>'+diskon[i].min+'-'+diskon[i].max+'</td>\
-                                <td>\
+                            // check validation
+                            if (diskon[i].jumlah_unit > diskon[i].max) {
+                                var btn = ''
+                                var stt = '<b class="text-red">Tidak Valid</b>'
+                            } else {
+                                var btn = '\
                                     <button type="button" onclick="op_e_generate(\
-                                        '+idbarang+',\
-                                        '+diskon[i].harga_barang+',\
-                                        '+diskon[i].jumlah_unit+',\
-                                        '+diskon[i].total_cost+',\
-                                        '+diskon[i].frekuensi_pembelian+',\
-                                        '+diskon[i].reorder_point+'\
+                                        '+"'"+idbarang+"'"+',\
+                                        '+"'"+diskon[i].harga_barang+"'"+',\
+                                        '+"'"+diskon[i].jumlah_unit+"'"+',\
+                                        '+"'"+diskon[i].total_cost+"'"+',\
+                                        '+"'"+diskon[i].frekuensi_pembelian+"'"+',\
+                                        '+"'"+diskon[i].reorder_point+"'"+'\
                                     )" \
                                     class="btn btn-danger">\
                                         Pilih Diskon Ini?\
-                                    </button>\
+                                    </button>'
+                                var stt = '<b class="text-green">Valid</b>'
+                            }
+
+                            dt += '\
+                            <tr>\
+                                <td>'+(i + 1)+'</td>\
+                                <td>Rp. '+diskon[i].harga_barang+'</td>\
+                                <td>'+diskon[i].jumlah_unit+'</td>\
+                                <td><b>Rp. '+diskon[i].total_cost+'</b></td>\
+                                <td>'+(diskon[i].diskon * 100)+'%</td>\
+                                <td>'+diskon[i].min+'-'+diskon[i].max+'</td>\
+                                <td>'+stt+'</td>\
+                                <td>\
+                                    '+btn+'\
                                 </td>\
                             </tr>';
                         }
                     }
                     $('#eoq-diskon').html(dt);
+                    // console.log(data);
                 } else {
                     // alert('barang tidak punya diskon');
                     var dt = '<tr><td colspan="7">barang tidak punya diskon</td></tr>';
                     $('#eoq-diskon').html(dt);
                 }
 
+                clLoading();
             })
             .fail(function(e) {
                 console.log("error " + e.responseJSON.message);
+                clLoading();
             })
             .always(function() {
                 console.log("complete");
@@ -194,6 +220,9 @@
                 // processData: false,
                 // contentType: false,
                 data: data,
+                beforeSend: function () {
+                    opLoading();
+                }
             })
             .done(function(data) {
                 if (data.status === 'success') {
@@ -201,11 +230,13 @@
                 } else {
                     alert(data.message);
                 }
+                clLoading();
                 // console.log(data);
             })
             .fail(function(data) {
                 console.log(data);
                 alert(data.responseJSON.message);
+                clLoading();
             })
             .always(function() {
                 console.log("complete");

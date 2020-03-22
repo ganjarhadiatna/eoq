@@ -196,7 +196,7 @@
                             @endif
                         </div> -->
 
-                        <div class="form-group{{ $errors->has('tipe') ? ' has-danger' : '' }}">
+                        <!-- <div class="form-group{{ $errors->has('tipe') ? ' has-danger' : '' }}">
                         	<label class="form-control-label" for="input_tipe">{{ __('Pilih Tipe Diskon *') }}</label>
                             <select 
                                 name="tipe" 
@@ -212,7 +212,7 @@
                                     </span>
                                 @endif
                             
-                    	</div>
+                    	</div> -->
 
                     	<div class="form-group{{ $errors->has('min') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="input-min">{{ __('Pembelian minimum') }}</label>

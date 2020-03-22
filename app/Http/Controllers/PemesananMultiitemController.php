@@ -141,11 +141,15 @@ class PemesananMultiitemController extends Controller
         $dataSave = [];
 
         foreach ($dataString as $key => $dt) {
+            
             $ex_q = sqrt((2 * $biaya_pemesanan * $dt->jumlah_permintaan) / $dt->biaya_penyimpanan);
+
             $ex_a = ($dt->harga_barang * $dt->jumlah_permintaan);
             $ex_b = sqrt(($dt->biaya_penyimpanan * $dt->jumlah_permintaan) / (2 * $biaya_pemesanan));
             $ex_d = (($dt->biaya_penyimpanan * $ex_q) / 2);
+            
             $ex_tc = $ex_a + ($biaya_pemesanan * $ex_b) + $ex_d;
+
             $a = $a + $ex_a;
             $b = $b + $ex_b;
             $d = $d + $ex_d;
@@ -268,17 +272,15 @@ class PemesananMultiitemController extends Controller
         ]);
     }
 
-    public function generate_sp()
+    public function generate_ip()
     {
         $idusers = Auth::id();
         $idsupplier = $_GET['idsupplier'];
         $data = $_GET['data'];
         $dataString = json_decode(json_encode($data), false);
-        
-        // $biaya_pemesanan = Supplier::GetBiayaPemesanan($idsupplier);
 
-        $special_order = $_GET['special_order'];
-        $tipe_harga = $_GET['tipe_harga'];
+        $month = date('m', strtotime('-1 month'));
+        $monthCurrent = date('m', strtotime('0 month'));
 
         $L = Supplier::GetLeadtime($idsupplier);
         $N = Supplier::GetWaktuOperasional($idsupplier);
@@ -287,15 +289,149 @@ class PemesananMultiitemController extends Controller
         $C = Supplier::GetBiayaPemesanan($idsupplier);
 
         // persentase dari harga barang
-        $T = 0.2;
+        $T = 0.02;
 
         $TC = 0;
 
         $dataSave = [];
         foreach ($dataString as $key => $dt) {
 
+            $special_order = $dt->increase_price;
+            $tipe_harga = $dt->tipe_harga;
+
             // jumlah permintaan costumer
-            $R = $dt->jumlah_permintaan;
+            if (Penjualan::GetTotalOrderByMonth($dt->idbarang, $monthCurrent) > 0) 
+            {
+                $R = Penjualan::GetTotalOrderByMonth($dt->idbarang, $monthCurrent);
+            }
+            else
+            {
+                $R = Penjualan::GetTotalOrderByMonth($dt->idbarang, $month);
+            }
+
+            // Harga barang
+            $P = $dt->harga_barang;
+
+            // biaya penyimpanan
+            $H = $dt->biaya_penyimpanan;
+
+            // waktu operasional
+            $N = Supplier::GetWaktuOperasional($idsupplier);
+
+            $q = Barang::where('id', $dt->idbarang)->value('stok');
+     
+            $K = ($dt->increase_price - $P);
+
+            $B = ($R * $L) / $N;
+
+            // jumlah unit sebelum kenaikan
+            $Qs = sqrt((2 * $C * $R) / ($P * $T));
+
+            // jumlah unit setelah kenaikan
+            $Qa = sqrt((2 * $C * $R) / (($P + $K) * $T));
+
+            // jumlah unit pesanan khusus
+            $Q = (($K * $R) / ($P * $T)) + ((($P + $K) * $Qa) / $P) - ($q - $B);
+
+            $jumlah_unit = 0;
+            $total_cost = 0;
+
+            if ($dt->tipe_harga == 2) {
+                // khusus
+                $TCs = ($P * $Q) + (($P * $T * $q * $Q) / $R) + (($P * $T * pow($Q, 2)) / (2 * $R)) + (($P * $T * pow($q, 2)) / (2 * $R)) + $C;
+
+                $jumlah_unit = $Q;
+                $total_cost = $TCs;
+            } else {
+                // normal
+                $TCn = (($P + $K) * $Q) + ((($P + $K) * $T * $Qa * $Q) / (2 * $R)) + (($P * $T * pow($q, 2)) / (2 * $R));
+
+                $jumlah_unit = $Q;
+                $total_cost = $TCn;
+            }
+
+            $gs = $C * (pow(($Qs / $Qa), 2) - 1);
+
+            $F = ($R / $Qa);
+
+            $habis_barang = ($jumlah_unit / $R) * $N;
+
+            $TC += $total_cost;
+
+            array_push($dataSave, [
+                'idusers' => $idusers,
+                'idsupplier' => $idsupplier,
+                'idbarang' => $dt->idbarang,
+                'harga_barang' => $dt->harga_barang,
+                'jumlah_unit' => ceil($jumlah_unit),
+                'total_cost' => ceil($total_cost),
+                'frekuensi_pembelian' => ceil($F),
+                'reorder_point' => ceil($B),
+                'tipe' => 'Price Increase'
+            ]);
+
+        }
+
+        if (Pemesanan::Insert($dataSave)) 
+        {
+            foreach ($dataString as $key => $dtc) {
+                Pemesanan::where('idbarang', $dtc->idbarang)
+                ->where('tipe', 'Price Increase')
+                ->Update(['total_cost_multiitem' => $TC]);
+            }
+
+            return json_encode([
+                'status' => 'success',
+                'message' => $dataSave
+            ]);
+        } 
+        else 
+        {
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Failed to save data'
+            ]);   
+        }
+    }
+
+    public function generate_sp()
+    {
+        $idusers = Auth::id();
+        $idsupplier = $_GET['idsupplier'];
+        $data = $_GET['data'];
+        $dataString = json_decode(json_encode($data), false);
+
+        $month = date('m', strtotime('-1 month'));
+        $monthCurrent = date('m', strtotime('0 month'));
+        
+        // $biaya_pemesanan = Supplier::GetBiayaPemesanan($idsupplier);
+
+        $L = Supplier::GetLeadtime($idsupplier);
+        $N = Supplier::GetWaktuOperasional($idsupplier);
+
+        // total biaya pesanan
+        $C = Supplier::GetBiayaPemesanan($idsupplier);
+
+        // persentase dari harga barang
+        $T = 0.02;
+
+        $TC = 0;
+
+        $dataSave = [];
+        foreach ($dataString as $key => $dt) {
+
+            $special_order = $dt->special_price;
+            $tipe_harga = $dt->tipe_harga;
+
+            // jumlah permintaan costumer
+            if (Penjualan::GetTotalOrderByMonth($dt->idbarang, $monthCurrent) > 0) 
+            {
+                $R = Penjualan::GetTotalOrderByMonth($dt->idbarang, $monthCurrent);
+            }
+            else
+            {
+                $R = Penjualan::GetTotalOrderByMonth($dt->idbarang, $month);
+            }
 
             // Harga barang
             $P = $dt->harga_barang;
@@ -329,9 +465,9 @@ class PemesananMultiitemController extends Controller
 
             $gs = ($C * ($P - $d) / $P) * pow((($Q / $Qs) - 1), 2);
 
-            $F = ceil(($R / $Q));
+            $F = ($R / $Q);
 
-            $B = ceil(($R * $L) / $N);
+            $B = ($R * $L) / $N;
 
             $TC += $total_cost;
 
@@ -342,24 +478,32 @@ class PemesananMultiitemController extends Controller
                 'harga_barang' => $dt->harga_barang,
                 'jumlah_unit' => ceil($jumlah_unit),
                 'total_cost' => ceil($total_cost),
-                'frekuensi_pembelian' => $F,
-                'reorder_point' => $B,
+                'frekuensi_pembelian' => ceil($F),
+                'reorder_point' => ceil($B),
                 'tipe' => 'Special Order'
             ]);
         }
 
-        Pemesanan::Insert($dataSave);
+        if (Pemesanan::Insert($dataSave)) 
+        {
+            foreach ($dataString as $key => $dtc) {
+                Pemesanan::where('idbarang', $dtc->idbarang)
+                ->where('tipe', 'Special Order')
+                ->Update(['total_cost_multiitem' => $TC]);
+            }
 
-        foreach ($dataString as $key => $dtc) {
-            Pemesanan::where('idbarang', $dtc->idbarang)
-            ->where('tipe', 'Special Order')
-            ->Update(['total_cost_multiitem' => $TC]);
+            return json_encode([
+                'status' => 'success',
+                'message' => $dataSave
+            ]);
+        } 
+        else 
+        {
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Failed to save data'
+            ]);   
         }
-
-        return json_encode([
-            'status' => 'success',
-            'message' => $dataSave
-        ]);
     }
 
     public function generate_bm()

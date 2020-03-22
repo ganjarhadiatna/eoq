@@ -45,11 +45,13 @@
                         <th scope="col" width="100">NO</th>
                         <th scope="col">Barang</th>
                         <th scope="col">Stok</th>
-                        <th scope="col">Safetly Stock</th>
-                        <th scope="col">Harga</th>
+                        <th scope="col">Safety Stock</th>
+                        <th scope="col">Harga Beli</th>
                         <th scope="col">Harga Jual</th>
                         <th scope="col">Satuan</th>
+                        <th scope="col">Ukuran (m3)</th>
                         <th scope="col">Biaya Penyimpanan</th>
+                        <th scope="col">Biaya Pemesanan</th>
                         <th scope="col">Tanggal Kadaluarsa</th>
                         <th scope="col">Supplier</th>
                         <th scope="col">Diskon</th>
@@ -86,7 +88,13 @@
                                 {{ $etl->satuan_barang }}
                             </td>
                             <td>
+                                {{ $etl->ukuran_barang }}
+                            </td>
+                            <td>
                                 <b>Rp {{ number_format($etl->biaya_penyimpanan) }}</b>
+                            </td>
+                            <td>
+                                <b>Rp {{ number_format($etl->biaya_pemesanan) }}</b>
                             </td>
                             <td>
                                 {{ $etl->tanggal_kadaluarsa }}
@@ -206,6 +214,23 @@
                                 @if ($errors->has('satuan_barang'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('satuan_barang') }}</strong>
+                                    </span>
+                                @endif
+                            
+                        </div>
+
+                        <div class="form-group{{ $errors->has('ukuran_barang') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="ukuran_barang">{{ __('Ukuran Barang (M3) *') }}</label>
+                            <input 
+                                type="text" 
+                                name="ukuran_barang" 
+                                id="ukuran_barang" 
+                                class="form-control form-control-alternative{{ $errors->has('ukuran_barang') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('00.00') }}"  
+                                required >
+                                @if ($errors->has('ukuran_barang'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('ukuran_barang') }}</strong>
                                     </span>
                                 @endif
                             
@@ -489,6 +514,23 @@
                             
                         </div>
 
+                        <div class="form-group{{ $errors->has('ukuran_barang') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="ukuran_barang">{{ __('Ukuran Barang (M3) *') }}</label>
+                            <input 
+                                type="text" 
+                                name="ukuran_barang" 
+                                id="ubah_ukuran_barang" 
+                                class="form-control form-control-alternative{{ $errors->has('ukuran_barang') ? ' is-invalid' : '' }}" 
+                                placeholder="{{ __('00.00') }}"  
+                                required >
+                                @if ($errors->has('ukuran_barang'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('ukuran_barang') }}</strong>
+                                    </span>
+                                @endif
+                            
+                        </div>
+
                         <div class="form-group{{ $errors->has('stok') ? ' has-danger' : '' }}">
                             <label class="form-control-label" for="stok">{{ __('Stok *') }}</label>
                             <input 
@@ -723,12 +765,16 @@
                     url: route,
                     type: 'GET',
                     dataType: 'json',
+                    beforeSend: function () {
+                        opLoading();
+                    }
                 })
                 .done(function(data) {
                     $('#editModal').attr('class', clOpen).show();
                     $('#ubah_id').val(data[0].id);
                     $('#ubah_nama_barang').val(data[0].nama_barang);
                     $('#ubah_satuan_barang').val(data[0].satuan_barang);
+                    $('#ubah_ukuran_barang').val(data[0].ukuran_barang);
                     $('#ubah_stok').val(data[0].stok);
                     $('#ubah_stok_pengaman').val(data[0].stok_pengaman);
                     $('#ubah_harga_barang').val(data[0].harga_barang);
@@ -740,10 +786,12 @@
                     $('#ubah_idetalase').val(data[0].idetalase);
                     $('#ubah_idsupplier').val(data[0].idsupplier);
 
-                    console.log(data);
+                    // console.log(data);
+                    clLoading();
                 })
                 .fail(function(e) {
                     console.log("error " + e);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");

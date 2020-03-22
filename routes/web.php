@@ -52,9 +52,11 @@ Route::middleware('auth')->group(function() {
     Route::get('/barang/edit/{iditems}', 'BarangController@edit')->name('barang-edit');
     
     // crud
+    Route::get('/barang/all', 'BarangController@all')->name('barang_all');
     Route::get('/barang/byid/{idbarang}', 'BarangController@byid')->name('barang_byid');
     Route::get('/barang/price_item/{idiems}', 'BarangController@price_item')->name('barang-price-item');
     Route::get('/barang/bysupplier/{idsupplier}', 'BarangController@bysupplier')->name('barang_bysupplier');
+
     Route::post('/barang/push', 'BarangController@push')->name('barang-push');
     Route::post('/barang/put', 'BarangController@put')->name('barang-put');
     Route::post('/barang/remove', 'BarangController@remove')->name('barang-remove');
@@ -125,6 +127,8 @@ Route::middleware('auth')->group(function() {
 
     Route::get('/pesanan/pushAjax', 'PemesananSingleitemController@pushAjax')->name('pesanan-singleitem-push-ajax');
 
+    Route::get('/pesanan/bytype/{type}', 'PemesananSingleitemController@getDataByType')->name('barang_bytype');
+
     Route::post('/pesanan/push', 'PemesananSingleitemController@push')->name('pesanan-singleitem-push');
     Route::post('/pesanan/remove', 'PemesananSingleitemController@remove')->name('pesanan-singleitem-remove');
     Route::post('/pesanan/create', 'PemesananSingleitemController@create')->name('pesanan-singleitem-create');
@@ -149,8 +153,13 @@ Route::middleware('auth')->group(function() {
     Route::get('/pesanan/multiitem/bg', 'PemesananMultiitemController@generate_bg')->name('pesanan-singleitem-bg');
 
     // batasan
-    Route::get('/batasan/modal', 'PemesananSingleitemController@batasan_modal')->name('batasan-modal');
-    Route::get('/batasan/gudang', 'PemesananSingleitemController@batasan_gudang')->name('batasan-gudang');
+    Route::get('/batasan/modal', 'BatasanController@batasan_modal')->name('batasan-modal');
+    Route::get('/batasan/gudang', 'BatasanController@batasan_gudang')->name('batasan-gudang');
+    Route::get('/batasan/modal/save', 'BatasanController@save_batasan_modal')->name('batasan-modal-save');
+    Route::get('/batasan/gudang/save', 'BatasanController@save_batasan_gudang')->name('batasan-gudang-save');
+
+    Route::get('/batasan/modal/generate', 'BatasanController@batasan_modal_generate')->name('batasan-modal-generate');
+    Route::get('/batasan/gudang/generate', 'BatasanController@batasan_gudang_generate')->name('batasan-gudang-generate');
 
     // laporan
     // Route::get('/laporan/pemesanan', 'LaporanController@laporanPemesanan')->name('laporan-pemesanan');

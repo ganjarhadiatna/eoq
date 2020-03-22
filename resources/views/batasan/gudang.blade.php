@@ -1,338 +1,262 @@
 @extends('layouts.app')
 
 @section('content')
-
-<!-- <form 
-    name="form-generate-bm" 
-    method="post" 
-    action="{{ route('pesanan-multiitem-push') }}"
-    autocomplete="off" 
-    id="form-generate-bm"> -->
-
-    <!-- @csrf -->
-<div class="card bg-secondary shadow">
-
-    <div class="card-header border-0">
+<div>
+    <div>
         <h3 class="mb-0">Batasan Gudang</h3>
     </div>
 
-    <div class="card-body">
+    <div class="row mb-2">
 
-        <div>
-            <h3 class="mb-0">Informasi Parameter</h3>
-        </div>
-
-        <div class="row mb-2">
-
-            <div class="col-sm">
-                <div class="form-group{{ $errors->has('bg_idsupplier') ? ' has-danger' : '' }}">
-                    <label class="form-control-label" for="bg_idsupplier">{{ __('Pilih supplier') }}</label>
-                    <select 
-                        name="bg_idsupplier"
-                        id="bg_idsupplier" 
-                        class="form-control form-control-alternative{{ $errors->has('bg_idsupplier') ? ' is-invalid' : '' }}" 
-                        required>
-                        <option value="0">Pilih Supplier</option>
-                        @foreach ($supplier as $br)
-                            <option value="{{ $br->id }}">{{ $br->nama }}</option>
-                        @endforeach
-                    </select>
-                    @if ($errors->has('bg_idsupplier'))
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $errors->first('bg_idsupplier') }}</strong>
-                        </span>
-                    @endif
-                </div>
-            </div>
-            <div class="col-sm">
-
-                <div class="col-sm">
-                    <div class="form-group{{ $errors->has('bg_kendala_gudang') ? ' has-danger' : '' }}">
-                        <label class="form-control-label" for="bg_kendala_gudang">{{ __('Kendala Luas Gudang') }}</label>
-                        <input 
-                            type="text" 
-                            name="bg_kendala_gudang" 
-                            id="bg_kendala_gudang" 
-                            class="form-control form-control-alternative{{ $errors->has('bg_kendala_gudang') ? ' is-invalid' : '' }}" 
-                            placeholder="0" 
-                            required>
-                        @if ($errors->has('bg_kendala_gudang'))
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('bg_kendala_gudang') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                </div>
+        <div class="col-sm">
+            <div class="form-group{{ $errors->has('idetalase') ? ' has-danger' : '' }}">
+                <label class="form-control-label" for="idetalase">{{ __('Pilih Etalase *') }}</label>
+                <select 
+                    name="idetalase" 
+                    id="idetalase" 
+                    class="form-control form-control-alternative{{ $errors->has('idetalase') ? ' is-invalid' : '' }}" 
+                    required>
+                    @foreach ($etalase as $etl)
+                        <option value="{{ $etl->id }}">
+                            {{ $etl->etalase }} | Luas etalase : {{ $etl->ukuran_etalase }} cm3
+                        </option>
+                    @endforeach
+                </select>
+                @if ($errors->has('idetalase'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('idetalase') }}</strong>
+                    </span>
+                @endif
             </div>
         </div>
 
-        <div>
-            <h3 class="mb-0">Daftar Barang</h3>
+        <div class="col-sm">
+            <div>
+               <label class="form-control-label" for="idbarang">{{ __('Mulai perhitungan?') }}</label>
+               <div>
+                    <button 
+                        type="button" 
+                        class="btn btn-success" 
+                        onclick="generate_method()">
+                        Generate Metode
+                    </button>
+               </div>
+           </div>
         </div>
 
-        <div class="table-responsive">
-            <form id="bg-form-barang">
-                <table class="table align-items-center table-flush">
-                    <thead class="thead-light">
-                        <tr>
-                            <th scope="col" width="100">NO</th>
-                            <th scope="col">Barang</th>
-                            <th scope="col">Harga</th>
-                            <th scope="col">Stok</th>
-                            <th scope="col">Status Pemesanan</th>
-                            <th scope="col">Status Pembelian</th>
-                            <th scope="col">bm</th>
-                            <th scope="col">Total Cost</th>
-                            <th scope="col" width="50">#</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bg-daftar-barang"></tbody>
-                    <tbody id="bg-daftar-barang">
-                        <tr>
-                            <th scope="col" colspan="6">Total Keseluruhan</th>
-                            <th scope="col" id="bg-jumlah-unit">0</th>
-                            <th scope="col" id="bg-total-cost">0</th>
-                            <td scope="col" width="50">
-                                <button 
-                                    type="button" 
-                                    class="btn btn-success" 
-                                    onclick="generate_bg_multititem()">
-                                    Simpan Pesanan
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </form>
-        </div>
     </div>
 
+    <br>
+
+    <div>
+        <h3 class="mb-0">Daftar Barang</h3>
+    </div>
+
+    <br>
+
+    <div class="table-responsive">
+        <form id="form-gudang-barang">
+            <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" width="100">NO</th>
+                        <th scope="col">Barang</th>
+                        <th scope="col">Harga Beli</th>
+                        <th scope="col">EOQ</th>
+                        <th scope="col">Ukuran Kemasan</th>
+                        <th scope="col">EOQ Batasan Gudang</th>
+                        <th scope="col">Kebutuhan Luas Gudang</th>
+                        <th scope="col">Jumlah Permintaan</th>
+                        <th scope="col">Biaya Pemesanan</th>
+                        <th scope="col">Biaya Penyimpanan</th>
+                        <th scope="col">Frekuensi Pembelian</th>
+                        <th scope="col">Reorder Point</th>
+                        <th scope="col">Total Cost</th>
+                        <th scope="col">Pilih Barang Untuk Disimpan</th>
+                    </tr>
+                </thead>
+                <tbody id="daftar-barang"></tbody>
+                <tbody>
+                    <tr>
+                        <th scope="col" colspan="13">Simpan pemesanan?</th>
+                        <td scope="col" width="50">
+                            <button 
+                                type="button" 
+                                class="btn btn-success" 
+                                onclick="generate_batasan_modal()">
+                                Simpan Pesanan
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <!-- <tbody>
+                    <tr>
+                        <th scope="col" colspan="8">Total Luas Gudang</th>
+                        <th 
+                            scope="col" 
+                            id="total-luas-gudang">0</th>
+                    </tr>
+                </tbody> -->
+            </table>
+        </form>
+    </div>
 </div>
 
-<script type="text/javascript">
-    var databm = [];
-    var clNow = "modal fade";
-    var clOpen = "modal fade show";
 
-    function op_bg_daftar_brang(stt) 
-    {
-        if (stt == 'open')
-        {
-            $('#bg-modal-barang').attr('class', clOpen).show();
-        } 
-        else 
-        {
-            $('#bg-modal-barang').attr('class', clNow).hide();
-        }
-    }
+    <script type="text/javascript">
 
-    function bg_event_barang(event) {
-        console.log($(this).is(':checked'));
-    }
+        var dataLG = [];
 
-    function bg_munculkan_barang() {
-        // get barang
-        var idsupplier = $('#bg_idsupplier').val();
-        var route = '{{ url("/barang/bysupplier/") }}' + '/' + idsupplier;
+        function generate_batasan_modal() {
+            // var idsupplier = $('#eoq_idsupplier').val();
+            var route = '{{ route("batasan-gudang-save") }}';
 
-        if (idsupplier == 0) {
-            // alert('pilih supplier terlebih dahulu.');
-            $('#bg-daftar-barang').html('');
-        } else {
-            $.ajax({
-                url: route,
-                type: 'GET',
-                dataType: 'json'
-            })
-            .done(function(data) {
-                var dt = '';
-                
-                if (data.length > 0) {
-                    // op_bg_daftar_brang('open');
-                    for (var i = 0; i < data.length; i++) {
-
-                        // status pemesanan
-                        if (data[i].status_pemesanan !== null) {
-                            var status_pemesanan = '<td class="text-orange">Sudah Dipesan</td>';
-                        } else {
-                            var status_pemesanan = '<td class="text-green">Belum Dipesan</td>';
+            // console.log(route);
+            if (dataLG.length > 0) {
+                var a = confirm('apakah barang yang dipilih sudah tepat?');
+                if (a) {
+                    $.ajax({
+                        url: route,
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            'data': dataLG
+                        },
+                        beforeSend: function () {
+                            opLoading();
                         }
-
-                        if (data[i].status_pembelian !== null) {
-                            var status_pembelian = '<td class="text-orange">Dalam Pembelian</td>';
-                        } else {
-                            var status_pembelian = '<td class="text-green">Belum Dibeli</td>';
+                    })
+                    .done(function(data) {
+                        if (data.status === 'success') {
+                            window.location = '{{ route("pesanan-item") }}';
                         }
-
-                        dt += '\
-                        <tr>\
-                            <td>'+(i + 1)+'</td>\
-                            <td>'+data[i].nama_barang+'</td>\
-                            <td>'+data[i].harga_barang+'</td>\
-                            <td>'+data[i].stok+'</td>\
-                            '+status_pemesanan+'\
-                            '+status_pembelian+'\
-                            <th id="bg-jumlah-unit-'+data[i].id+'">0</th>\
-                            <th id="bg-total-cost-'+data[i].id+'">0</th>\
-                            <td>\
-                                <label class="custom-toggle">\
-                                    <input type="checkbox" value="'+data[i].id+'" class="checkbox" />\
-                                    <span class="custom-toggle-slider rounded-circle"></span>\
-                                </label>\
-                            </td>\
-                        </tr>'
-                    }
+                        // console.log(data);
+                        clLoading();
+                    })
+                    .fail(function(e) {
+                        console.log("error => " + e.responseJSON.message);
+                        clLoading();
+                    })
+                    .always(function() {
+                        console.log("complete");
+                    });
                 }
-
-                $('#bg-daftar-barang').html(dt);
-
-                // console.log(data);
-            })
-            .fail(function(e) {
-                console.log("error => " + e);
-            })
-            .always(function() {
-                console.log("complete");
-            });
-            
-        }
-    }
-
-    function bg_update_total() {
-        var jumlah_unit = 0;
-        var total_cost = 0;
-
-        for (var i = 0; i < databm.length; i++) {
-            var jumlah_unit = jumlah_unit + databm[i].jumlah_unit;
-            var total_cost = total_cost + databm[i].total_cost;
+            } else {
+                alert('pilih satu atau lebih barang barang.');
+            }
         }
 
-        $('#bg-jumlah-unit').html(jumlah_unit);
-        $('#bg-total-cost').html(total_cost);
-    }
+        function generate_method()
+        {
+            var route = '{{ url("/batasan/gudang/generate") }}';
+            // var luas_gudang = $('#luas_gudang').val();
+            var idetalase = $('#idetalase').val();
+            var bm_idbarang = 1;
 
-    function generate_bg_multititem() {
-        var idsupplier = $('#bg_idsupplier').val();
-        var kendala_gudang = $('#bg_kendala_gudang').val();
-        var route = '{{ url("/pesanan/multiitem/bm/") }}';
-
-        // console.log(route);
-        if (databm.length > 0) {
-            var a = confirm('apakah barang yang dipilih sudah tepat?');
-            if (a) {
+            if (1) 
+            {
                 $.ajax({
                     url: route,
                     type: 'GET',
-                    dataType: 'json',
+                    dataType: 'JSON',
                     data: {
-                        'idsupplier': idsupplier, 
-                        'kendala_gudang': kendala_gudang,
-                        'data': databm
+                        'idetalase': idetalase
+                    },
+                    beforeSend: function () {
+                        opLoading();
                     }
                 })
                 .done(function(data) {
-                    // if (data.status === 'success') {
-                    //     window.location = '{{ route("pesanan-item") }}';
+                    var data_save = data.data;
+                    var dt = [];
+                    for (var i = 0; i < data_save.length; i++) {
+                        dt += '\
+                            <tr>\
+                                <td>'+(i + 1)+'</td>\
+                                <td>'+data_save[i].nama_barang+'</td>\
+                                <td>Rp. <span id="gl-harga-barang-'+data_save[i].idbarang+'">'+data_save[i].harga_barang+'</span></td>\
+                                <td><span id="gl-jumlah-unit-dulu-'+data_save[i].idbarang+'">'+data_save[i].jumlah_unit+'</span></td>\
+                                <td><span id="gl-ukuran-barang-'+data_save[i].idbarang+'">'+data_save[i].ukuran_barang+'</span> cm3</td>\
+                                <td><span id="gl-jumlah-unit-'+data_save[i].idbarang+'">'+data_save[i].QL+'</span></td>\
+                                <td><span id="gl-kebutuhan-gudang-'+data_save[i].idbarang+'">'+data_save[i].kebutuhan_gudang+'</span> cm3</td>\
+                                <td><span id="gl-jumlah-permintaan-'+data_save[i].idbarang+'">'+data_save[i].jumlah_permintaan+'</span></td>\
+                                <td><span id="gl-biaya-pemesanan-'+data_save[i].idbarang+'">'+data_save[i].biaya_pemesanan+'</span></td>\
+                                <td><span id="gl-biaya-penyimpanan-'+data_save[i].idbarang+'">'+data_save[i].biaya_penyimpanan+'</span></td>\
+                                <td><span id="gl-frekuensi-pembelian-'+data_save[i].idbarang+'">'+data_save[i].frekuensi_pembelian+'</span></td>\
+                                <td><span id="gl-reorder-point-'+data_save[i].idbarang+'">'+data_save[i].reorder_point+'</span></td>\
+                                <td><span id="gl-total-cost-'+data_save[i].idbarang+'">'+data_save[i].total_cost+'</span></td>\
+                                <td>\
+                                    <label class="custom-toggle">\
+                                        <input type="checkbox" value="'+data_save[i].idbarang+'" class="checkbox" />\
+                                        <span class="custom-toggle-slider rounded-circle"></span>\
+                                    </label>\
+                                </td>\
+                            </tr>\
+                        ';
+                    }
+                    $('#daftar-barang').html(dt);
+                    // $('#total-luas-gudang').html('<b class="text-green">' + data.total_luas_gudang + ' cm3 </b>');
+
+                    // if (data.status_investasi === 'Feasible') {
+                    //     $('#total-investasi').html('<span class="text-green">Rp. ' + data.total_investasi + '</span>');
+                    //     $('#total-modal').html('<span class="text-green">Rp. ' + data.luas_gudang + '</span>');
+                    //     $('#status-investasi').html('<span class="text-green">' + data.status_investasi + '</span>');
+                    // } else {
+                    //     $('#total-investasi').html('<span class="text-red">Rp. ' + data.total_investasi + '</span>');
+                    //     $('#total-modal').html('<span class="text-green">Rp. ' + data.luas_gudang + '</span>');
+                    //     $('#status-investasi').html('<span class="text-red">' + data.status_investasi + '</span>');
                     // }
-                    console.log(data);
+
+                    // console.log(data);
+                    clLoading();
                 })
                 .fail(function(e) {
-                    console.log("error => " + e.responseJSON.message);
+                    console.log("error " + e.responseJSON.message);
+                    clLoading();
                 })
                 .always(function() {
                     console.log("complete");
                 });
             }
-        } else {
-            alert('pilih satu atau lebih barang.');
         }
-    }
 
-    function generate_bg_singleitem(idbarang) 
-    {
-        
-        var route = '{{ url("/pesanan/eoq") }}';
-        var idsupplier = $('#bg_idsupplier').val();
-        var kendala_gudang = $('#bg_kendala_gudang').val();
+        $(document).ready(function () {
+            $('#form-gudang-barang').on('change', ':checkbox', function () {
+                if ($(this).is(':checked')) {
+                    var idbarang = $(this).val();
+                    var harga_barang = $('#gl-harga-barang-'+idbarang).html();
+                    var biaya_penyimpanan = $('#gl-biaya-penyimpanan-'+idbarang).html();
+                    var biaya_pemesanan = $('#gl-biaya-pemesanan-'+idbarang).html();
+                    var frekuensi_pembelian = $('#gl-frekuensi-pembelian-'+idbarang).html();
+                    var reorder_point = $('#gl-reorder-point-'+idbarang).html();
+                    var jumlah_permintaan = $('#gl-jumlah-permintaan-'+idbarang).html();
+                    var jumlah_unit = $('#gl-jumlah-unit-'+idbarang).html();
+                    var total_cost = $('#gl-total-cost-'+idbarang).html();
 
-        if (kendala_gudang > 0) {
-            $.ajax({
-                url: route,
-                type: 'GET',
-                dataType: 'JSON',
-                data: {
-                    'idbarang': idbarang,
-                    'idsupplier': idsupplier,
-                    'kendala_gudang': kendala_gudang
-                    // 'tipe_harga': bg_tipe_harga
-                }
-            })
-            .done(function(data) {
-                databm.push({
-                    'idbarang': idbarang, 
-                    'biaya_penyimpanan': data.biaya_penyimpanan,
-                    'jumlah_permintaan': data.jumlah_permintaan,
-                    'harga_barang': data.harga_barang,
-                    'jumlah_unit': data.jumlah_unit,
-                    'total_cost': data.total_cost
-                });
-                $('#bg-jumlah-unit-'+idbarang).html(data.jumlah_unit);
-                $('#bg-total-cost-'+idbarang).html(data.total_cost);
+                    dataLG.push({
+                        'idbarang': idbarang, 
+                        'biaya_penyimpanan': biaya_penyimpanan,
+                        'biaya_pemesanan': biaya_pemesanan,
+                        'jumlah_permintaan': jumlah_permintaan,
+                        'frekuensi_pembelian': frekuensi_pembelian,
+                        'reorder_point': reorder_point,
+                        'harga_barang': harga_barang,
+                        'jumlah_unit': jumlah_unit,
+                        'total_cost': total_cost
+                    });
 
-                bg_update_total();
-                // console.log(data);
-            })
-            .fail(function(e) {
-                // console.log("error " + e);
-                $('#bg-jumlah-unit-'+idbarang).html('0');
-                $('#bg-total-cost-'+idbarang).html('0');
-
-                bg_update_total();
-            })
-            .always(function() {
-                console.log("complete");
-            });
-        } else {
-            alert('kendala luas gudang tidak boleh kosong.');
-        }
-    }
-
-    $(document).ready(function () {
-        
-        $('#bg_idsupplier').change(function(event) {
-            event.preventDefault();
-            bg_munculkan_barang();
-
-            databm = [];
-            bg_update_total();
-        });
-
-        $('#bg-form-barang').on('change', ':checkbox', function () {
-            if ($(this).is(':checked')) {
-                // console.log($(this).val() + ' is now checked');
-                generate_bg_singleitem($(this).val());
-
-                // add array
-                // databm.push($(this).val());
-            } else {
-                // console.log($(this).val() + ' is now unchecked');
-                $('#bg-jumlah-unit-'+$(this).val()).html('0');
-                $('#bg-total-cost-'+$(this).val()).html('0');
-
-                // remove array
-                for (var i = 0; i < databm.length; i++) {
-                    if (databm[i].idbarang === $(this).val()) {
-                        databm.splice(i, 1);
+                    // console.log(dataLG);
+                } else {
+                    for (var i = 0; i < dataLG.length; i++) {
+                        if (dataLG[i].idbarang === $(this).val()) {
+                            dataLG.splice(i, 1);
+                        }
                     }
+                    // console.log(dataLG);
                 }
-
-                bg_update_total();
-            }
-            // console.log(databm);
+            });
         });
-
-    });
-
-</script>
+        
+    </script>
 
 @endsection
